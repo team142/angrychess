@@ -24,6 +24,10 @@ func CreateGame(creator *Player) *Game {
 	return game
 }
 
+type ListOfGames struct {
+	Games map[string]map[string]string
+}
+
 type Game struct {
 	ID      string          `json:"id"`
 	Title   string          `json:"title"`

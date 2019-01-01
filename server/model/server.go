@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"github.com/team142/chessfor4/io/ws"
 )
 
@@ -47,4 +48,14 @@ func (s *Server) JoinGame(gameID string, p *Profile) *Game {
 	game.JoinGame(player)
 	return game
 
+}
+
+func (s *Server) CreateListOfGames() *ListOfGames {
+	result := ListOfGames{Games: make(map[string]map[string]string)}
+	for _, game := range s.Games {
+		result.Games[game.ID] = make(map[string]string)
+		result.Games[game.ID]["title"] = game.Title
+		result.Games[game.ID]["players"] = fmt.Sprint("%n/%n", len(game.Players), game.GetMaxPlayers())
+	}
+	return &result
 }
