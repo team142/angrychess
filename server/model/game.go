@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	MaxSupportedBoards = 2
+	maxSupportedBoards = 2
 )
 
 //CreateGame starts a game with a player
@@ -18,7 +18,7 @@ func CreateGame(creator *Player) *Game {
 	game := &Game{
 		ID:      uuid.NewV4().String(),
 		Players: make(map[int]*Player),
-		Boards:  MaxSupportedBoards,
+		Boards:  maxSupportedBoards,
 		Title:   fmt.Sprintf("%s's game", creator.Profile.Nick),
 	}
 	game.Players[1] = creator
