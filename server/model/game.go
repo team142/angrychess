@@ -13,6 +13,7 @@ const (
 	MaxSupportedBoards = 2
 )
 
+//CreateGame starts a game with a player
 func CreateGame(creator *Player) *Game {
 	game := &Game{
 		ID:      uuid.NewV4().String(),
@@ -26,10 +27,12 @@ func CreateGame(creator *Player) *Game {
 	return game
 }
 
+//ListOfGames describes a list of games on the server
 type ListOfGames struct {
 	Games []map[string]string `json:"games"`
 }
 
+//Game describes a game on the server
 type Game struct {
 	ID      string          `json:"id"`
 	Title   string          `json:"title"`
@@ -38,6 +41,7 @@ type Game struct {
 	Boards  int             `json:"boards"`
 }
 
+//JoinGame gets a player into a game
 func (game *Game) JoinGame(player *Player) bool {
 	found, spot := game.findSpot()
 	if !found {
@@ -59,16 +63,20 @@ func (game *Game) findSpot() (found bool, spot int) {
 	}
 	return false, 0
 }
+
+//Announce announces something to all players
 func (game *Game) Announce(b []byte) {
 	for _, player := range game.Players {
 		player.Profile.Client.Send <- b
 	}
 }
 
+//GetMaxPlayers determines the max number of players
 func (game *Game) GetMaxPlayers() int {
 	return game.Boards * 2
 }
 
+//FindPlayerByClient for easy access
 func (game *Game) FindPlayerByClient(client *ws.Client) (result *Player, found bool) {
 	for _, p := range game.Players {
 		if p.Profile.Client == client {
@@ -79,6 +87,7 @@ func (game *Game) FindPlayerByClient(client *ws.Client) (result *Player, found b
 	return
 }
 
+//ShareState tells all players what is going on
 func (game *Game) ShareState() {
 	b, err := json.Marshal(&game)
 	if err != nil {
@@ -90,6 +99,7 @@ func (game *Game) ShareState() {
 
 }
 
+//SetupBoards initializes all boards in the game
 func (game *Game) SetupBoards() {
 	for _, player := range game.Players {
 		player.SetupBoard()
@@ -97,10 +107,12 @@ func (game *Game) SetupBoards() {
 
 }
 
+//CanStart checks that the game can start
 func (game *Game) CanStart() bool {
 	return game.GetMaxPlayers() == len(game.Players)
 }
 
+//Move moves a piece
 func (game *Game) Move(player *Player, move messages.MessageMove) (err error) {
 	if !player.OwnsPiece(move.PieceID) {
 		err = fmt.Errorf("player doesnt not own piece: %s", move.PieceID)

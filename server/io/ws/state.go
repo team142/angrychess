@@ -27,6 +27,7 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
+//Hub keeps track of all connected clients
 type Hub struct {
 	clients    map[*Client]bool
 	register   chan *Client

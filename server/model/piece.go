@@ -9,6 +9,7 @@ const (
 	identityKing   = 6
 )
 
+//Piece describes a piece on the board
 type Piece struct {
 	ID       string `json:"id"`
 	Identity int    `json:"identity"`
@@ -17,6 +18,7 @@ type Piece struct {
 	Color    bool   `json:"color"`
 }
 
+//TryMove attempts to move a piece.. probably should not be here
 func (piece *Piece) TryMove(game *Game, color bool, fromX, fromY, toX, toY int) (err error) {
 	//TODO: implement
 
