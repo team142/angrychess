@@ -1,7 +1,7 @@
 package model
 
 type Player struct {
-	Profile Profile
+	Profile *Profile
 	Color   bool
 	Team    int
 	Board   *Board
