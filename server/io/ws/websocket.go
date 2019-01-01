@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func StartServer(addr *string, handler func(*Client, []byte)) {
+func StartWSServer(addr *string, handler func(*Client, []byte)) {
 
 	flag.Parse()
 	hub := newHub()
