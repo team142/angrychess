@@ -17,7 +17,8 @@ type Piece struct {
 	Color    bool   `json:"color"`
 }
 
-func (piece *Piece) TryMove(game *Game, color bool, fromX, fromY, toX, toY int) bool {
+func (piece *Piece) TryMove(game *Game, color bool, fromX, fromY, toX, toY int) (err error) {
 	//TODO: implement
-	return true
+
+	return
 }

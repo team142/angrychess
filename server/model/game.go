@@ -111,9 +111,20 @@ func (game *Game) CanStart() bool {
 	return game.GetMaxPlayers() == len(game.Players)
 }
 
-func (game *Game) Move(player *Player, move messages.MessageMove) error {
+func (game *Game) Move(player *Player, move messages.MessageMove) (err error) {
 	if !player.OwnsPiece(move.PieceID) {
-
+		err = fmt.Errorf("player doesnt not own piece: %s", move.PieceID)
 	}
 
+	piece, found := player.GetPieceByID(move.PieceID)
+	if !found {
+		err = fmt.Errorf("could not find piece: %s", move.PieceID)
+	}
+
+	/*
+		TODO: do other checks
+	*/
+
+	err = piece.TryMove(game, player.Color, move.FromX, move.FromY, move.ToX, move.ToY)
+	return
 }
