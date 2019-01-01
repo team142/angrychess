@@ -12,20 +12,22 @@ const (
 )
 
 func CreateGame(creator *Player) *Game {
-	var players []*Player
-	players = append(players, creator)
-	return &Game{
+	game := &Game{
 		ID:      uuid.NewV4().String(),
 		Players: make(map[int]*Player),
 		Boards:  MaxSupportedBoards,
 		Title:   fmt.Sprintf("%s's game", creator.Profile.Nick),
 	}
+	game.Players[1] = creator
+	game.Owner = creator
+	creator.SetTeamAndColor(1, game.Boards)
+	return game
 }
 
 type Game struct {
 	ID      string          `json:"id"`
 	Title   string          `json:"title"`
-	Owner   *Player         `json:"owner"`
+	Owner   *Player         `json:"-"`
 	Players map[int]*Player `json:"players"`
 	Boards  int             `json:"boards"`
 }
@@ -71,5 +73,8 @@ func (game *Game) ShareState() {
 	if err != nil {
 		log.Println(fmt.Sprintf("Error marshalling, %s", err))
 	}
-	game.Players[0].Profile.Client.Send <- b
+	for _, player := range game.Players {
+		player.Profile.Client.Send <- b
+	}
+
 }
