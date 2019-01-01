@@ -23,10 +23,10 @@ func CreateGame(creator *Player) *Game {
 }
 
 type Game struct {
-	ID      string
-	Title   string
-	Players []*Player
-	Boards  int
+	ID      string    `json:"id"`
+	Title   string    `json:"title"`
+	Players []*Player `json:"players"`
+	Boards  int       `json:"boards"`
 }
 
 func (game *Game) FindPlayerBySecret(secret string) (result *Player, found bool) {

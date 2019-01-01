@@ -11,7 +11,7 @@ func CreateProfile(client *ws.Client) *Profile {
 
 type Profile struct {
 	Client *ws.Client
-	Nick   string
+	Nick   string `json:"nick"`
 	Secret string
 }
 
