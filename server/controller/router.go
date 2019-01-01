@@ -42,7 +42,7 @@ func HandleIncoming(server *model.Server, client *ws.Client, msg []byte) {
 		handleInMessageListOfGame(server, client, msg)
 
 	} else if message.Msg == InMessageMove {
-		//TODO: handle route
+		handleInMessageMove(server, client, msg)
 
 	} else if message.Msg == InMessagePlace {
 		//TODO: handle route
