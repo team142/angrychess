@@ -44,7 +44,7 @@ func (game *Game) findSpot() (found bool, spot int) {
 	if len(game.Players) >= game.GetMaxPlayers() {
 		return false, 0
 	}
-	for s := 1; s < game.GetMaxPlayers(); s++ {
+	for s := 1; s <= game.GetMaxPlayers(); s++ {
 		if game.Players[s] == nil {
 			return true, s
 		}
