@@ -10,9 +10,9 @@ func CreateProfile(client *ws.Client) *Profile {
 }
 
 type Profile struct {
-	Client *ws.Client
-	Nick   string `json:"nick"`
-	Secret string
+	Client *ws.Client `json:"-"`
+	Nick   string     `json:"nick"`
+	Secret string     `json:"-"`
 }
 
 func (p *Profile) IsMe(secret string) bool {

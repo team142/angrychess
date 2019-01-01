@@ -5,7 +5,7 @@ import (
 )
 
 func CreateServer(address string, handler func(*Server, *ws.Client, []byte)) *Server {
-	return &Server{Address: address, Handler: handler}
+	return &Server{Address: address, Handler: handler, Lobby: make(map[*ws.Client]*Profile)}
 }
 
 type Server struct {

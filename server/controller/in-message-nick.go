@@ -18,6 +18,8 @@ func handleInMessageNick(server *model.Server, client *ws.Client, msg []byte) {
 	profile := server.GetOrCreateProfile(client)
 	profile.Nick = message.Nick
 
+	fmt.Println(">> Set profile nick: ", profile.Nick)
+
 	reply := messages.CreateMessageSecret(profile.Secret)
 	b, err := json.Marshal(reply)
 	if err != nil {

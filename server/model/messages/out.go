@@ -15,7 +15,7 @@ type MessageSecret struct {
 }
 
 func CreateMessageView(view string) MessageView {
-	return MessageView{Msg: view, View: view}
+	return MessageView{Msg: "view", View: view}
 }
 
 type MessageView struct {
