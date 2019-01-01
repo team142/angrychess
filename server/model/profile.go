@@ -1,15 +1,18 @@
 package model
 
-import "github.com/satori/go.uuid"
+import (
+	"github.com/satori/go.uuid"
+	"github.com/team142/chessfor4/io/ws"
+)
 
-func CreateProfile(clientID string) *Profile {
-	return &Profile{ClientID: clientID, Secret: uuid.NewV4().String()}
+func CreateProfile(client *ws.Client) *Profile {
+	return &Profile{Client: client, Secret: uuid.NewV4().String()}
 }
 
 type Profile struct {
-	ClientID string
-	Nick     string
-	Secret   string
+	Client *ws.Client
+	Nick   string
+	Secret string
 }
 
 func (p *Profile) IsMe(secret string) bool {

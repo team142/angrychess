@@ -31,8 +31,8 @@ func serveWs(hub *Hub, handler func(*Client, []byte), w http.ResponseWriter, r *
 		return
 	}
 	id := uuid.NewV4()
-	client := &Client{hub: hub, conn: conn, Send: make(chan []byte, 256), handler: handler, ClientID: id.String()}
-	client.hub.register <- client
+	client := &Client{Hub: hub, conn: conn, Send: make(chan []byte, 256), handler: handler, ClientID: id.String()}
+	client.Hub.register <- client
 
 	go client.writePump()
 	go client.readPump()
@@ -40,7 +40,7 @@ func serveWs(hub *Hub, handler func(*Client, []byte), w http.ResponseWriter, r *
 
 func (c *Client) readPump() {
 	defer func() {
-		c.hub.unregister <- c
+		c.Hub.unregister <- c
 		c.conn.Close()
 	}()
 	c.conn.SetReadLimit(maxMessageSize)
@@ -70,7 +70,7 @@ func (c *Client) writePump() {
 		case message, ok := <-c.Send:
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
-				// The hub closed the channel.
+				// The Hub closed the channel.
 				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}

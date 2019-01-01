@@ -10,7 +10,7 @@ func CreateServer(address string, handler func(*Server, *ws.Client, []byte)) *Se
 
 type Server struct {
 	Address string
-	Lobby   map[string]*Profile
+	Lobby   map[*ws.Client]*Profile
 	Games   []*Game
 	Handler func(*Server, *ws.Client, []byte)
 }
@@ -19,11 +19,11 @@ func (s *Server) HandleMessage(client *ws.Client, msg []byte) {
 	s.Handler(s, client, msg)
 }
 
-func (s *Server) GetOrCreateProfile(clientID string) *Profile {
-	p := s.Lobby[clientID]
+func (s *Server) GetOrCreateProfile(client *ws.Client) *Profile {
+	p := s.Lobby[client]
 	if p == nil {
-		p = CreateProfile(clientID)
-		s.Lobby[clientID] = p
+		p = CreateProfile(client)
+		s.Lobby[client] = p
 	}
 	return p
 }

@@ -42,11 +42,10 @@ func newHub() *Hub {
 }
 
 type Client struct {
-	ClientID string
-	hub      *Hub
-	conn     *websocket.Conn
-	Send     chan []byte
-	handler  func(*Client, []byte)
+	Hub     *Hub
+	conn    *websocket.Conn
+	Send    chan []byte
+	handler func(*Client, []byte)
 }
 
 func (c *Client) handleMessage(msg []byte) {

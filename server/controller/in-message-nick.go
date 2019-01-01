@@ -15,7 +15,7 @@ func handleInMessageNick(server *model.Server, client *ws.Client, msg []byte) {
 		log.Println(fmt.Sprintf("Error unmarshaling, %s", err))
 	}
 
-	profile := server.GetOrCreateProfile(client.ClientID)
+	profile := server.GetOrCreateProfile(client)
 	profile.Nick = message.Nick
 
 	reply := messages.CreateMessageSecret(profile.Secret)
