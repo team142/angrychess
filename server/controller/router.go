@@ -10,11 +10,12 @@ import (
 )
 
 const (
-	InMessageNick      = "nick"
-	InMessageStartGame = "start-game"
-	InMessageJoinGame  = "join-game"
-	InMessageMove      = "move"
-	InMessagePlace     = "place"
+	InMessageNick       = "nick"
+	InMessageStartGame  = "start-game"
+	InMessageJoinGame   = "join-game"
+	InMessageMove       = "move"
+	InMessagePlace      = "place"
+	InMessageChangeSeat = "seat"
 )
 
 func HandleIncoming(server *model.Server, client *ws.Client, msg []byte) {
@@ -32,6 +33,8 @@ func HandleIncoming(server *model.Server, client *ws.Client, msg []byte) {
 	} else if message.Msg == InMessageMove {
 		//TODO: handle route
 	} else if message.Msg == InMessagePlace {
+		//TODO: handle route
+	} else if message.Msg == InMessageChangeSeat {
 		//TODO: handle route
 	} else {
 		log.Println("Unknown route: ", message.Msg)
