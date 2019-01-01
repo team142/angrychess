@@ -13,11 +13,10 @@ type MessageJoinGame struct {
 }
 
 type MessageMove struct {
-	Secret string `json:"secret"`
-	FromX  int    `json:"fx"`
-	FromY  int    `json:"fy"`
-	ToX    int    `json:"tx"`
-	ToY    int    `json:"ty"`
+	FromX int `json:"fx"`
+	FromY int `json:"fy"`
+	ToX   int `json:"tx"`
+	ToY   int `json:"ty"`
 }
 
 type MessagePlace struct {

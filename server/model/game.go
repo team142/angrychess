@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/satori/go.uuid"
+	"github.com/team142/chessfor4/io/ws"
+	"github.com/team142/chessfor4/model/messages"
 	"log"
 )
 
@@ -67,6 +69,16 @@ func (game *Game) GetMaxPlayers() int {
 	return game.Boards * 2
 }
 
+func (game *Game) FindPlayerByClient(client *ws.Client) (result *Player, found bool) {
+	for _, p := range game.Players {
+		if p.Profile.Client == client {
+			result, found = p, true
+			return
+		}
+	}
+	return
+}
+
 func (game *Game) FindPlayerBySecret(secret string) (result *Player, found bool) {
 	for _, p := range game.Players {
 		if p.Profile.IsMe(secret) {
@@ -97,4 +109,8 @@ func (game *Game) SetupBoards() {
 
 func (game *Game) CanStart() bool {
 	return game.GetMaxPlayers() == len(game.Players)
+}
+
+func (game *Game) Move(move messages.MessageMove) error {
+
 }

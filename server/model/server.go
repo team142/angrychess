@@ -27,7 +27,6 @@ func (s *Server) FindGameByClient(client *ws.Client) (found bool, game *Game) {
 			return true, game
 		}
 	}
-	found = false
 	return
 }
 
