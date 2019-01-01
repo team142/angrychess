@@ -28,8 +28,9 @@ func (s *Server) GetOrCreateProfile(client *ws.Client) *Profile {
 	return p
 }
 
-func (s *Server) CreateGame(p *Player) {
+func (s *Server) CreateGame(p *Player) *Game {
 	g := CreateGame(p)
 	s.Games = append(s.Games, g)
+	return g
 
 }
