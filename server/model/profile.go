@@ -1,12 +1,13 @@
 package model
 
-func CreateProfile(nick string) *Profile {
-	return &Profile{Nick: nick}
+func CreateProfile(clientID string) *Profile {
+	return &Profile{ClientID: clientID}
 }
 
 type Profile struct {
-	Nick   string
-	Secret string
+	ClientID string
+	Nick     string
+	Secret   string
 }
 
 func (p *Profile) IsMe(secret string) bool {
