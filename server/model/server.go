@@ -40,13 +40,11 @@ func (s *Server) CreateGame(p *Player) *Game {
 }
 
 func (s *Server) JoinGame(gameID string, p *Profile) *Game {
-
 	player := &Player{
 		Profile: s.Lobby[p.Client],
 	}
 	game := s.Games[gameID]
 	game.JoinGame(player)
-
 	return game
 
 }
