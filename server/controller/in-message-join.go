@@ -22,7 +22,7 @@ func handleInMessageJoinGame(server *model.Server, client *ws.Client, msg []byte
 	if err != nil {
 		log.Println(fmt.Sprintf("Error marshalling, %s", err))
 	}
-	fmt.Println(">> Created game ", game.Title)
+	log.Println(">> Created game ", game.Title)
 	client.Send <- b
 
 	game.ShareState()
