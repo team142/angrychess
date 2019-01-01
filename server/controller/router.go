@@ -20,6 +20,7 @@ const (
 	inMessageChangeSeat  = "seat"
 )
 
+//HandleIncoming handles messages arriving to the websocket server
 func HandleIncoming(server *model.Server, client *ws.Client, msg []byte) {
 	var message messages.BaseMessage
 	if err := json.Unmarshal(msg, &message); err != nil {
