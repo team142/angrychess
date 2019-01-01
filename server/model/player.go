@@ -7,6 +7,7 @@ type Player struct {
 	Color   bool     `json:"color"`
 	Team    int      `json:"team"`
 	Pieces  []*Piece `json:"pieces"`
+	MyTurn  bool     `json:"myTurn"`
 }
 
 func (p *Player) GetPieceByID(id string) (piece *Piece, found bool) {
@@ -32,6 +33,9 @@ func (p *Player) SetTeamAndColor(spot int, boards int) {
 }
 
 func (p *Player) SetupBoard() {
+	if !p.Color {
+		p.MyTurn = true
+	}
 
 	//Pawns
 	for i := 1; i <= 8; i++ {
