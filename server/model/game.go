@@ -94,3 +94,7 @@ func (game *Game) SetupBoards() {
 	}
 
 }
+
+func (game *Game) CanStart() interface{} {
+	return game.GetMaxPlayers() == len(game.Players)
+}

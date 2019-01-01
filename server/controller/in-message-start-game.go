@@ -12,6 +12,12 @@ import (
 func handleInMessageStartGame(server *model.Server, client *ws.Client, msg []byte) {
 
 	found, game := server.FindGameByClient(client)
+
+	if !game.CanStart() {
+		//TODO: send an error
+		return
+	}
+
 	game.SetupBoards()
 
 	if !found {
