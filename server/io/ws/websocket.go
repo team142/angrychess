@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"flag"
 	"github.com/gorilla/websocket"
-	"github.com/satori/go.uuid"
 	"log"
 	"net/http"
 	"time"
@@ -30,8 +29,7 @@ func serveWs(hub *Hub, handler func(*Client, []byte), w http.ResponseWriter, r *
 		log.Println(err)
 		return
 	}
-	id := uuid.NewV4()
-	client := &Client{Hub: hub, conn: conn, Send: make(chan []byte, 256), handler: handler, ClientID: id.String()}
+	client := &Client{Hub: hub, conn: conn, Send: make(chan []byte, 256), handler: handler}
 	client.Hub.register <- client
 
 	go client.writePump()
