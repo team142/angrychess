@@ -3,6 +3,7 @@ package model
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/satori/go.uuid"
 	"log"
 )
 
@@ -13,7 +14,12 @@ const (
 func CreateGame(creator *Player) *Game {
 	var players []*Player
 	players = append(players, creator)
-	return &Game{Players: players, Boards: MaxSupportedBoards}
+	return &Game{
+		ID:      uuid.NewV4().String(),
+		Players: players,
+		Boards:  MaxSupportedBoards,
+		Title:   fmt.Sprintf("%s's game", creator.Profile.Nick),
+	}
 }
 
 type Game struct {
