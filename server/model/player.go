@@ -7,3 +7,13 @@ type Player struct {
 	Board   *Board
 	Pieces  []*Piece
 }
+
+func (p *Player) GetPieceByID(id string) (piece Piece, found bool) {
+	for _, p := range p.Pieces {
+		if p.ID == id {
+			piece, found = p, true
+			return
+		}
+	}
+	return
+}

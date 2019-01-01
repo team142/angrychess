@@ -7,6 +7,7 @@ func CreateGame(creator *Player) *Game {
 }
 
 type Game struct {
+	ID      string
 	Players []*Player
 	Board   *Board
 }
@@ -18,6 +19,5 @@ func (game *Game) FindPlayerBySecret(secret string) (result *Player, found bool)
 			return
 		}
 	}
-	found = false
 	return
 }
