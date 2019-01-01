@@ -16,3 +16,18 @@ func (p *Player) GetPieceByID(id string) (piece *Piece, found bool) {
 	}
 	return
 }
+
+func (p *Player) SetTeamAndColor(spot int, boards int) {
+	if boards == 2 && (spot == 1 || spot == 2) {
+		p.Team = 1
+	} else if boards == 2 && (spot == 3 || spot == 4) {
+		p.Team = 2
+	}
+
+	if boards == 2 && (spot == 1 || spot == 4) {
+		p.Color = false
+	} else if boards == 2 && (spot == 2 || spot == 3) {
+		p.Color = true
+	}
+
+}

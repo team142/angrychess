@@ -16,62 +16,40 @@ func CreateGame(creator *Player) *Game {
 	players = append(players, creator)
 	return &Game{
 		ID:      uuid.NewV4().String(),
-		Players: players,
+		Players: make(map[int]*Player),
 		Boards:  MaxSupportedBoards,
 		Title:   fmt.Sprintf("%s's game", creator.Profile.Nick),
 	}
 }
 
 type Game struct {
-	ID      string    `json:"id"`
-	Title   string    `json:"title"`
-	Players []*Player `json:"players"`
-	Boards  int       `json:"boards"`
+	ID      string          `json:"id"`
+	Title   string          `json:"title"`
+	Owner   *Player         `json:"owner"`
+	Players map[int]*Player `json:"players"`
+	Boards  int             `json:"boards"`
 }
 
 func (game *Game) JoinGame(player *Player) bool {
-	if len(game.Players) >= game.GetMaxPlayers() {
-		return false
-	}
-	found, team, color := game.findSpot()
+	found, spot := game.findSpot()
 	if !found {
 		return false
 	}
-	player.Team = team
-	player.Color = color
-
-	game.Players = append(game.Players, player)
-
+	player.SetTeamAndColor(spot, game.Boards)
+	game.Players[spot] = player
 	return true
 }
 
-func (game *Game) findSpot() (found bool, team int, color bool) {
-	var slots [][]bool
-	for x := 1; x <= 2; x++ {
-		for y := 1; y <= 2; y++ {
-			slots[x][y] = false
+func (game *Game) findSpot() (found bool, spot int) {
+	if len(game.Players) >= game.GetMaxPlayers() {
+		return false, 0
+	}
+	for s := 1; s < game.GetMaxPlayers(); s++ {
+		if game.Players[s] == nil {
+			return true, s
 		}
 	}
-
-	for _, player := range game.Players {
-		team := player.Team - 1
-		color := 0
-		if player.Color {
-			color = 1
-		}
-		slots[team][color] = true
-	}
-
-	for x := 1; x <= 2; x++ {
-		for y := 1; y <= 2; y++ {
-			if slots[x][y] == false {
-				return true, x, y == 0
-			}
-		}
-	}
-	found = false
-	return
-
+	return false, 0
 }
 
 func (game *Game) GetMaxPlayers() int {

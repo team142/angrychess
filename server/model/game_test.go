@@ -2,23 +2,22 @@ package model
 
 import "testing"
 
-func TestFindSpot(t *testing.T) {
+func TestFindSpotEmptyGame(t *testing.T) {
 
-	game := Game{}
+	game := Game{Boards: MaxSupportedBoards}
 	expectedFound := true
-	found, team, color := game.findSpot()
+	found, spot := game.findSpot()
 	if !found {
 		t.Errorf("Expected empty game to have found spot %v, got %v", expectedFound, found)
+	} else {
+		t.Logf("Empty game returns spot found correctly")
 	}
 
-	expectedTeam := 1
-	if team != expectedTeam {
-		t.Errorf("Expected empty game to have TEAM spot %v, got %v", expectedTeam, team)
-	}
-
-	expectedColor := false
-	if color != expectedColor {
-		t.Errorf("Expected empty game to have COLOR spot %v, got %v", expectedColor, color)
+	expectedSpot := 1
+	if spot != expectedSpot {
+		t.Errorf("Expected empty game to have TEAM spot %v, got %v", expectedSpot, spot)
+	} else {
+		t.Logf("Empty game returns spot 1 correctly")
 	}
 
 }
