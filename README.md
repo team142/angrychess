@@ -2,15 +2,16 @@
 
 ## Background
 
-Four player chess is a game I played growing up.
+Four player chess is a game I played growing up. I would love to relive the fun of playing "chess doubles" from 18 years ago and so this project was born.
+
 - Two people play on a board as in normal chess.
 - There are two teams consisting of two players.
 - Each team has a one person playing as black and one person playing as white.
-- When a player takes an enemy piece they give it to their team-mate who can then place it on the board as a move.
-- Pieces cannot be placed on the last two lines or such that they put the other place in check or checkmate.
-- A timer can be introduced limiting the time a player has to make a move. If a move is not made within the time limit, then the other player make take a piece off the board from the other player.
+- When a player takes an enemy piece they give it to their teammate who can then place it on the board as a move.
+- Pieces cannot be placed on the last two lines or such that they put the other player in check or mate.
+- A timer can be introduced limiting the time a player has to make a move. If a move is not made within the time limit, then the other player may take a piece off the board from their opponent.
 
-I would love to relive the fun of playing "chess doubles" from 18 years ago and so this project was born.
+
 
 ## Project structure
 
