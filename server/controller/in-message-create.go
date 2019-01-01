@@ -16,8 +16,7 @@ func handleInMessageCreateGame(server *model.Server, client *ws.Client, msg []by
 		Team:    1,
 	}
 	server.CreateGame(player)
-
-	reply := messages.CreateMessageSecret(profile.Secret)
+	reply := messages.CreateMessageView(messages.ViewBoard)
 	b, err := json.Marshal(reply)
 	if err != nil {
 		log.Println(fmt.Sprintf("Error marshalling, %s", err))

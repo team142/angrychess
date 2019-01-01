@@ -15,10 +15,10 @@ type MessageSecret struct {
 }
 
 func CreateMessageView(view string) MessageView {
-	return MessageView{Msg: view, view: view}
+	return MessageView{Msg: view, View: view}
 }
 
 type MessageView struct {
 	Msg  string `json:"msg"`
-	view string `json:"view"`
+	View string `json:"view"`
 }
