@@ -5,6 +5,7 @@ import (
 	"github.com/team142/chessfor4/io/ws"
 )
 
+//CreateServer starts a new server
 func CreateServer(address string, handler func(*Server, *ws.Client, []byte)) *Server {
 	return &Server{
 		Address: address,
@@ -14,6 +15,7 @@ func CreateServer(address string, handler func(*Server, *ws.Client, []byte)) *Se
 	}
 }
 
+//Server holds server state
 type Server struct {
 	Address string
 	Lobby   map[*ws.Client]*Profile
@@ -21,6 +23,7 @@ type Server struct {
 	Handler func(*Server, *ws.Client, []byte)
 }
 
+//FindGameByClient for easy access
 func (s *Server) FindGameByClient(client *ws.Client) (found bool, game *Game) {
 	for _, game := range s.Games {
 		if game.Owner.Profile.Client == client {
@@ -30,10 +33,12 @@ func (s *Server) FindGameByClient(client *ws.Client) (found bool, game *Game) {
 	return
 }
 
+//HandleMessage A handler for messages being given to this server
 func (s *Server) HandleMessage(client *ws.Client, msg []byte) {
 	s.Handler(s, client, msg)
 }
 
+//GetOrCreateProfile creates profiles from a websocket client
 func (s *Server) GetOrCreateProfile(client *ws.Client) *Profile {
 	p := s.Lobby[client]
 	if p == nil {
@@ -43,12 +48,14 @@ func (s *Server) GetOrCreateProfile(client *ws.Client) *Profile {
 	return p
 }
 
+//CreateGame for easy access
 func (s *Server) CreateGame(p *Player) *Game {
 	g := CreateGame(p)
 	s.Games[g.ID] = g
 	return g
 }
 
+//JoinGame for easy access
 func (s *Server) JoinGame(gameID string, p *Profile) *Game {
 	player := &Player{
 		Profile: s.Lobby[p.Client],
@@ -59,6 +66,7 @@ func (s *Server) JoinGame(gameID string, p *Profile) *Game {
 
 }
 
+//CreateListOfGames produces a light struct that describes the games hosted
 func (s *Server) CreateListOfGames() *ListOfGames {
 	result := ListOfGames{Games: []map[string]string{}}
 	for _, game := range s.Games {

@@ -1,12 +1,12 @@
 package model
 
 const (
-	IdentityPawn   = 1
-	IdentityKnight = 2
-	IdentityBishop = 3
-	IdentityRook   = 4
-	IdentityQueen  = 5
-	IdentityKing   = 6
+	identityPawn   = 1
+	identityKnight = 2
+	identityBishop = 3
+	identityRook   = 4
+	identityQueen  = 5
+	identityKing   = 6
 )
 
 type Piece struct {

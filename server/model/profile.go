@@ -5,16 +5,14 @@ import (
 	"github.com/team142/chessfor4/io/ws"
 )
 
+//CreateProfile for easy access
 func CreateProfile(client *ws.Client) *Profile {
 	return &Profile{Client: client, Secret: uuid.NewV4().String()}
 }
 
+//Profile describes a client
 type Profile struct {
 	Client *ws.Client `json:"-"`
 	Nick   string     `json:"nick"`
 	Secret string     `json:"-"`
-}
-
-func (p *Profile) IsMe(secret string) bool {
-	return p.Secret == secret
 }

@@ -79,16 +79,6 @@ func (game *Game) FindPlayerByClient(client *ws.Client) (result *Player, found b
 	return
 }
 
-func (game *Game) FindPlayerBySecret(secret string) (result *Player, found bool) {
-	for _, p := range game.Players {
-		if p.Profile.IsMe(secret) {
-			result, found = p, true
-			return
-		}
-	}
-	return
-}
-
 func (game *Game) ShareState() {
 	b, err := json.Marshal(&game)
 	if err != nil {

@@ -41,6 +41,7 @@ func newHub() *Hub {
 	}
 }
 
+//Client describes a websocket client
 type Client struct {
 	Hub     *Hub
 	conn    *websocket.Conn

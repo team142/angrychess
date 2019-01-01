@@ -1,17 +1,21 @@
 package messages
 
+//BaseMessage for all incoming messages
 type BaseMessage struct {
 	Msg string `json:"msg"`
 }
 
+//MessageNick describes a nickname change
 type MessageNick struct {
 	Nick string `json:"nick"`
 }
 
+//MessageJoinGame for joining a game by id
 type MessageJoinGame struct {
 	ID string `json:"id"`
 }
 
+//MessageMove describes a movement
 type MessageMove struct {
 	PieceID string `json:"pieceId"`
 	FromX   int    `json:"fx"`
@@ -20,9 +24,9 @@ type MessageMove struct {
 	ToY     int    `json:"ty"`
 }
 
+//MessagePlace describes placing a piece
 type MessagePlace struct {
-	Secret string `json:"secret"`
-	ID     string `json:"id"`
-	ToX    int    `json:"tx"`
-	ToY    int    `json:"ty"`
+	ID  string `json:"id"`
+	ToX int    `json:"tx"`
+	ToY int    `json:"ty"`
 }

@@ -2,6 +2,7 @@ package model
 
 import "github.com/satori/go.uuid"
 
+//Player describes a client in a game
 type Player struct {
 	Profile *Profile `json:"profile"`
 	Color   bool     `json:"color"`
@@ -10,6 +11,7 @@ type Player struct {
 	MyTurn  bool     `json:"myTurn"`
 }
 
+//GetPieceByID for easy access
 func (p *Player) GetPieceByID(id string) (piece *Piece, found bool) {
 	for _, p := range p.Pieces {
 		if p.ID == id {
@@ -20,6 +22,7 @@ func (p *Player) GetPieceByID(id string) (piece *Piece, found bool) {
 	return
 }
 
+//SetTeamAndColor derives the color and team
 func (p *Player) SetTeamAndColor(spot int, boards int) {
 	c := spot + boards
 	b := c%2 == 0
@@ -32,6 +35,7 @@ func (p *Player) SetTeamAndColor(spot int, boards int) {
 
 }
 
+//SetupBoard initializes the board and players
 func (p *Player) SetupBoard() {
 	if !p.Color {
 		p.MyTurn = true
@@ -43,7 +47,7 @@ func (p *Player) SetupBoard() {
 			ID:       uuid.NewV4().String(),
 			Color:    p.Color,
 			X:        i,
-			Identity: IdentityPawn,
+			Identity: identityPawn,
 		}
 		if p.Color {
 			piece.Y = 7
@@ -55,6 +59,7 @@ func (p *Player) SetupBoard() {
 
 }
 
+//OwnsPiece determines if the piece is owned by a player
 func (p *Player) OwnsPiece(ID string) bool {
 	for _, p := range p.Pieces {
 		if p.ID == ID {
