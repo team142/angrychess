@@ -25,7 +25,7 @@ func HandleIncoming(server *model.Server, client *ws.Client, msg []byte) {
 	}
 
 	if message.Msg == InMessageNick {
-		//TODO: handle route
+		handleInMessageNick(server, client, msg)
 	} else if message.Msg == InMessageStartGame {
 		//TODO: handle route
 	} else if message.Msg == InMessageJoinGame {
