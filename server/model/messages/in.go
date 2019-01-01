@@ -1,10 +1,10 @@
 package messages
 
 const (
-	MessageNickVal = "nick"
-	StartGameVal   = "start-game"
-	JoinGameVal    = "join-game"
-	MoveVal        = "move"
+	MessageInNickVal = "nick"
+	StartGameInVal   = "start-game"
+	JoinGameInVal    = "join-game"
+	MoveInVal        = "move"
 )
 
 type BaseMessage struct {
