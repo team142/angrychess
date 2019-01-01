@@ -15,16 +15,16 @@ func handleInMessageJoinGame(server *model.Server, client *ws.Client, msg []byte
 		log.Println(fmt.Sprintf("Error unmarshaling, %s", err))
 	}
 
-	game := server.JoinGame(server.Lobby[client])
+	game := server.JoinGame(message.ID, server.Lobby[client])
 
 	reply := messages.CreateMessageView(messages.ViewBoard)
 	b, err := json.Marshal(reply)
 	if err != nil {
 		log.Println(fmt.Sprintf("Error marshalling, %s", err))
 	}
-	fmt.Println(">> Created game ", g.Title)
+	fmt.Println(">> Created game ", game.Title)
 	client.Send <- b
 
-	g.ShareState()
+	game.ShareState()
 
 }

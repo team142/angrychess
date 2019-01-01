@@ -47,4 +47,6 @@ func (s *Server) JoinGame(gameID string, p *Profile) *Game {
 	game := s.Games[gameID]
 	game.JoinGame(player)
 
+	return game
+
 }
