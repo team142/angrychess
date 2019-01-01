@@ -12,6 +12,7 @@ func CreateGame(creator *Player) *Game {
 
 type Game struct {
 	ID      string
+	Title   string
 	Players []*Player
 	Boards  int
 }

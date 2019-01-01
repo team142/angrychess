@@ -1,7 +1,6 @@
 package model
 
 import (
-	"github.com/team142/chessfor4/controller"
 	"github.com/team142/chessfor4/io/ws"
 )
 
@@ -13,8 +12,9 @@ type Server struct {
 	Address string
 	Lobby   []*Profile
 	Games   []*Game
+	Handler func(*Server, *ws.Client, []byte)
 }
 
 func (s *Server) HandleMessage(client *ws.Client, msg []byte) {
-	controller.HandleIncoming(s, client, msg)
+	s.Handler(s, client, msg)
 }

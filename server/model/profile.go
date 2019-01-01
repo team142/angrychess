@@ -7,8 +7,6 @@ func CreateProfile(nick string) *Profile {
 type Profile struct {
 	Nick   string
 	Secret string
-	Out    chan []byte
-	In     chan []byte
 }
 
 func (p *Profile) IsMe(secret string) bool {
