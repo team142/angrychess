@@ -18,10 +18,7 @@ func handleInMessageStartGame(server *model.Server, client *ws.Client, msg []byt
 	}
 
 	reply := messages.CreateMessageView(messages.ViewBoard)
-	b, err := json.Marshal(reply)
-	if err != nil {
-		log.Println(fmt.Sprintf("Error marshalling, %s", err))
-	}
+	b, _ := json.Marshal(reply)
 	game.Announce(b)
 	game.ShareState()
 
