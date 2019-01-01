@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	"github.com/team142/chessfor4/io/ws"
+	"log"
 )
 
 //CreateServer starts a new server
@@ -49,9 +50,17 @@ func (s *Server) GetOrCreateProfile(client *ws.Client) *Profile {
 }
 
 //CreateGame for easy access
-func (s *Server) CreateGame(p *Player) *Game {
-	g := CreateGame(p)
+func (s *Server) CreateGame(client *ws.Client) *Game {
+	player := &Player{
+		Profile: s.Lobby[client],
+		Team:    1,
+	}
+
+	g := CreateGame(player)
 	s.Games[g.ID] = g
+
+	g.ShareState()
+	log.Println(">> Created game ", g.Title)
 	return g
 }
 
@@ -62,6 +71,8 @@ func (s *Server) JoinGame(gameID string, p *Profile) *Game {
 	}
 	game := s.Games[gameID]
 	game.JoinGame(player)
+	log.Println(">> Joined game ", game.Title)
+	game.ShareState()
 	return game
 
 }

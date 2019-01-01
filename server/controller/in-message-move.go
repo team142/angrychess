@@ -15,22 +15,16 @@ func handleInMessageMove(server *model.Server, client *ws.Client, msg []byte) {
 		log.Println(fmt.Sprintf("Error finding game"))
 		return
 	}
-
-	player, _ := game.FindPlayerByClient(client)
-
 	var message messages.MessageMove
 	if err := json.Unmarshal(msg, &message); err != nil {
 		log.Println(fmt.Sprintf("Error unmarshaling, %s", err))
 		return
 	}
-
-	log.Println(">> Moving ")
-	err := game.Move(player, message)
+	err := game.Move(client, message)
 	if err != nil {
 		log.Println(fmt.Sprintf("Error trying to move, %s", err))
 		//TODO: send error message to players
 		return
 	}
-	game.ShareState()
 
 }

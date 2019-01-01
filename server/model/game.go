@@ -113,7 +113,10 @@ func (game *Game) CanStart() bool {
 }
 
 //Move moves a piece
-func (game *Game) Move(player *Player, move messages.MessageMove) (err error) {
+func (game *Game) Move(client *ws.Client, move messages.MessageMove) (err error) {
+	player, _ := game.FindPlayerByClient(client)
+	log.Println(">> Moving ")
+
 	if !player.OwnsPiece(move.PieceID) {
 		err = fmt.Errorf("player doesnt not own piece: %s", move.PieceID)
 	}
@@ -128,5 +131,8 @@ func (game *Game) Move(player *Player, move messages.MessageMove) (err error) {
 	*/
 
 	err = piece.TryMove(game, player.Color, move.FromX, move.FromY, move.ToX, move.ToY)
+	if err == nil {
+		game.ShareState()
+	}
 	return
 }

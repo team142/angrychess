@@ -14,9 +14,6 @@ func handleInMessageJoinGame(server *model.Server, client *ws.Client, msg []byte
 	if err := json.Unmarshal(msg, &message); err != nil {
 		log.Println(fmt.Sprintf("Error unmarshaling, %s", err))
 	}
-
-	game := server.JoinGame(message.ID, server.Lobby[client])
-	log.Println(">> Created game ", game.Title)
-	game.ShareState()
+	server.JoinGame(message.ID, server.Lobby[client])
 
 }

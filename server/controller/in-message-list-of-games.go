@@ -9,7 +9,6 @@ import (
 )
 
 func handleInMessageListOfGame(server *model.Server, client *ws.Client, msg []byte) {
-
 	reply := server.CreateListOfGames()
 	b, err := json.Marshal(&reply)
 	if err != nil {
