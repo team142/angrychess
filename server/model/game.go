@@ -87,3 +87,10 @@ func (game *Game) ShareState() {
 	}
 
 }
+
+func (game *Game) SetupBoards() {
+	for _, player := range game.Players {
+		player.SetupBoard()
+	}
+
+}

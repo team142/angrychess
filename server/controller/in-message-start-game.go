@@ -12,6 +12,8 @@ import (
 func handleInMessageStartGame(server *model.Server, client *ws.Client, msg []byte) {
 
 	found, game := server.FindGameByClient(client)
+	game.SetupBoards()
+
 	if !found {
 		log.Println(fmt.Sprintf("Error finding game owned by, %v", client))
 		log.Println(fmt.Sprintf("Error finding game owned by player with nick, %v", server.Lobby[client].Nick))

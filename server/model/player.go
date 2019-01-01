@@ -1,5 +1,7 @@
 package model
 
+import "github.com/satori/go.uuid"
+
 type Player struct {
 	Profile *Profile `json:"profile"`
 	Color   bool     `json:"color"`
@@ -25,6 +27,26 @@ func (p *Player) SetTeamAndColor(spot int, boards int) {
 		p.Team = 1
 	} else {
 		p.Team = 2
+	}
+
+}
+
+func (p *Player) SetupBoard() {
+
+	//Pawns
+	for i := 1; i <= 8; i++ {
+		piece := &Piece{
+			ID:       uuid.NewV4().String(),
+			Color:    p.Color,
+			X:        i,
+			Identity: IdentityPawn,
+		}
+		if p.Color {
+			piece.Y = 7
+		} else {
+			piece.Y = 2
+		}
+		p.Pieces = append(p.Pieces, piece)
 	}
 
 }
