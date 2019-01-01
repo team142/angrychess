@@ -18,4 +18,11 @@ func handleInMessageNick(server *model.Server, client *ws.Client, msg []byte) {
 	profile := server.GetOrCreateProfile(client.ClientID)
 	profile.Nick = message.Nick
 
+	reply := messages.CreateMessageSecret(profile.Secret)
+	b, err := json.Marshal(reply)
+	if err != nil {
+		log.Println(fmt.Sprintf("Error marshalling, %s", err))
+	}
+	client.Send <- b
+
 }

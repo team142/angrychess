@@ -31,7 +31,7 @@ func serveWs(hub *Hub, handler func(*Client, []byte), w http.ResponseWriter, r *
 		return
 	}
 	id := uuid.NewV4()
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), handler: handler, ClientID: id.String()}
+	client := &Client{hub: hub, conn: conn, Send: make(chan []byte, 256), handler: handler, ClientID: id.String()}
 	client.hub.register <- client
 
 	go client.writePump()
@@ -67,7 +67,7 @@ func (c *Client) writePump() {
 	}()
 	for {
 		select {
-		case message, ok := <-c.send:
+		case message, ok := <-c.Send:
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
 				// The hub closed the channel.
@@ -80,9 +80,9 @@ func (c *Client) writePump() {
 				return
 			}
 			w.Write(message)
-			n := len(c.send)
+			n := len(c.Send)
 			for i := 0; i < n; i++ {
-				w.Write(<-c.send)
+				w.Write(<-c.Send)
 			}
 			if err := w.Close(); err != nil {
 				return

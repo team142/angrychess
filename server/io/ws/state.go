@@ -45,7 +45,7 @@ type Client struct {
 	ClientID string
 	hub      *Hub
 	conn     *websocket.Conn
-	send     chan []byte
+	Send     chan []byte
 	handler  func(*Client, []byte)
 }
 
@@ -62,7 +62,7 @@ func (h *Hub) run() {
 		case client := <-h.unregister:
 			if _, ok := h.clients[client]; ok {
 				delete(h.clients, client)
-				close(client.send)
+				close(client.Send)
 				log.Println("Client unregistered")
 			}
 		}
