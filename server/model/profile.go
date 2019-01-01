@@ -1,7 +1,9 @@
 package model
 
+import "github.com/satori/go.uuid"
+
 func CreateProfile(clientID string) *Profile {
-	return &Profile{ClientID: clientID}
+	return &Profile{ClientID: clientID, Secret: uuid.NewV4().String()}
 }
 
 type Profile struct {
