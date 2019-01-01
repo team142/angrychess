@@ -33,10 +33,10 @@ func (game *Game) FindPlayerBySecret(secret string) (result *Player, found bool)
 	return
 }
 
-func (g *Game) ShareState() {
-	b, err := json.Marshal(g)
+func (game *Game) ShareState() {
+	b, err := json.Marshal(game)
 	if err != nil {
 		log.Println(fmt.Sprintf("Error marshalling, %s", err))
 	}
-	g.Players[0].Profile.Client.Send <- b
+	game.Players[0].Profile.Client.Send <- b
 }
