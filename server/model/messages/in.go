@@ -13,10 +13,11 @@ type MessageJoinGame struct {
 }
 
 type MessageMove struct {
-	FromX int `json:"fx"`
-	FromY int `json:"fy"`
-	ToX   int `json:"tx"`
-	ToY   int `json:"ty"`
+	PieceID string `json:"pieceId"`
+	FromX   int    `json:"fx"`
+	FromY   int    `json:"fy"`
+	ToX     int    `json:"tx"`
+	ToY     int    `json:"ty"`
 }
 
 type MessagePlace struct {

@@ -10,13 +10,13 @@ import (
 )
 
 func handleInMessageMove(server *model.Server, client *ws.Client, msg []byte) {
-	found, game := server.FindGameByClient(client)
-	if !found {
+	foundGame, game := server.FindGameByClient(client)
+	if !foundGame {
 		log.Println(fmt.Sprintf("Error finding game"))
 		return
 	}
 
-	game.FindPlayerBySecret()
+	player, _ := game.FindPlayerByClient(client)
 
 	var message messages.MessageMove
 	if err := json.Unmarshal(msg, &message); err != nil {
@@ -25,7 +25,7 @@ func handleInMessageMove(server *model.Server, client *ws.Client, msg []byte) {
 	}
 
 	log.Println(">> Moving ")
-	err := game.Move(message)
+	err := game.Move(player, message)
 	if err != nil {
 		log.Println(fmt.Sprintf("Error trying to move, %s", err))
 		//TODO: send error message to players

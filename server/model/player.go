@@ -54,3 +54,12 @@ func (p *Player) SetupBoard() {
 	}
 
 }
+
+func (p *Player) OwnsPiece(ID string) bool {
+	for _, p := range p.Pieces {
+		if p.ID == ID {
+			return true
+		}
+	}
+	return false
+}

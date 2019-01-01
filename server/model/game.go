@@ -111,6 +111,9 @@ func (game *Game) CanStart() bool {
 	return game.GetMaxPlayers() == len(game.Players)
 }
 
-func (game *Game) Move(move messages.MessageMove) error {
+func (game *Game) Move(player *Player, move messages.MessageMove) error {
+	if !player.OwnsPiece(move.PieceID) {
+
+	}
 
 }
