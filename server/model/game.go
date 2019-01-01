@@ -1,15 +1,19 @@
 package model
 
+const (
+	MaxSupportedBoards = 2
+)
+
 func CreateGame(creator *Player) *Game {
 	var players []*Player
 	players = append(players, creator)
-	return &Game{Players: players, Board: CreateBoard()}
+	return &Game{Players: players, Boards: MaxSupportedBoards}
 }
 
 type Game struct {
 	ID      string
 	Players []*Player
-	Board   *Board
+	Boards  int
 }
 
 func (game *Game) FindPlayerBySecret(secret string) (result *Player, found bool) {
