@@ -1,13 +1,5 @@
 package messages
 
-const (
-	InMessageNick      = "nick"
-	InMessageStartGame = "start-game"
-	InMessageJoinGame  = "join-game"
-	InMessageMove      = "move"
-	InMessagePlace     = "place"
-)
-
 type BaseMessage struct {
 	Msg string `json:"msg"`
 }

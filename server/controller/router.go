@@ -9,21 +9,29 @@ import (
 	"log"
 )
 
+const (
+	InMessageNick      = "nick"
+	InMessageStartGame = "start-game"
+	InMessageJoinGame  = "join-game"
+	InMessageMove      = "move"
+	InMessagePlace     = "place"
+)
+
 func HandleIncoming(server *model.Server, client *ws.Client, msg []byte) {
 	var message messages.BaseMessage
 	if err := json.Unmarshal(msg, &message); err != nil {
 		log.Println(fmt.Sprintf("Error unmarshaling, %s", err))
 	}
 
-	if message.Msg == messages.InMessageNick {
+	if message.Msg == InMessageNick {
 		//TODO: handle route
-	} else if message.Msg == messages.InMessageStartGame {
+	} else if message.Msg == InMessageStartGame {
 		//TODO: handle route
-	} else if message.Msg == messages.InMessageJoinGame {
+	} else if message.Msg == InMessageJoinGame {
 		//TODO: handle route
-	} else if message.Msg == messages.InMessageMove {
+	} else if message.Msg == InMessageMove {
 		//TODO: handle route
-	} else if message.Msg == messages.InMessagePlace {
+	} else if message.Msg == InMessagePlace {
 		//TODO: handle route
 	} else {
 		log.Println("Unknown route: ", message.Msg)
