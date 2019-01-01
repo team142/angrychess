@@ -57,6 +57,11 @@ func (game *Game) findSpot() (found bool, spot int) {
 	}
 	return false, 0
 }
+func (game *Game) Announce(b []byte) {
+	for _, player := range game.Players {
+		player.Profile.Client.Send <- b
+	}
+}
 
 func (game *Game) GetMaxPlayers() int {
 	return game.Boards * 2

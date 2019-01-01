@@ -21,6 +21,16 @@ type Server struct {
 	Handler func(*Server, *ws.Client, []byte)
 }
 
+func (s *Server) FindGameByClient(client *ws.Client) (found bool, game *Game) {
+	for _, game := range s.Games {
+		if game.Owner.Profile.Client == client {
+			return true, game
+		}
+	}
+	found = false
+	return
+}
+
 func (s *Server) HandleMessage(client *ws.Client, msg []byte) {
 	s.Handler(s, client, msg)
 }

@@ -12,6 +12,7 @@ import (
 const (
 	InMessageNick        = "nick"
 	InMessageStartGame   = "start-game"
+	InMessageCreateGame  = "create-game"
 	InMessageJoinGame    = "join-game"
 	InMessageListOfGames = "list-games"
 	InMessageMove        = "move"
@@ -28,11 +29,14 @@ func HandleIncoming(server *model.Server, client *ws.Client, msg []byte) {
 	if message.Msg == InMessageNick {
 		handleInMessageNick(server, client, msg)
 
-	} else if message.Msg == InMessageStartGame {
+	} else if message.Msg == InMessageCreateGame {
 		handleInMessageCreateGame(server, client, msg)
 
 	} else if message.Msg == InMessageJoinGame {
 		handleInMessageJoinGame(server, client, msg)
+
+	} else if message.Msg == InMessageStartGame {
+		handleInMessageStartGame(server, client, msg)
 
 	} else if message.Msg == InMessageListOfGames {
 		handleInMessageListOfGame(server, client, msg)

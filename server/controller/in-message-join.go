@@ -16,15 +16,7 @@ func handleInMessageJoinGame(server *model.Server, client *ws.Client, msg []byte
 	}
 
 	game := server.JoinGame(message.ID, server.Lobby[client])
-
-	reply := messages.CreateMessageView(messages.ViewBoard)
-	b, err := json.Marshal(reply)
-	if err != nil {
-		log.Println(fmt.Sprintf("Error marshalling, %s", err))
-	}
 	log.Println(">> Created game ", game.Title)
-	client.Send <- b
-
 	game.ShareState()
 
 }

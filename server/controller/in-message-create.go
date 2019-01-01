@@ -1,11 +1,8 @@
 package controller
 
 import (
-	"encoding/json"
-	"fmt"
 	"github.com/team142/chessfor4/io/ws"
 	"github.com/team142/chessfor4/model"
-	"github.com/team142/chessfor4/model/messages"
 	"log"
 )
 
@@ -16,13 +13,7 @@ func handleInMessageCreateGame(server *model.Server, client *ws.Client, msg []by
 		Team:    1,
 	}
 	g := server.CreateGame(player)
-	reply := messages.CreateMessageView(messages.ViewBoard)
-	b, err := json.Marshal(reply)
-	if err != nil {
-		log.Println(fmt.Sprintf("Error marshalling, %s", err))
-	}
 	log.Println(">> Created game ", g.Title)
-	client.Send <- b
 
 	g.ShareState()
 
