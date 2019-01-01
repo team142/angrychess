@@ -5,6 +5,7 @@ const (
 	InMessageStartGame = "start-game"
 	InMessageJoinGame  = "join-game"
 	InMessageMove      = "move"
+	InMessagePlace     = "place"
 )
 
 type BaseMessage struct {

@@ -17,6 +17,14 @@ func HandleIncoming(server *model.Server, client *ws.Client, msg []byte) {
 
 	if message.Msg == messages.InMessageNick {
 		//TODO: handle route
+	} else if message.Msg == messages.InMessageStartGame {
+		//TODO: handle route
+	} else if message.Msg == messages.InMessageJoinGame {
+		//TODO: handle route
+	} else if message.Msg == messages.InMessageMove {
+		//TODO: handle route
+	} else if message.Msg == messages.InMessagePlace {
+		//TODO: handle route
 	} else {
 		log.Println("Unknown route: ", message.Msg)
 	}
