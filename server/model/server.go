@@ -5,13 +5,18 @@ import (
 )
 
 func CreateServer(address string, handler func(*Server, *ws.Client, []byte)) *Server {
-	return &Server{Address: address, Handler: handler, Lobby: make(map[*ws.Client]*Profile)}
+	return &Server{
+		Address: address,
+		Handler: handler,
+		Lobby:   make(map[*ws.Client]*Profile),
+		Games:   make(map[string]*Game),
+	}
 }
 
 type Server struct {
 	Address string
 	Lobby   map[*ws.Client]*Profile
-	Games   []*Game
+	Games   map[string]*Game
 	Handler func(*Server, *ws.Client, []byte)
 }
 
@@ -30,7 +35,16 @@ func (s *Server) GetOrCreateProfile(client *ws.Client) *Profile {
 
 func (s *Server) CreateGame(p *Player) *Game {
 	g := CreateGame(p)
-	s.Games = append(s.Games, g)
+	s.Games[g.ID] = g
 	return g
+}
+
+func (s *Server) JoinGame(gameID string, p *Profile) *Game {
+
+	player := &Player{
+		Profile: s.Lobby[p.Client],
+	}
+	game := s.Games[gameID]
+	game.JoinGame(player)
 
 }
