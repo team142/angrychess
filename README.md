@@ -1,4 +1,5 @@
 # Chess For 4 (Chess Doubles)
+<img src="https://goreportcard.com/badge/github.com/team142/chessfor4" />
 
 ## Background
 
