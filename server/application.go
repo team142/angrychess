@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"github.com/team142/chessfor4/controller"
 	"github.com/team142/chessfor4/io/ws"
 	"github.com/team142/chessfor4/model"
 	"log"
@@ -14,7 +15,7 @@ func main() {
 
 	log.Println("Oh hai 🚀 Lets Go 🎠")
 
-	server := model.CreateServer(*publicAddress)
+	server := model.CreateServer(*publicAddress, controller.HandleIncoming)
 
 	//Blocking call
 	ws.StartWSServer(addr, server.HandleMessage)

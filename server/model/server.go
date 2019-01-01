@@ -4,8 +4,8 @@ import (
 	"github.com/team142/chessfor4/io/ws"
 )
 
-func CreateServer(address string) *Server {
-	return &Server{Address: address}
+func CreateServer(address string, handler func(*Server, *ws.Client, []byte)) *Server {
+	return &Server{Address: address, Handler: handler}
 }
 
 type Server struct {
