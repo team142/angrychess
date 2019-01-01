@@ -1,8 +1,10 @@
 package model
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/team142/chessfor4/io/ws"
+	"github.com/team142/chessfor4/model/messages"
 	"log"
 )
 
@@ -88,4 +90,21 @@ func (s *Server) CreateListOfGames() *ListOfGames {
 		result.Games = append(result.Games, item)
 	}
 	return &result
+}
+
+//SetNick sets profiles nickname
+func (s *Server) SetNick(client *ws.Client, nick string) {
+
+	profile := s.GetOrCreateProfile(client)
+	profile.Nick = nick
+
+	log.Println(">> Set profile nick: ", profile.Nick)
+
+	reply := messages.CreateMessageSecret(profile.Secret)
+	b, err := json.Marshal(reply)
+	if err != nil {
+		log.Println(fmt.Sprintf("Error marshalling, %s", err))
+	}
+	client.Send <- b
+
 }

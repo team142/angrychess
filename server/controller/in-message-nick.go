@@ -14,17 +14,6 @@ func handleInMessageNick(server *model.Server, client *ws.Client, msg []byte) {
 	if err := json.Unmarshal(msg, &message); err != nil {
 		log.Println(fmt.Sprintf("Error unmarshaling, %s", err))
 	}
-
-	profile := server.GetOrCreateProfile(client)
-	profile.Nick = message.Nick
-
-	log.Println(">> Set profile nick: ", profile.Nick)
-
-	reply := messages.CreateMessageSecret(profile.Secret)
-	b, err := json.Marshal(reply)
-	if err != nil {
-		log.Println(fmt.Sprintf("Error marshalling, %s", err))
-	}
-	client.Send <- b
+	server.SetNick(client, message.Nick)
 
 }
