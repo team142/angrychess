@@ -10,14 +10,14 @@ import (
 )
 
 const (
-	InMessageNick        = "nick"
-	InMessageStartGame   = "start-game"
-	InMessageCreateGame  = "create-game"
-	InMessageJoinGame    = "join-game"
-	InMessageListOfGames = "list-games"
-	InMessageMove        = "move"
-	InMessagePlace       = "place"
-	InMessageChangeSeat  = "seat"
+	inMessageNick        = "nick"
+	inMessageStartGame   = "start-game"
+	inMessageCreateGame  = "create-game"
+	inMessageJoinGame    = "join-game"
+	inMessageListOfGames = "list-games"
+	inMessageMove        = "move"
+	inMessagePlace       = "place"
+	inMessageChangeSeat  = "seat"
 )
 
 func HandleIncoming(server *model.Server, client *ws.Client, msg []byte) {
@@ -26,28 +26,28 @@ func HandleIncoming(server *model.Server, client *ws.Client, msg []byte) {
 		log.Println(fmt.Sprintf("Error unmarshaling, %s", err))
 	}
 
-	if message.Msg == InMessageNick {
+	if message.Msg == inMessageNick {
 		handleInMessageNick(server, client, msg)
 
-	} else if message.Msg == InMessageCreateGame {
+	} else if message.Msg == inMessageCreateGame {
 		handleInMessageCreateGame(server, client, msg)
 
-	} else if message.Msg == InMessageJoinGame {
+	} else if message.Msg == inMessageJoinGame {
 		handleInMessageJoinGame(server, client, msg)
 
-	} else if message.Msg == InMessageStartGame {
+	} else if message.Msg == inMessageStartGame {
 		handleInMessageStartGame(server, client, msg)
 
-	} else if message.Msg == InMessageListOfGames {
+	} else if message.Msg == inMessageListOfGames {
 		handleInMessageListOfGame(server, client, msg)
 
-	} else if message.Msg == InMessageMove {
+	} else if message.Msg == inMessageMove {
 		handleInMessageMove(server, client, msg)
 
-	} else if message.Msg == InMessagePlace {
+	} else if message.Msg == inMessagePlace {
 		//TODO: handle route
 
-	} else if message.Msg == InMessageChangeSeat {
+	} else if message.Msg == inMessageChangeSeat {
 		//TODO: handle route
 
 	} else {
