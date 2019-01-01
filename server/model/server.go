@@ -51,11 +51,13 @@ func (s *Server) JoinGame(gameID string, p *Profile) *Game {
 }
 
 func (s *Server) CreateListOfGames() *ListOfGames {
-	result := ListOfGames{Games: make(map[string]map[string]string)}
+	result := ListOfGames{Games: []map[string]string{}}
 	for _, game := range s.Games {
-		result.Games[game.ID] = make(map[string]string)
-		result.Games[game.ID]["title"] = game.Title
-		result.Games[game.ID]["players"] = fmt.Sprint("%n/%n", len(game.Players), game.GetMaxPlayers())
+		item := make(map[string]string)
+		item["id"] = game.ID
+		item["title"] = game.Title
+		item["players"] = fmt.Sprint(len(game.Players), "/", game.GetMaxPlayers())
+		result.Games = append(result.Games, item)
 	}
 	return &result
 }
