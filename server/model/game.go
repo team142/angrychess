@@ -74,10 +74,6 @@ func (game *Game) StartGame() {
 	}
 
 	game.SetupBoards()
-
-	reply := CreateMessageView(ViewBoard)
-	b, _ := json.Marshal(reply)
-	game.Announce(b)
 	game.ShareState()
 
 }

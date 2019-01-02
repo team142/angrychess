@@ -82,6 +82,10 @@ func (s *Server) CreateGame(client *ws.Client) *Game {
 	g := CreateGame(player)
 	s.Games[g.ID] = g
 
+	reply := CreateMessageView(ViewBoard)
+	b, _ := json.Marshal(reply)
+	g.Announce(b)
+
 	g.ShareState()
 	log.Println(">> Created game ", g.Title)
 	return g
@@ -94,6 +98,11 @@ func (s *Server) JoinGame(gameID string, p *Profile) *Game {
 	}
 	game := s.Games[gameID]
 	game.JoinGame(player)
+
+	reply := CreateMessageView(ViewBoard)
+	b, _ := json.Marshal(reply)
+	game.Announce(b)
+
 	log.Println(">> ", player.Profile.Nick, " joined game ", game.Title)
 	game.ShareState()
 	return game
