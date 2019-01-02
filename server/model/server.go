@@ -109,8 +109,7 @@ func (s *Server) SetNick(client *ws.Client, nick string) {
 func (s *Server) StartGame(client *ws.Client) {
 	found, game := s.FindGameByClient(client)
 	if !found {
-		log.Println(fmt.Sprintf("Error finding game owned by, %v", client))
-		log.Println(fmt.Sprintf("Error finding game owned by player with nick, %v", s.Lobby[client].Nick))
+		log.Println(fmt.Sprintf("Error finding game owned by, %v with nick %v", client, s.Lobby[client].Nick))
 		return
 	}
 	game.StartGame()
