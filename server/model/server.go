@@ -42,11 +42,23 @@ func (s *Server) run() {
 	}()
 }
 
-//GameByClient for easy access
-func (s *Server) GameByClient(client *ws.Client) (found bool, game *Game) {
+//GameByClientOwner finds a game owned by client
+func (s *Server) GameByClientOwner(client *ws.Client) (found bool, game *Game) {
 	for _, game := range s.Games {
 		if game.Owner.Profile.Client == client {
 			return true, game
+		}
+	}
+	return
+}
+
+//GameByClientPlaying find any player in a game
+func (s *Server) GameByClientPlaying(client *ws.Client) (found bool, game *Game) {
+	for _, game := range s.Games {
+		for _, player := range game.Players {
+			if player.Profile.Client == client {
+				return true, game
+			}
 		}
 	}
 	return
@@ -140,7 +152,7 @@ func (s *Server) SetNick(client *ws.Client, nick string) {
 
 //StartGame starts a game if possible
 func (s *Server) StartGame(client *ws.Client) {
-	found, game := s.GameByClient(client)
+	found, game := s.GameByClientOwner(client)
 	if !found {
 		log.Println(fmt.Sprintf("Error finding game owned by, %v with nick %v", client, s.Lobby[client].Nick))
 		return
@@ -151,7 +163,7 @@ func (s *Server) StartGame(client *ws.Client) {
 
 //Move attempts to move a piece
 func (s *Server) Move(message MessageMove, client *ws.Client) {
-	foundGame, game := s.GameByClient(client)
+	foundGame, game := s.GameByClientPlaying(client)
 	if !foundGame {
 		log.Println(fmt.Sprintf("Error finding game"))
 		return
@@ -162,7 +174,7 @@ func (s *Server) Move(message MessageMove, client *ws.Client) {
 
 //Place attempts to place a piece
 func (s *Server) Place(message MessagePlace, client *ws.Client) {
-	foundGame, game := s.GameByClient(client)
+	foundGame, game := s.GameByClientPlaying(client)
 	if !foundGame {
 		log.Println(fmt.Sprintf("Error finding game"))
 		return
@@ -171,8 +183,9 @@ func (s *Server) Place(message MessagePlace, client *ws.Client) {
 
 }
 
+//ChangeSeat changes where a player sits
 func (s *Server) ChangeSeat(client *ws.Client, seat int) {
-	_, game := s.GameByClient(client)
+	_, game := s.GameByClientPlaying(client)
 	game.ChangeSeat(client, seat)
 }
 
@@ -198,9 +211,10 @@ func (s *Server) createUniqueNick(nickIn string) string {
 
 }
 
+//Disconnect handles changes to server state when someone a websocket disconnects
 func (s *Server) Disconnect(client *ws.Client) {
 	log.Println(">> Going to handle disconnect")
-	found, game := s.GameByClient(client)
+	found, game := s.GameByClientPlaying(client)
 	if found {
 		game.RemoveClient(client)
 		if len(game.Players) == 0 {

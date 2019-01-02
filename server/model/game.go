@@ -214,5 +214,6 @@ func (game *Game) RemoveClient(client *ws.Client) {
 		}
 
 	}
+	game.ShareState()
 
 }
