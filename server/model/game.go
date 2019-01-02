@@ -64,6 +64,22 @@ func (game *Game) findSpot() (found bool, spot int) {
 	return false, 0
 }
 
+//StartGame starts the game for all players
+func (game *Game) StartGame() {
+	if !game.CanStart() {
+		//TODO: send an error
+		return
+	}
+
+	game.SetupBoards()
+
+	reply := messages.CreateMessageView(messages.ViewBoard)
+	b, _ := json.Marshal(reply)
+	game.Announce(b)
+	game.ShareState()
+
+}
+
 //Announce announces something to all players
 func (game *Game) Announce(b []byte) {
 	for _, player := range game.Players {

@@ -37,7 +37,7 @@ func HandleIncoming(server *model.Server, client *ws.Client, msg []byte) {
 		handleInMessageJoinGame(server, client, msg)
 
 	} else if message.Msg == inMessageStartGame {
-		handleInMessageStartGame(server, client, msg)
+		handleInMessageStartGame(server, client)
 
 	} else if message.Msg == inMessageListOfGames {
 		handleInMessageListOfGame(server, client, msg)
