@@ -10,12 +10,15 @@ import (
 
 //CreateServer starts a new server
 func CreateServer(address string, handler func(*Server, *ws.Client, []byte)) *Server {
-	return &Server{
+	s := &Server{
 		Address: address,
-		Handler: handler,
+		handler: handler,
 		Lobby:   make(map[*ws.Client]*Profile),
 		Games:   make(map[string]*Game),
+		todo:    make(chan *item, 256),
 	}
+	s.run()
+	return s
 }
 
 //Server holds server state
@@ -23,7 +26,21 @@ type Server struct {
 	Address string
 	Lobby   map[*ws.Client]*Profile
 	Games   map[string]*Game
-	Handler func(*Server, *ws.Client, []byte)
+	handler func(*Server, *ws.Client, []byte)
+	todo    chan *item
+}
+
+type item struct {
+	client *ws.Client
+	msg    []byte
+}
+
+func (s *Server) run() {
+	go func() {
+		for i := range s.todo {
+			s.handler(s, i.client, i.msg)
+		}
+	}()
 }
 
 //GameByClient for easy access
@@ -36,9 +53,14 @@ func (s *Server) GameByClient(client *ws.Client) (found bool, game *Game) {
 	return
 }
 
-//HandleMessage A handler for messages being given to this server
+//HandleMessage This message is called by other parts of the system - the interface to the server
 func (s *Server) HandleMessage(client *ws.Client, msg []byte) {
-	s.Handler(s, client, msg)
+	i := &item{
+		client: client,
+		msg:    msg,
+	}
+	s.todo <- i
+
 }
 
 //GetOrCreateProfile creates profiles from a websocket client
@@ -73,7 +95,7 @@ func (s *Server) JoinGame(gameID string, p *Profile) *Game {
 	}
 	game := s.Games[gameID]
 	game.JoinGame(player)
-	log.Println(">> Joined game ", game.Title)
+	log.Println(">> ", player.Profile.Nick, " joined game ", game.Title)
 	game.ShareState()
 	return game
 
