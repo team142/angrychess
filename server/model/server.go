@@ -26,8 +26,8 @@ type Server struct {
 	Handler func(*Server, *ws.Client, []byte)
 }
 
-//FindGameByClient for easy access
-func (s *Server) FindGameByClient(client *ws.Client) (found bool, game *Game) {
+//GameByClient for easy access
+func (s *Server) GameByClient(client *ws.Client) (found bool, game *Game) {
 	for _, game := range s.Games {
 		if game.Owner.Profile.Client == client {
 			return true, game
@@ -79,14 +79,14 @@ func (s *Server) JoinGame(gameID string, p *Profile) *Game {
 
 }
 
-//CreateListOfGames produces a light struct that describes the games hosted
-func (s *Server) CreateListOfGames() *ListOfGames {
+//ListOfGames produces a light struct that describes the games hosted
+func (s *Server) ListOfGames() *ListOfGames {
 	result := ListOfGames{Games: []map[string]string{}}
 	for _, game := range s.Games {
 		item := make(map[string]string)
 		item["id"] = game.ID
 		item["title"] = game.Title
-		item["players"] = fmt.Sprint(len(game.Players), "/", game.GetMaxPlayers())
+		item["players"] = fmt.Sprint(len(game.Players), "/", game.MaxPlayers())
 		result.Games = append(result.Games, item)
 	}
 	return &result
@@ -108,7 +108,7 @@ func (s *Server) SetNick(client *ws.Client, nick string) {
 
 //StartGame starts a game if possible
 func (s *Server) StartGame(client *ws.Client) {
-	found, game := s.FindGameByClient(client)
+	found, game := s.GameByClient(client)
 	if !found {
 		log.Println(fmt.Sprintf("Error finding game owned by, %v with nick %v", client, s.Lobby[client].Nick))
 		return
@@ -119,7 +119,7 @@ func (s *Server) StartGame(client *ws.Client) {
 
 //Move attempts to move a piece
 func (s *Server) Move(message messages.MessageMove, client *ws.Client) {
-	foundGame, game := s.FindGameByClient(client)
+	foundGame, game := s.GameByClient(client)
 	if !foundGame {
 		log.Println(fmt.Sprintf("Error finding game"))
 		return
@@ -130,7 +130,7 @@ func (s *Server) Move(message messages.MessageMove, client *ws.Client) {
 
 //Place attempts to place a piece
 func (s *Server) Place(message messages.MessagePlace, client *ws.Client) {
-	foundGame, game := s.FindGameByClient(client)
+	foundGame, game := s.GameByClient(client)
 	if !foundGame {
 		log.Println(fmt.Sprintf("Error finding game"))
 		return
@@ -140,6 +140,6 @@ func (s *Server) Place(message messages.MessagePlace, client *ws.Client) {
 }
 
 func (s *Server) ChangeSeat(client *ws.Client, seat int) {
-	_, game := s.FindGameByClient(client)
+	_, game := s.GameByClient(client)
 	game.ChangeSeat(client, seat)
 }

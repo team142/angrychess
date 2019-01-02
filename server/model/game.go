@@ -53,10 +53,10 @@ func (game *Game) JoinGame(player *Player) bool {
 }
 
 func (game *Game) findSpot() (found bool, spot int) {
-	if len(game.Players) >= game.GetMaxPlayers() {
+	if len(game.Players) >= game.MaxPlayers() {
 		return false, 0
 	}
-	for s := 1; s <= game.GetMaxPlayers(); s++ {
+	for s := 1; s <= game.MaxPlayers(); s++ {
 		if game.Players[s] == nil {
 			return true, s
 		}
@@ -66,7 +66,7 @@ func (game *Game) findSpot() (found bool, spot int) {
 
 //StartGame starts the game for all players
 func (game *Game) StartGame() {
-	ok, msg := game.CanStart()
+	ok, msg := game.IsReadyToStart()
 	if !ok {
 		reply := messages.CreateMessageError("Failed to start game", msg)
 		b, _ := json.Marshal(reply)
@@ -90,13 +90,13 @@ func (game *Game) Announce(b []byte) {
 	}
 }
 
-//GetMaxPlayers determines the max number of players
-func (game *Game) GetMaxPlayers() int {
+//MaxPlayers determines the max number of players
+func (game *Game) MaxPlayers() int {
 	return game.Boards * 2
 }
 
-//FindPlayerByClient for easy access
-func (game *Game) FindPlayerByClient(client *ws.Client) (result *Player, found bool) {
+//PlayerByClient for easy access
+func (game *Game) PlayerByClient(client *ws.Client) (result *Player, found bool) {
 	for _, p := range game.Players {
 		if p.Profile.Client == client {
 			result, found = p, true
@@ -123,9 +123,9 @@ func (game *Game) SetupBoards() {
 
 }
 
-//CanStart checks that the game can start
-func (game *Game) CanStart() (ok bool, message string) {
-	ok = game.GetMaxPlayers() == len(game.Players)
+//IsReadyToStart checks that the game can start
+func (game *Game) IsReadyToStart() (ok bool, message string) {
+	ok = game.MaxPlayers() == len(game.Players)
 	if !ok {
 		message = "Not enough players"
 	}
@@ -135,7 +135,7 @@ func (game *Game) CanStart() (ok bool, message string) {
 //Move moves a piece
 func (game *Game) Move(client *ws.Client, message messages.MessageMove) {
 	log.Println(">> Moving ")
-	player, _ := game.FindPlayerByClient(client)
+	player, _ := game.PlayerByClient(client)
 	piece, _ := player.GetPieceByID(message.PieceID)
 
 	/*
@@ -158,7 +158,7 @@ func (game *Game) Place(client *ws.Client, message messages.MessagePlace) {
 		TODO: do other checks
 	*/
 
-	player, _ := game.FindPlayerByClient(client)
+	player, _ := game.PlayerByClient(client)
 	piece, _ := player.GetPieceByID(message.ID)
 	piece.Place(message)
 	game.ShareState()
