@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <img alt="Logo" src="./assets/logo.png">
     <HelloWorld msg="Welcome to Chess for 4"/>
   </div>
 </template>
