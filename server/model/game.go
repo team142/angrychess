@@ -182,8 +182,37 @@ func (game *Game) ChangeSeat(client *ws.Client, seat int) {
 	if currentSeat == 0 {
 		log.Fatal("Could not find client in game.. dying")
 	}
-	game.Players[currentSeat] = nil
+	delete(game.Players, currentSeat)
 	game.Players[seat] = currentPlayer
 	game.ShareState()
+
+}
+
+func (game *Game) RemoveClient(client *ws.Client) {
+	pid := 0
+	for a, player := range game.Players {
+		if player.Profile.Client == client {
+			pid = a
+			break
+		}
+	}
+	if pid != 0 {
+		log.Println(">> Removing player with seat ", pid)
+		delete(game.Players, pid)
+	} else {
+		log.Println(">> Could not find player to remove from game")
+	}
+
+	fmt.Println("There are now how many players ", len(game.Players))
+
+	if game.Owner.Profile.Client == client {
+		game.Owner = nil
+		for a := range game.Players {
+			log.Println(">> New owner is ", game.Players[a].Profile.Nick)
+			game.Owner = game.Players[a]
+			break
+		}
+
+	}
 
 }

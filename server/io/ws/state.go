@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"encoding/json"
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
@@ -51,7 +52,7 @@ type Client struct {
 }
 
 func (c *Client) handleMessage(msg []byte) {
-	go c.handler(c, msg)
+	go c.handler(c, msg) //TODO: is this right?
 }
 
 func (h *Hub) run() {
@@ -64,6 +65,14 @@ func (h *Hub) run() {
 			if _, ok := h.clients[client]; ok {
 				delete(h.clients, client)
 				close(client.Send)
+
+				data := struct {
+					Msg string `json:"msg"`
+				}{
+					"disconnect",
+				}
+				b, _ := json.Marshal(data)
+				client.handler(client, b)
 				log.Println("Client unregistered")
 			}
 		}

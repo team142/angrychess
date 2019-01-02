@@ -17,6 +17,7 @@ const (
 	inMessageMove        = "move"
 	inMessagePlace       = "place"
 	inMessageChangeSeat  = "seat"
+	inMessageDC          = "disconnect"
 )
 
 //HandleIncoming handles messages arriving to the websocket server
@@ -50,8 +51,12 @@ func HandleIncoming(server *model.Server, client *ws.Client, msg []byte) {
 	} else if message.Msg == inMessageChangeSeat {
 		handleInMessageChangeSeat(server, client, msg)
 
+	} else if message.Msg == inMessageDC {
+		handleInMessageDC(server, client)
+
 	} else {
 		log.Println("Unknown route: ", message.Msg)
+		log.Println(string(msg))
 	}
 
 }

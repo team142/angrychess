@@ -197,3 +197,21 @@ func (s *Server) createUniqueNick(nickIn string) string {
 	return nick
 
 }
+
+func (s *Server) Disconnect(client *ws.Client) {
+	log.Println(">> Going to handle disconnect")
+	found, game := s.GameByClient(client)
+	if found {
+		game.RemoveClient(client)
+		if len(game.Players) == 0 {
+			log.Println(">> Game is empty. Removing game")
+			delete(s.Games, game.ID)
+		}
+	} else {
+		log.Println(">> Player disconnecting was not in game")
+	}
+
+	//Remove from server
+	delete(s.Lobby, client)
+
+}
