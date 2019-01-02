@@ -106,6 +106,7 @@ func (s *Server) SetNick(client *ws.Client, nick string) {
 
 }
 
+//StartGame starts a game if possible
 func (s *Server) StartGame(client *ws.Client) {
 	found, game := s.FindGameByClient(client)
 	if !found {
@@ -116,6 +117,7 @@ func (s *Server) StartGame(client *ws.Client) {
 
 }
 
+//Move attempts to move a piece
 func (s *Server) Move(message messages.MessageMove, client *ws.Client) {
 	foundGame, game := s.FindGameByClient(client)
 	if !foundGame {
@@ -126,6 +128,7 @@ func (s *Server) Move(message messages.MessageMove, client *ws.Client) {
 
 }
 
+//Place attempts to place a piece
 func (s *Server) Place(message messages.MessagePlace, client *ws.Client) {
 	foundGame, game := s.FindGameByClient(client)
 	if !foundGame {

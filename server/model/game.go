@@ -150,6 +150,7 @@ func (game *Game) Move(client *ws.Client, message messages.MessageMove) {
 	return
 }
 
+//Place places a piece if possible
 func (game *Game) Place(client *ws.Client, message messages.MessagePlace) {
 	log.Println(">> Placing ")
 

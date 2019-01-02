@@ -20,7 +20,7 @@ type Piece struct {
 	Color    bool   `json:"color"`
 }
 
-//TryMove moves piece
+//Move moves piece
 func (piece *Piece) Move(message messages.MessageMove) {
 	piece.X = message.ToX
 	piece.Y = message.ToY
