@@ -40,6 +40,14 @@
                 </md-table-cell>
               </md-table-row>
 
+              <md-table-row>
+                <md-table-cell md-numeric>Search again?</md-table-cell>
+                <md-table-cell></md-table-cell>
+                <md-table-cell>
+                  <md-button class="md-raised md-primary" v-on:click="searchAgain">Refresh</md-button>
+                </md-table-cell>
+              </md-table-row>
+
               <md-table-row v-for="game in listOfGames">
                 <md-table-cell>{{ game["title"] }}</md-table-cell>
                 <md-table-cell>{{ game["players"] }}</md-table-cell>
@@ -55,7 +63,7 @@
 
       <div v-if="mutableViewGame">
         <h2>Chess for 4</h2>
-        <md-button class="md-raised md-primary" v-on:click="startGame" v-if="admin">Start game</md-button>
+        <md-button class="md-raised md-primary" v-on:click="startGame" v-if="admin && !gameState.started">Start game</md-button>
         <br>
         {{ JSON.stringify(gameState)}}
       </div>
@@ -80,7 +88,8 @@ export default {
       secret: "",
       gameState: {},
       listOfGames: [],
-      admin: false
+      admin: false,
+      id: {}
     };
   },
   methods: {
@@ -100,11 +109,7 @@ export default {
             nick: this.nickname
           })
         );
-        this.conn.send(
-          JSON.stringify({
-            msg: "list-games"
-          })
-        );
+        this.searchAgain();
       };
       this.conn.onclose = () => {
         alert("closed ws");
@@ -115,6 +120,7 @@ export default {
         const msg = o.msg;
         if (msg === "secret") {
           this.secret = o.secret;
+          this.id = o.id;
         } else if (msg === "list-games") {
           this.listOfGames = o.games.games;
         } else if (msg === "share-state") {
@@ -131,6 +137,14 @@ export default {
           alert(json);
         }
       };
+    },
+
+    searchAgain() {
+      this.conn.send(
+        JSON.stringify({
+          msg: "list-games"
+        })
+      );
     },
 
     createGame() {
