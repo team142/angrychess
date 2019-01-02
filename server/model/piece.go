@@ -22,5 +22,9 @@ type Piece struct {
 func (piece *Piece) TryMove(game *Game, color bool, fromX, fromY, toX, toY int) (ok bool, msg string) {
 	//TODO: implement
 
+	piece.X = toX
+	piece.Y = toY
+	ok = true
+
 	return
 }
