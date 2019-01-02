@@ -16,8 +16,8 @@ Four player chess is a game I played growing up. I would love to relive the fun 
 
 ## Project structure
 
-- Client will probably be ReactJS
-- Server is being written in Golang
+- Client is being written in Vue JS
+- Server has being written in Golang
 
 ## Running the project
 
