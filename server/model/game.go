@@ -107,7 +107,8 @@ func (game *Game) PlayerByClient(client *ws.Client) (result *Player, found bool)
 
 //ShareState tells all players what is going on
 func (game *Game) ShareState() {
-	b, _ := json.Marshal(&game)
+	reply := CreateMessageShareState(game)
+	b, _ := json.Marshal(reply)
 	for _, player := range game.Players {
 		player.Profile.Client.Send <- b
 	}

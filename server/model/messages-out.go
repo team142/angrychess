@@ -46,6 +46,15 @@ func CreateMessageListOfGames(games *ListOfGames) MessageListOfGames {
 }
 
 type MessageListOfGames struct {
-	Msg   string      `json:"msg"`
-	Games interface{} `json:"games"`
+	Msg   string       `json:"msg"`
+	Games *ListOfGames `json:"games"`
+}
+
+func CreateMessageShareState(game *Game) MessageShareState {
+	return MessageShareState{Msg: "share-state", Game: game}
+}
+
+type MessageShareState struct {
+	Msg  string `json:"msg"`
+	Game *Game  `json:"game"`
 }
