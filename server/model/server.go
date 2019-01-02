@@ -125,6 +125,8 @@ func (s *Server) ListOfGames() *ListOfGames {
 //SetNick sets profiles nickname
 func (s *Server) SetNick(client *ws.Client, nick string) {
 
+	nick = s.createUniqueNick(nick)
+
 	profile := s.GetOrCreateProfile(client)
 	profile.Nick = nick
 
@@ -172,4 +174,26 @@ func (s *Server) Place(message MessagePlace, client *ws.Client) {
 func (s *Server) ChangeSeat(client *ws.Client, seat int) {
 	_, game := s.GameByClient(client)
 	game.ChangeSeat(client, seat)
+}
+
+func (s *Server) createUniqueNick(nickIn string) string {
+	nick := nickIn
+	ok := false
+	i := 0
+	for !ok {
+		ok = true
+		for _, b := range s.Lobby {
+			if b.Nick == nick {
+				ok = false
+				break
+			}
+		}
+		if ok {
+			break
+		}
+		i++
+		nick = fmt.Sprintf("%s%v", nickIn, i)
+	}
+	return nick
+
 }
