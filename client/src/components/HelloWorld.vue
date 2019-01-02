@@ -55,6 +55,8 @@
 
       <div v-if="mutableViewGame">
         <h2>Chess for 4</h2>
+        <md-button class="md-raised md-primary" v-on:click="startGame" v-if="admin">Start game</md-button>
+        <br>
         {{ JSON.stringify(gameState)}}
       </div>
     </div>
@@ -77,7 +79,8 @@ export default {
       conn: {},
       secret: "",
       gameState: {},
-      listOfGames: []
+      listOfGames: [],
+      admin: false
     };
   },
   methods: {
@@ -136,6 +139,7 @@ export default {
           msg: "create-game"
         })
       );
+      this.admin = true;
     },
 
     joinGame(id) {
@@ -143,6 +147,15 @@ export default {
         JSON.stringify({
           msg: "join-game",
           id: id
+        })
+      );
+      this.admin = false;
+    },
+
+    startGame() {
+      this.conn.send(
+        JSON.stringify({
+          msg: "start-game"
         })
       );
     }
