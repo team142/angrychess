@@ -8,14 +8,15 @@ const (
 )
 
 //CreateMessageSecret for easy access
-func CreateMessageSecret(secret string) MessageSecret {
-	return MessageSecret{Msg: "secret", Secret: secret}
+func CreateMessageSecret(secret, id string) MessageSecret {
+	return MessageSecret{Msg: "secret", Secret: secret, ID: id}
 }
 
 //MessageSecret for easy access
 type MessageSecret struct {
 	Msg    string `json:"msg"`
 	Secret string `json:"secret"`
+	ID     string `json:"id"`
 }
 
 //CreateMessageView for easy access

@@ -7,12 +7,13 @@ import (
 
 //CreateProfile for easy access
 func CreateProfile(client *ws.Client) *Profile {
-	return &Profile{Client: client, Secret: uuid.NewV4().String()}
+	return &Profile{Client: client, Secret: uuid.NewV4().String(), ID: uuid.NewV4().String()}
 }
 
 //Profile describes a client
 type Profile struct {
 	Client *ws.Client `json:"-"`
 	Nick   string     `json:"nick"`
+	ID     string     `json:"nick"`
 	Secret string     `json:"-"`
 }
