@@ -121,7 +121,7 @@ func (s *Server) SetNick(client *ws.Client, nick string) {
 
 	log.Println(">> Set profile nick: ", profile.Nick)
 
-	reply := messages.CreateMessageSecret(profile.Secret)
+	reply := CreateMessageSecret(profile.Secret)
 	b, _ := json.Marshal(reply)
 	client.Send <- b
 
