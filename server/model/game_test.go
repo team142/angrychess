@@ -3,7 +3,7 @@ package model
 import "testing"
 
 func TestFindSpotEmptyGame(t *testing.T) {
-	game := Game{Boards: MaxSupportedBoards}
+	game := Game{Boards: maxSupportedBoards}
 	expectedFound := true
 	found, spot := game.findSpot()
 	if !found {
@@ -17,7 +17,7 @@ func TestFindSpotEmptyGame(t *testing.T) {
 }
 
 func TestFindSpotGameWithPlayers(t *testing.T) {
-	game := Game{Boards: MaxSupportedBoards, Players: make(map[int]*Player)}
+	game := Game{Boards: maxSupportedBoards, Players: make(map[int]*Player)}
 	for i := 1; i <= 4; i++ {
 		found, spot := game.findSpot()
 		expectedFound := true
@@ -33,7 +33,7 @@ func TestFindSpotGameWithPlayers(t *testing.T) {
 }
 
 func TestFindSpotGameFullPlayers(t *testing.T) {
-	game := Game{Boards: MaxSupportedBoards, Players: make(map[int]*Player)}
+	game := Game{Boards: maxSupportedBoards, Players: make(map[int]*Player)}
 	for i := 1; i <= 4; i++ {
 		game.JoinGame(&Player{})
 	}
