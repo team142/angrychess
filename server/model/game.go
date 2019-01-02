@@ -34,6 +34,7 @@ type ListOfGames struct {
 //Game describes a game on the server
 type Game struct {
 	ID      string          `json:"id"`
+	Started bool            `json:"started"`
 	Title   string          `json:"title"`
 	Owner   *Player         `json:"-"`
 	Players map[int]*Player `json:"players"`
@@ -74,6 +75,7 @@ func (game *Game) StartGame() {
 	}
 
 	game.SetupBoards()
+	game.Started = true
 	game.ShareState()
 
 }
