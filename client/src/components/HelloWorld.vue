@@ -48,7 +48,7 @@
                 </md-table-cell>
               </md-table-row>
 
-              <md-table-row v-for="game in listOfGames">
+              <md-table-row v-for="game in listOfGames" :key="game['id']">
                 <md-table-cell>{{ game["title"] }}</md-table-cell>
                 <md-table-cell>{{ game["players"] }}</md-table-cell>
                 <md-table-cell>
@@ -63,7 +63,11 @@
 
       <div v-if="mutableViewGame">
         <h2>Chess for 4</h2>
-        <md-button class="md-raised md-primary" v-on:click="startGame" v-if="admin && !gameState.started">Start game</md-button>
+        <md-button
+          class="md-raised md-primary"
+          v-on:click="startGame"
+          v-if="admin && !gameState.started"
+        >Start game</md-button>
         <br>
         {{ JSON.stringify(gameState)}}
       </div>
@@ -72,6 +76,8 @@
 </template>
 
 <script>
+// const Bingo = require("./bingo.js");
+
 export default {
   name: "HelloWorld",
   props: {
@@ -115,31 +121,35 @@ export default {
         alert("closed ws");
       };
       this.conn.onmessage = event => {
-        const json = event.data;
-        const o = JSON.parse(json);
-        const msg = o.msg;
-        if (msg === "secret") {
-          this.secret = o.secret;
-          this.id = o.id;
-        } else if (msg === "list-games") {
-          this.listOfGames = o.games.games;
-        } else if (msg === "share-state") {
-          this.gameState = o.game;
-        } else if (msg === "view") {
-          if (o.view == "view-board") {
-            this.mutableViewServer = false;
-            this.mutableViewGames = false;
-            this.mutableViewGame = true;
+        try {
+          const json = event.data;
+          const o = JSON.parse(json);
+          const msg = o.msg;
+          if (msg === "secret") {
+            this.secret = o.secret;
+            this.id = o.id;
+          } else if (msg === "list-games") {
+            this.listOfGames = o.games.games;
+          } else if (msg === "share-state") {
+            this.gameState = o.game;
+          } else if (msg === "view") {
+            if (o.view == "view-board") {
+              this.mutableViewServer = false;
+              this.mutableViewGames = false;
+              this.mutableViewGame = true;
+            }
           } else {
-            alert("Unknown view: " + o.view);
+            alert(json);
           }
-        } else {
-          alert(json);
+        } catch (e) {
+          alert(e);
+          alert(event.data);
         }
       };
     },
 
     searchAgain() {
+      // Bingo.Bingo.alerter("oh hai");
       this.conn.send(
         JSON.stringify({
           msg: "list-games"
