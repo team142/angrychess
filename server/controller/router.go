@@ -49,7 +49,7 @@ func HandleIncoming(server *model.Server, client *ws.Client, msg []byte) {
 		handleInMessagePlace(server, client, msg)
 
 	} else if message.Msg == inMessageChangeSeat {
-		//TODO: handle route
+		handleInMessageChangeSeat(server, client, msg)
 
 	} else {
 		log.Println("Unknown route: ", message.Msg)

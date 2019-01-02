@@ -30,3 +30,7 @@ type MessagePlace struct {
 	ToX int    `json:"tx"`
 	ToY int    `json:"ty"`
 }
+
+type MessageChangeSeat struct {
+	Seat int `json:"seat"`
+}

@@ -138,3 +138,8 @@ func (s *Server) Place(message messages.MessagePlace, client *ws.Client) {
 	game.Place(client, message)
 
 }
+
+func (s *Server) ChangeSeat(client *ws.Client, seat int) {
+	_, game := s.FindGameByClient(client)
+	game.ChangeSeat(client, seat)
+}

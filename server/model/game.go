@@ -164,3 +164,28 @@ func (game *Game) Place(client *ws.Client, message messages.MessagePlace) {
 	game.ShareState()
 	return
 }
+
+func (game *Game) ChangeSeat(client *ws.Client, seat int) {
+	if game.Players[seat] != nil {
+		msg := messages.CreateMessageError("Failed to move seats", "Seat taken")
+		b, _ := json.Marshal(msg)
+		client.Send <- b
+		return
+	}
+	currentSeat := 0
+	var currentPlayer *Player
+	for seatN, playerN := range game.Players {
+		if playerN.Profile.Client == client {
+			currentSeat = seatN
+			currentPlayer = playerN
+			break
+		}
+	}
+	if currentSeat == 0 {
+		log.Fatal("Could not find client in game.. dying")
+	}
+	game.Players[currentSeat] = nil
+	game.Players[seat] = currentPlayer
+	game.ShareState()
+
+}
