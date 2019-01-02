@@ -105,10 +105,7 @@ func (game *Game) FindPlayerByClient(client *ws.Client) (result *Player, found b
 
 //ShareState tells all players what is going on
 func (game *Game) ShareState() {
-	b, err := json.Marshal(&game)
-	if err != nil {
-		log.Println(fmt.Sprintf("Error marshalling, %s", err))
-	}
+	b, _ := json.Marshal(&game)
 	for _, player := range game.Players {
 		player.Profile.Client.Send <- b
 	}
@@ -148,7 +145,8 @@ func (game *Game) Move(client *ws.Client, move messages.MessageMove) (err error)
 
 	err = piece.TryMove(game, player.Color, move.FromX, move.FromY, move.ToX, move.ToY)
 	if err == nil {
-		game.ShareState()
+		//TODO: send error
 	}
+	game.ShareState()
 	return
 }

@@ -101,10 +101,7 @@ func (s *Server) SetNick(client *ws.Client, nick string) {
 	log.Println(">> Set profile nick: ", profile.Nick)
 
 	reply := messages.CreateMessageSecret(profile.Secret)
-	b, err := json.Marshal(reply)
-	if err != nil {
-		log.Println(fmt.Sprintf("Error marshalling, %s", err))
-	}
+	b, _ := json.Marshal(reply)
 	client.Send <- b
 
 }

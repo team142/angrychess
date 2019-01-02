@@ -28,3 +28,12 @@ type MessageView struct {
 	Msg  string `json:"msg"`
 	View string `json:"view"`
 }
+
+func CreateMessageError(t, m string) MessageError {
+	return MessageError{Title: t, Msg: m}
+}
+
+type MessageError struct {
+	Title string `json:"title"`
+	Msg   string `json:"msg"`
+}
