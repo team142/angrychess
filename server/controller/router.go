@@ -46,7 +46,7 @@ func HandleIncoming(server *model.Server, client *ws.Client, msg []byte) {
 		handleInMessageMove(server, client, msg)
 
 	} else if message.Msg == inMessagePlace {
-		//TODO: handle route
+		handleInMessagePlace(server, client, msg)
 
 	} else if message.Msg == inMessageChangeSeat {
 		//TODO: handle route

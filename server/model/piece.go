@@ -1,5 +1,7 @@
 package model
 
+import "github.com/team142/chessfor4/model/messages"
+
 const (
 	identityPawn   = 1
 	identityKnight = 2
@@ -18,13 +20,16 @@ type Piece struct {
 	Color    bool   `json:"color"`
 }
 
-//TryMove attempts to move a piece.. probably should not be here
-func (piece *Piece) TryMove(game *Game, color bool, fromX, fromY, toX, toY int) (ok bool, msg string) {
-	//TODO: implement
+//TryMove moves piece
+func (piece *Piece) Move(message messages.MessageMove) {
+	piece.X = message.ToX
+	piece.Y = message.ToY
 
-	piece.X = toX
-	piece.Y = toY
-	ok = true
+}
 
-	return
+//Place places a piece on a board at a point
+func (piece *Piece) Place(message messages.MessagePlace) {
+	piece.X = message.ToY
+	piece.Y = message.ToY
+
 }

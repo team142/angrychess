@@ -123,11 +123,16 @@ func (s *Server) Move(message messages.MessageMove, client *ws.Client) {
 		log.Println(fmt.Sprintf("Error finding game"))
 		return
 	}
-	err := game.Move(client, message)
-	if err != nil {
-		log.Println(fmt.Sprintf("Error trying to move, %s", err))
-		//TODO: send error message to players
+	game.Move(client, message)
+
+}
+
+func (s *Server) Place(message messages.MessagePlace, client *ws.Client) {
+	foundGame, game := s.FindGameByClient(client)
+	if !foundGame {
+		log.Println(fmt.Sprintf("Error finding game"))
 		return
 	}
+	game.Place(client, message)
 
 }

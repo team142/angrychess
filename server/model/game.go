@@ -133,29 +133,33 @@ func (game *Game) CanStart() (ok bool, message string) {
 }
 
 //Move moves a piece
-func (game *Game) Move(client *ws.Client, move messages.MessageMove) (err error) {
-	player, _ := game.FindPlayerByClient(client)
+func (game *Game) Move(client *ws.Client, message messages.MessageMove) {
 	log.Println(">> Moving ")
+	player, _ := game.FindPlayerByClient(client)
+	piece, _ := player.GetPieceByID(message.PieceID)
 
-	if !player.OwnsPiece(move.PieceID) {
-		err = fmt.Errorf("player doesnt not own piece: %s", move.PieceID)
-	}
+	/*
+		TODO: do other checks
+	*/
+	//if !player.OwnsPiece(move.PieceID) {
+	//	err = fmt.Errorf("player doesnt not own piece: %s", move.PieceID)
+	//}
 
-	piece, found := player.GetPieceByID(move.PieceID)
-	if !found {
-		err = fmt.Errorf("could not find piece: %s", move.PieceID)
-	}
+	piece.Move(message)
+	game.ShareState()
+	return
+}
+
+func (game *Game) Place(client *ws.Client, message messages.MessagePlace) {
+	log.Println(">> Placing ")
 
 	/*
 		TODO: do other checks
 	*/
 
-	ok, msg := piece.TryMove(game, player.Color, move.FromX, move.FromY, move.ToX, move.ToY)
-	if !ok {
-		reply := messages.CreateMessageError("Failed to move piece", msg)
-		b, _ := json.Marshal(reply)
-		client.Send <- b
-	}
+	player, _ := game.FindPlayerByClient(client)
+	piece, _ := player.GetPieceByID(message.ID)
+	piece.Place(message)
 	game.ShareState()
 	return
 }
