@@ -1,16 +1,26 @@
 <template>
   <div class="hello">
-    <p>Get started by connecting to a server.</p>
-
     <div>
       <div v-if="mutableViewServer">
+        <h2>Chess for 4</h2>
+        <img alt="Logo" src="../assets/logo.png">
+
         <h3>Server</h3>
-        <input type="text" id="nick" name="nick" value="Nickname" /><br />
-        <input type="text" id="url" name="url" value="ws://localhost:8000/ws" /><br />
+        <p>Get started by connecting to a server.</p>
+
+        <input v-model="nickname" placeholder="Nickname">
+        <br>
+        <input v-model="url" placeholder>
+        <br>
         <md-button class="md-raised md-primary" v-on:click="connect">Connect</md-button>
       </div>
+
       <div v-if="mutableViewGames">
-        <h4>List of games</h4>
+        <h2>Chess for 4</h2>
+        <img alt="Logo" src="../assets/logo.png">
+
+        <h3>List of games</h3>
+        <p>Pick a game or start your own.</p>
 
         <div class="md-layout">
           <div class="md-layout-item"></div>
@@ -19,14 +29,22 @@
               <md-table-row>
                 <md-table-head md-numeric>Name</md-table-head>
                 <md-table-head>Players</md-table-head>
-                <md-table-head>Join</md-table-head>
+                <md-table-head>Actions</md-table-head>
               </md-table-row>
 
               <md-table-row>
-                <md-table-cell md-numeric>Captains game</md-table-cell>
-                <md-table-cell>1/4</md-table-cell>
+                <md-table-cell md-numeric>New game?</md-table-cell>
+                <md-table-cell></md-table-cell>
                 <md-table-cell>
-                  <md-button class="md-raised md-primary" v-on:click="connect">Join</md-button>
+                  <md-button class="md-raised md-primary" v-on:click="createGame">Create</md-button>
+                </md-table-cell>
+              </md-table-row>
+
+              <md-table-row v-for="game in listOfGames">
+                <md-table-cell>{{ game["title"] }}</md-table-cell>
+                <md-table-cell>{{ game["players"] }}</md-table-cell>
+                <md-table-cell>
+                  <md-button class="md-raised md-primary" v-on:click="joinGame(game['id'])">Join</md-button>
                 </md-table-cell>
               </md-table-row>
             </md-table>
@@ -34,7 +52,11 @@
           <div class="md-layout-item"></div>
         </div>
       </div>
-      <div v-if="mutableViewGame"></div>
+
+      <div v-if="mutableViewGame">
+        <h2>Chess for 4</h2>
+        {{ JSON.stringify(gameState)}}
+      </div>
     </div>
   </div>
 </template>
@@ -50,27 +72,79 @@ export default {
       mutableViewServer: true,
       mutableViewGames: false,
       mutableViewGame: false,
-      conn: {}
+      nickname: "Swag",
+      url: "ws://localhost:8000/ws",
+      conn: {},
+      secret: "",
+      gameState: {},
+      listOfGames: []
     };
   },
   methods: {
     connect() {
-      const url = "ws://localhost:8000/ws";
-      this.conn = new WebSocket(url);
-      this.conn.onclose = function(evt) {
-        console.log("Closed ws");
+      if (!this.nickname) {
+        alert("You need a nickname");
+        return;
+      }
+      this.conn = new WebSocket(this.url);
+      this.conn.onopen = () => {
+        this.mutableViewServer = false;
+        this.mutableViewGames = true;
+        this.mutableViewGame = false;
+        this.conn.send(
+          JSON.stringify({
+            msg: "nick",
+            nick: this.nickname
+          })
+        );
+        this.conn.send(
+          JSON.stringify({
+            msg: "list-games"
+          })
+        );
       };
-      this.conn.onmessage = function(evt) {
-        var messages = evt.data.split("\n");
-        for (var i = 0; i < messages.length; i++) {
-          console.log("Recieved: " + messages[i]);
+      this.conn.onclose = () => {
+        alert("closed ws");
+      };
+      this.conn.onmessage = event => {
+        const json = event.data;
+        const o = JSON.parse(json);
+        const msg = o.msg;
+        if (msg === "secret") {
+          this.secret = o.secret;
+        } else if (msg === "list-games") {
+          this.listOfGames = o.games.games;
+        } else if (msg === "share-state") {
+          this.gameState = o.game;
+        } else if (msg === "view") {
+          if (o.view == "view-board") {
+            this.mutableViewServer = false;
+            this.mutableViewGames = false;
+            this.mutableViewGame = true;
+          } else {
+            alert("Unknown view: " + o.view);
+          }
+        } else {
+          alert(json);
         }
       };
+    },
 
-      //TODO: connect to the server
-      this.mutableViewGames = true;
-      this.mutableViewServer = false;
-      this.mutableViewGame = false;
+    createGame() {
+      this.conn.send(
+        JSON.stringify({
+          msg: "create-game"
+        })
+      );
+    },
+
+    joinGame(id) {
+      this.conn.send(
+        JSON.stringify({
+          msg: "join-game",
+          id: id
+        })
+      );
     }
   }
 };
