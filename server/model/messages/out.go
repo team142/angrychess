@@ -31,11 +31,12 @@ type MessageView struct {
 
 //CreateMessageError is a general error message constructor
 func CreateMessageError(t, m string) MessageError {
-	return MessageError{Title: t, Msg: m}
+	return MessageError{Msg: "error", Title: t, Body: m}
 }
 
 //MessageError is a general error message
 type MessageError struct {
-	Title string `json:"title"`
 	Msg   string `json:"msg"`
+	Title string `json:"title"`
+	Body  string `json:"body"`
 }
