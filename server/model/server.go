@@ -105,3 +105,29 @@ func (s *Server) SetNick(client *ws.Client, nick string) {
 	client.Send <- b
 
 }
+
+func (s *Server) StartGame(client *ws.Client) {
+	found, game := s.FindGameByClient(client)
+	if !found {
+		log.Println(fmt.Sprintf("Error finding game owned by, %v", client))
+		log.Println(fmt.Sprintf("Error finding game owned by player with nick, %v", s.Lobby[client].Nick))
+		return
+	}
+	game.StartGame()
+
+}
+
+func (s *Server) Move(message messages.MessageMove, client *ws.Client) {
+	foundGame, game := s.FindGameByClient(client)
+	if !foundGame {
+		log.Println(fmt.Sprintf("Error finding game"))
+		return
+	}
+	err := game.Move(client, message)
+	if err != nil {
+		log.Println(fmt.Sprintf("Error trying to move, %s", err))
+		//TODO: send error message to players
+		return
+	}
+
+}

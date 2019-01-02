@@ -66,8 +66,11 @@ func (game *Game) findSpot() (found bool, spot int) {
 
 //StartGame starts the game for all players
 func (game *Game) StartGame() {
-	if !game.CanStart() {
-		//TODO: send an error
+	ok, msg := game.CanStart()
+	if !ok {
+		reply := messages.CreateMessageError("Failed to start game", msg)
+		b, _ := json.Marshal(reply)
+		game.Owner.Profile.Client.Send <- b
 		return
 	}
 
@@ -121,8 +124,12 @@ func (game *Game) SetupBoards() {
 }
 
 //CanStart checks that the game can start
-func (game *Game) CanStart() bool {
-	return game.GetMaxPlayers() == len(game.Players)
+func (game *Game) CanStart() (ok bool, message string) {
+	ok = game.GetMaxPlayers() == len(game.Players)
+	if !ok {
+		message = "Not enough players"
+	}
+	return
 }
 
 //Move moves a piece
@@ -143,9 +150,11 @@ func (game *Game) Move(client *ws.Client, move messages.MessageMove) (err error)
 		TODO: do other checks
 	*/
 
-	err = piece.TryMove(game, player.Color, move.FromX, move.FromY, move.ToX, move.ToY)
-	if err == nil {
-		//TODO: send error
+	ok, msg := piece.TryMove(game, player.Color, move.FromX, move.FromY, move.ToX, move.ToY)
+	if !ok {
+		reply := messages.CreateMessageError("Failed to move piece", msg)
+		b, _ := json.Marshal(reply)
+		client.Send <- b
 	}
 	game.ShareState()
 	return

@@ -19,7 +19,7 @@ type Piece struct {
 }
 
 //TryMove attempts to move a piece.. probably should not be here
-func (piece *Piece) TryMove(game *Game, color bool, fromX, fromY, toX, toY int) (err error) {
+func (piece *Piece) TryMove(game *Game, color bool, fromX, fromY, toX, toY int) (ok bool, msg string) {
 	//TODO: implement
 
 	return
