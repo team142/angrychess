@@ -1,4 +1,4 @@
-package messages
+package model
 
 //BaseMessage for all incoming messages
 type BaseMessage struct {

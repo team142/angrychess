@@ -1,4 +1,4 @@
-package messages
+package model
 
 const (
 	//ViewMenu for displaying the game menu
@@ -39,4 +39,13 @@ type MessageError struct {
 	Msg   string `json:"msg"`
 	Title string `json:"title"`
 	Body  string `json:"body"`
+}
+
+func CreateMessageListOfGames(games *ListOfGames) MessageListOfGames {
+	return MessageListOfGames{Msg: "list-games", Games: games}
+}
+
+type MessageListOfGames struct {
+	Msg   string      `json:"msg"`
+	Games interface{} `json:"games"`
 }

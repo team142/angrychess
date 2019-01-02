@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/team142/chessfor4/io/ws"
-	"github.com/team142/chessfor4/model/messages"
 	"log"
 )
 
@@ -140,7 +139,7 @@ func (s *Server) StartGame(client *ws.Client) {
 }
 
 //Move attempts to move a piece
-func (s *Server) Move(message messages.MessageMove, client *ws.Client) {
+func (s *Server) Move(message MessageMove, client *ws.Client) {
 	foundGame, game := s.GameByClient(client)
 	if !foundGame {
 		log.Println(fmt.Sprintf("Error finding game"))
@@ -151,7 +150,7 @@ func (s *Server) Move(message messages.MessageMove, client *ws.Client) {
 }
 
 //Place attempts to place a piece
-func (s *Server) Place(message messages.MessagePlace, client *ws.Client) {
+func (s *Server) Place(message MessagePlace, client *ws.Client) {
 	foundGame, game := s.GameByClient(client)
 	if !foundGame {
 		log.Println(fmt.Sprintf("Error finding game"))

@@ -1,7 +1,5 @@
 package model
 
-import "github.com/team142/chessfor4/model/messages"
-
 const (
 	identityPawn   = 1
 	identityKnight = 2
@@ -21,14 +19,14 @@ type Piece struct {
 }
 
 //Move moves piece
-func (piece *Piece) Move(message messages.MessageMove) {
+func (piece *Piece) Move(message MessageMove) {
 	piece.X = message.ToX
 	piece.Y = message.ToY
 
 }
 
 //Place places a piece on a board at a point
-func (piece *Piece) Place(message messages.MessagePlace) {
+func (piece *Piece) Place(message MessagePlace) {
 	piece.X = message.ToY
 	piece.Y = message.ToY
 

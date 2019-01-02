@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/satori/go.uuid"
 	"github.com/team142/chessfor4/io/ws"
-	"github.com/team142/chessfor4/model/messages"
 	"log"
 )
 
@@ -68,7 +67,7 @@ func (game *Game) findSpot() (found bool, spot int) {
 func (game *Game) StartGame() {
 	ok, msg := game.IsReadyToStart()
 	if !ok {
-		reply := messages.CreateMessageError("Failed to start game", msg)
+		reply := CreateMessageError("Failed to start game", msg)
 		b, _ := json.Marshal(reply)
 		game.Owner.Profile.Client.Send <- b
 		return
@@ -76,7 +75,7 @@ func (game *Game) StartGame() {
 
 	game.SetupBoards()
 
-	reply := messages.CreateMessageView(messages.ViewBoard)
+	reply := CreateMessageView(ViewBoard)
 	b, _ := json.Marshal(reply)
 	game.Announce(b)
 	game.ShareState()
@@ -133,7 +132,7 @@ func (game *Game) IsReadyToStart() (ok bool, message string) {
 }
 
 //Move moves a piece
-func (game *Game) Move(client *ws.Client, message messages.MessageMove) {
+func (game *Game) Move(client *ws.Client, message MessageMove) {
 	log.Println(">> Moving ")
 	player, _ := game.PlayerByClient(client)
 	piece, _ := player.GetPieceByID(message.PieceID)
@@ -151,7 +150,7 @@ func (game *Game) Move(client *ws.Client, message messages.MessageMove) {
 }
 
 //Place places a piece if possible
-func (game *Game) Place(client *ws.Client, message messages.MessagePlace) {
+func (game *Game) Place(client *ws.Client, message MessagePlace) {
 	log.Println(">> Placing ")
 
 	/*
@@ -167,7 +166,7 @@ func (game *Game) Place(client *ws.Client, message messages.MessagePlace) {
 
 func (game *Game) ChangeSeat(client *ws.Client, seat int) {
 	if game.Players[seat] != nil {
-		msg := messages.CreateMessageError("Failed to move seats", "Seat taken")
+		msg := CreateMessageError("Failed to move seats", "Seat taken")
 		b, _ := json.Marshal(msg)
 		client.Send <- b
 		return
