@@ -1,27 +1,18 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>Get started by creating or joining a game.</p>
+    <p>Get started by connecting to a server.</p>
 
-    <h3>Create a new game</h3>
-    <ul>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel"
-          target="_blank"
-          rel="noopener"
-        >babel</a>
-      </li>
-    </ul>
-
-    <h3>Join existing game</h3>
-    <ul>
-      <li>
-        <a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a>
-      </li>
-    </ul>
+    <h3>Server</h3>
+    <div>
+      <div>
+        <md-button class="md-raised md-primary">Connect</md-button>
+      </div>
+    </div>
   </div>
 </template>
+
+
+
 
 <script>
 export default {
@@ -49,3 +40,5 @@ a {
   color: #42b983;
 }
 </style>
+
+
