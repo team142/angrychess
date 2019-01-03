@@ -1,75 +1,79 @@
 <template>
   <div class="hello">
-    <div>
-      <div v-if="state.mutableViewServer">
-        <h2>Chess for 4</h2>
-        <img alt="Logo" src="../assets/logo.png">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-8">
+          <div>
+            <div v-if="state.mutableViewServer" class="form-group">
+              <h2>Chess for 4</h2>
+              <img width="200px" alt="Logo" src="../assets/logo.png">
 
-        <h3>Server</h3>
-        <p>Get started by connecting to a server.</p>
+              <h3>Server</h3>
+              <p>Get started by connecting to a server.</p>
 
-        <input v-model="state.nickname" placeholder="Nickname">
-        <br>
-        <input v-model="state.url" placeholder>
-        <br>
-        <md-button class="md-raised md-primary" v-on:click="connect">Connect</md-button>
-      </div>
+              <input
+                type="text"
+                class="form-control-plaintext"
+                v-model="state.nickname"
+                placeholder="Nickname"
+              >
+              <br>
+              <input type="text" class="form-control-plaintext" v-model="state.url" placeholder>
+              <br>
+              <button class="btn btn-success" v-on:click="connect">Connect</button>
+            </div>
 
-      <div v-if="state.mutableViewGames">
-        <h2>Chess for 4</h2>
-        <img alt="Logo" src="../assets/logo.png">
+            <div v-if="state.mutableViewGames">
+              <h2>Chess for 4</h2>
+              <img alt="Logo" src="../assets/logo.png">
 
-        <h3>List of games</h3>
-        <p>Pick a game or start your own.</p>
+              <h3>List of games</h3>
+              <p>Pick a game or start your own.</p>
 
-        <div class="md-layout">
-          <div class="md-layout-item"></div>
-          <div class="md-layout-item">
-            <md-table>
-              <md-table-row>
-                <md-table-head md-numeric>Name</md-table-head>
-                <md-table-head>Players</md-table-head>
-                <md-table-head>Actions</md-table-head>
-              </md-table-row>
+              <button class="btn btn-primary" v-on:click="createGame">New game</button>&nbsp;
+              <button class="btn btn-primary" v-on:click="searchAgain">Refresh</button>
 
-              <md-table-row>
-                <md-table-cell md-numeric>New game?</md-table-cell>
-                <md-table-cell></md-table-cell>
-                <md-table-cell>
-                  <md-button class="md-raised md-primary" v-on:click="createGame">Create</md-button>
-                </md-table-cell>
-              </md-table-row>
+              <div class="md-layout">
+                <div class="md-layout-item"></div>
+                <div class="md-layout-item">
+                  <br>
+                  <table class="table table-hover">
+                    <tr>
+                      <th md-numeric>Name</th>
+                      <th>Players</th>
+                      <th>Actions</th>
+                    </tr>
 
-              <md-table-row>
-                <md-table-cell md-numeric>Search again?</md-table-cell>
-                <md-table-cell></md-table-cell>
-                <md-table-cell>
-                  <md-button class="md-raised md-primary" v-on:click="searchAgain">Refresh</md-button>
-                </md-table-cell>
-              </md-table-row>
+                    <tr v-for="game in state.listOfGames" :key="game['id']">
+                      <td>{{ game["title"] }}</td>
+                      <td>{{ game["players"] }}</td>
+                      <td>
+                        <button
+                          class="btn btn-primary btn-sm"
+                          v-on:click="joinGame(game['id'])"
+                        >Join</button>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div class="md-layout-item"></div>
+              </div>
+            </div>
 
-              <md-table-row v-for="game in state.listOfGames" :key="game['id']">
-                <md-table-cell>{{ game["title"] }}</md-table-cell>
-                <md-table-cell>{{ game["players"] }}</md-table-cell>
-                <md-table-cell>
-                  <md-button class="md-raised md-primary" v-on:click="joinGame(game['id'])">Join</md-button>
-                </md-table-cell>
-              </md-table-row>
-            </md-table>
+            <div v-if="state.mutableViewGame">
+              <h2>Chess for 4</h2>
+              <button
+                class="btn btn-primary"
+                v-on:click="startGame"
+                v-if="state.admin && !state.gameState.started"
+              >Start game</button><br />
+              <br>
+              {{ JSON.stringify(state.gameState)}}
+            </div>
           </div>
-          <div class="md-layout-item"></div>
         </div>
-      </div>
-
-      <div v-if="state.mutableViewGame">
-        <h2>Chess for 4</h2>
-        <md-button
-          class="md-raised md-primary"
-          v-on:click="startGame"
-          v-if="state.admin && !state.gameState.started"
-        >Start game</md-button>
-        <br>
-        {{ JSON.stringify(state.gameState)}}
+        <div class="col"></div>
       </div>
     </div>
   </div>
