@@ -204,7 +204,7 @@ func (s *Server) ChangeSeat(client *ws.Client, seat int) {
 func (s *Server) createUniqueNick(nickIn string) string {
 	nick := nickIn
 	ok := false
-	i := 0
+	i := 1
 	for !ok {
 		ok = true
 		for _, b := range s.Lobby {
