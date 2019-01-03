@@ -20,7 +20,8 @@ export class NetworkManager {
         };
 
         NetworkManager.state.conn.onclose = () => {
-            alert("closed ws");
+            alert("Server is down!");
+            location.reload();
         };
         NetworkManager.state.conn.onmessage = event => {
             try {

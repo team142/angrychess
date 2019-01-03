@@ -62,13 +62,18 @@
             </div>
 
             <div v-if="state.mutableViewGame">
-              <h2>Chess for 4</h2>
+              <h2>{{ state.gameState.title}}</h2>
               <button
                 class="btn btn-primary"
                 v-on:click="startGame"
                 v-if="state.admin && !state.gameState.started"
-              >Start game</button><br />
+              >Start game</button>
               <br>
+              <br>
+              <span v-if="!state.gameState.started" class="badge badge-warning">Has not started</span>
+              
+              <span v-if="state.gameState.started && myTurn()" class="badge badge-success">Your turn</span>
+              <span v-if="state.gameState.started && !myTurn()" class="badge badge-warning">Their turn</span>
               {{ JSON.stringify(state.gameState)}}
             </div>
           </div>
@@ -119,6 +124,18 @@ export default {
 
     startGame() {
       this.NetworkManager.startGame();
+    },
+
+    myTurn() {
+      const id = this.state.id;
+      // console.log(this.state.gameState.players)
+      for (let seat in this.state.gameState.players) {
+        if (this.state.gameState.players[seat].profile.id == id) {
+          return this.state.gameState.players[seat].myTurn
+        }
+      }
+
+      return true;
     }
   }
 };
