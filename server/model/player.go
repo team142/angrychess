@@ -57,6 +57,18 @@ func (p *Player) SetupBoard() {
 		p.Pieces = append(p.Pieces, piece)
 	}
 
+	//Two free pawns :D
+	for i := 1; i <= 2; i++ {
+		piece := &Piece{
+			ID:       uuid.NewV4().String(),
+			Color:    p.Color,
+			X:        0,
+			Y:        0,
+			Identity: identityPawn,
+		}
+		p.Pieces = append(p.Pieces, piece)
+	}
+
 }
 
 //OwnsPiece determines if the piece is owned by a player
