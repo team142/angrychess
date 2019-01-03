@@ -1,21 +1,21 @@
 <template>
   <div class="hello">
     <div>
-      <div v-if="mutableViewServer">
+      <div v-if="state.mutableViewServer">
         <h2>Chess for 4</h2>
         <img alt="Logo" src="../assets/logo.png">
 
         <h3>Server</h3>
         <p>Get started by connecting to a server.</p>
 
-        <input v-model="nickname" placeholder="Nickname">
+        <input v-model="state.nickname" placeholder="Nickname">
         <br>
-        <input v-model="url" placeholder>
+        <input v-model="state.url" placeholder>
         <br>
         <md-button class="md-raised md-primary" v-on:click="connect">Connect</md-button>
       </div>
 
-      <div v-if="mutableViewGames">
+      <div v-if="state.mutableViewGames">
         <h2>Chess for 4</h2>
         <img alt="Logo" src="../assets/logo.png">
 
@@ -48,7 +48,7 @@
                 </md-table-cell>
               </md-table-row>
 
-              <md-table-row v-for="game in listOfGames" :key="game['id']">
+              <md-table-row v-for="game in state.listOfGames" :key="game['id']">
                 <md-table-cell>{{ game["title"] }}</md-table-cell>
                 <md-table-cell>{{ game["players"] }}</md-table-cell>
                 <md-table-cell>
@@ -61,15 +61,15 @@
         </div>
       </div>
 
-      <div v-if="mutableViewGame">
+      <div v-if="state.mutableViewGame">
         <h2>Chess for 4</h2>
         <md-button
           class="md-raised md-primary"
           v-on:click="startGame"
-          v-if="admin && !gameState.started"
+          v-if="state.admin && !state.gameState.started"
         >Start game</md-button>
         <br>
-        {{ JSON.stringify(gameState)}}
+        {{ JSON.stringify(state.gameState)}}
       </div>
     </div>
   </div>
@@ -77,7 +77,8 @@
 
 <script>
 const network = require("./network.js");
-const NetworkManager = network.NetworkManager;
+const stateR = require("./state.js");
+// const NetworkManager = network.NetworkManager;
 
 export default {
   name: "HelloWorld",
@@ -86,59 +87,64 @@ export default {
   },
   data: function() {
     return {
-      mutableViewServer: true,
-      mutableViewGames: false,
-      mutableViewGame: false,
-      nickname: "Swag",
-      url: "ws://localhost:8000/ws",
-      conn: {},
-      secret: "",
-      gameState: {},
-      listOfGames: [],
-      admin: false,
-      id: {}
+      NetworkManager: network.NetworkManager,
+      state: new stateR.State(),
+
+      // mutableViewServer: true,
+      // mutableViewGames: false,
+      // mutableViewGame: false,
+      // nickname: "Swag",
+      // url: "ws://localhost:8000/ws",
+      // conn: {},
+      // secret: "",
+      // gameState: {},
+      // listOfGames: [],
+      // admin: false,
+      // id: {}
     };
   },
   methods: {
     connect() {
-      if (!this.nickname) {
+      if (!this.state.nickname) {
         alert("You need a nickname");
         return;
       }
-      this.conn = new WebSocket(this.url);
-      NetworkManager.state.conn = this.conn;
-      this.conn.onopen = () => {
-        this.mutableViewServer = false;
-        this.mutableViewGames = true;
-        this.mutableViewGame = false;
-        this.conn.send(
+      this.state.conn = new WebSocket(this.state.url);
+      this.NetworkManager.state.conn = this.state.conn;
+
+      this.state.conn.onopen = () => {
+        this.state.mutableViewServer = false;
+        this.state.mutableViewGames = true;
+        this.state.mutableViewGame = false;
+        this.state.conn.send(
           JSON.stringify({
             msg: "nick",
-            nick: this.nickname
+            nick: this.state.nickname
           })
         );
         this.searchAgain();
       };
-      this.conn.onclose = () => {
+
+      this.state.conn.onclose = () => {
         alert("closed ws");
       };
-      this.conn.onmessage = event => {
+      this.state.conn.onmessage = event => {
         try {
           const json = event.data;
           const o = JSON.parse(json);
           const msg = o.msg;
           if (msg === "secret") {
-            this.secret = o.secret;
-            this.id = o.id;
+            this.state.secret = o.secret;
+            this.state.id = o.id;
           } else if (msg === "list-games") {
-            this.listOfGames = o.games.games;
+            this.state.listOfGames = o.games.games;
           } else if (msg === "share-state") {
-            this.gameState = o.game;
+            this.state.gameState = o.game;
           } else if (msg === "view") {
             if (o.view == "view-board") {
-              this.mutableViewServer = false;
-              this.mutableViewGames = false;
-              this.mutableViewGame = true;
+              this.state.mutableViewServer = false;
+              this.state.mutableViewGames = false;
+              this.state.mutableViewGame = true;
             }
           } else {
             alert(json);
@@ -151,21 +157,21 @@ export default {
     },
 
     searchAgain() {
-      NetworkManager.searchAgain();
+      this.NetworkManager.searchAgain();
     },
 
     createGame() {
-      NetworkManager.createGame();
-      this.admin = true;
+      this.NetworkManager.createGame();
+      this.state.admin = true;
     },
 
     joinGame(id) {
-      NetworkManager.joinGame(id);
-      this.admin = false;
+      this.NetworkManager.joinGame(id);
+      this.state.admin = false;
     },
 
     startGame() {
-      NetworkManager.startGame();
+      this.NetworkManager.startGame();
     }
   }
 };
