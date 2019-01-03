@@ -14,5 +14,6 @@ func handleInMessageJoinGame(server *model.Server, client *ws.Client, msg []byte
 		log.Println(fmt.Sprintf("Error unmarshaling, %s", err))
 	}
 	server.JoinGame(message.ID, server.Lobby[client])
+	server.NotifyLobby()
 
 }
