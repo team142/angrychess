@@ -88,7 +88,7 @@ export default {
   data: function() {
     return {
       NetworkManager: network.NetworkManager,
-      state: new stateR.State(),
+      state: new stateR.State()
     };
   },
   methods: {
@@ -97,21 +97,17 @@ export default {
         alert("You need a nickname");
         return;
       }
-      this.NetworkManager.state.conn = new WebSocket(this.state.url);
-      this.NetworkManager.state.conn = this.NetworkManager.state.conn;
 
-      this.NetworkManager.state.conn.onopen = () => {
-        this.state.mutableViewServer = false;
-        this.state.mutableViewGames = true;
-        this.state.mutableViewGame = false;
-        this.NetworkManager.state.conn.send(
-          JSON.stringify({
-            msg: "nick",
-            nick: this.state.nickname
-          })
-        );
-        this.searchAgain();
-      };
+      this.NetworkManager.connect(this.state);
+
+      // this.NetworkManager.state.conn.onopen = () => {
+      //   this.state.mutableViewServer = false;
+      //   this.state.mutableViewGames = true;
+      //   this.state.mutableViewGame = false;
+
+      //   this.NetworkManager.sendNick(this.state.nickname);
+      //   this.searchAgain();
+      // };
 
       this.NetworkManager.state.conn.onclose = () => {
         alert("closed ws");

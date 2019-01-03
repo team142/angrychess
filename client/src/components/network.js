@@ -1,7 +1,34 @@
 export class NetworkManager {
 
     static state = {
-        conn: {}
+        conn: {},
+        game: {}
+
+    }
+
+    static connect(game) {
+        NetworkManager.state.game = game
+        NetworkManager.state.conn = new WebSocket(NetworkManager.state.game.url);
+  
+        NetworkManager.state.conn.onopen = () => {
+            NetworkManager.state.game.mutableViewServer = false;
+            NetworkManager.state.game.mutableViewGames = true;
+            NetworkManager.state.game.mutableViewGame = false;
+    
+            NetworkManager.sendNick(this.state.nickname);
+            NetworkManager.searchAgain();
+          };
+    
+
+    }
+
+    static sendNick(nick) {
+        NetworkManager.state.conn.send(
+            JSON.stringify({
+                msg: "nick",
+                nick: nick
+            })
+        );
     }
 
     static searchAgain() {
