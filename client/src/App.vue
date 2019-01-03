@@ -4,6 +4,11 @@
   </div>
 </template>
 
+<style>
+  @import './assets/bootstrap.min.css';
+</style>
+
+
 <script>
 import HelloWorld from "./components/HelloWorld.vue";
 
