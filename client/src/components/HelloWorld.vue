@@ -76,7 +76,8 @@
 </template>
 
 <script>
-// const Bingo = require("./bingo.js");
+const network = require("./network.js");
+const NetworkManager = network.NetworkManager;
 
 export default {
   name: "HelloWorld",
@@ -105,6 +106,7 @@ export default {
         return;
       }
       this.conn = new WebSocket(this.url);
+      NetworkManager.state.conn = this.conn;
       this.conn.onopen = () => {
         this.mutableViewServer = false;
         this.mutableViewGames = true;
@@ -149,39 +151,21 @@ export default {
     },
 
     searchAgain() {
-      // Bingo.Bingo.alerter("oh hai");
-      this.conn.send(
-        JSON.stringify({
-          msg: "list-games"
-        })
-      );
+      NetworkManager.searchAgain();
     },
 
     createGame() {
-      this.conn.send(
-        JSON.stringify({
-          msg: "create-game"
-        })
-      );
+      NetworkManager.createGame();
       this.admin = true;
     },
 
     joinGame(id) {
-      this.conn.send(
-        JSON.stringify({
-          msg: "join-game",
-          id: id
-        })
-      );
+      NetworkManager.joinGame(id);
       this.admin = false;
     },
 
     startGame() {
-      this.conn.send(
-        JSON.stringify({
-          msg: "start-game"
-        })
-      );
+      NetworkManager.startGame();
     }
   }
 };
