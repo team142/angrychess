@@ -9,16 +9,45 @@ export class NetworkManager {
     static connect(game) {
         NetworkManager.state.game = game
         NetworkManager.state.conn = new WebSocket(NetworkManager.state.game.url);
-  
+
         NetworkManager.state.conn.onopen = () => {
             NetworkManager.state.game.mutableViewServer = false;
             NetworkManager.state.game.mutableViewGames = true;
             NetworkManager.state.game.mutableViewGame = false;
-    
-            NetworkManager.sendNick(this.state.nickname);
+
+            NetworkManager.sendNick(NetworkManager.state.game.nickname);
             NetworkManager.searchAgain();
-          };
-    
+        };
+
+        NetworkManager.state.conn.onclose = () => {
+            alert("closed ws");
+        };
+        NetworkManager.state.conn.onmessage = event => {
+            try {
+                const json = event.data;
+                const o = JSON.parse(json);
+                const msg = o.msg;
+                if (msg === "secret") {
+                    NetworkManager.state.game.secret = o.secret;
+                    NetworkManager.state.game.id = o.id;
+                } else if (msg === "list-games") {
+                    NetworkManager.state.game.listOfGames = o.games.games;
+                } else if (msg === "share-state") {
+                    NetworkManager.state.game.gameState = o.game;
+                } else if (msg === "view") {
+                    if (o.view == "view-board") {
+                        NetworkManager.state.game.mutableViewServer = false;
+                        NetworkManager.state.game.mutableViewGames = false;
+                        NetworkManager.state.game.mutableViewGame = true;
+                    }
+                } else {
+                    alert(json);
+                }
+            } catch (e) {
+                alert(e);
+                alert(event.data);
+            }
+        };
 
     }
 

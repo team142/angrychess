@@ -97,47 +97,7 @@ export default {
         alert("You need a nickname");
         return;
       }
-
       this.NetworkManager.connect(this.state);
-
-      // this.NetworkManager.state.conn.onopen = () => {
-      //   this.state.mutableViewServer = false;
-      //   this.state.mutableViewGames = true;
-      //   this.state.mutableViewGame = false;
-
-      //   this.NetworkManager.sendNick(this.state.nickname);
-      //   this.searchAgain();
-      // };
-
-      this.NetworkManager.state.conn.onclose = () => {
-        alert("closed ws");
-      };
-      this.NetworkManager.state.conn.onmessage = event => {
-        try {
-          const json = event.data;
-          const o = JSON.parse(json);
-          const msg = o.msg;
-          if (msg === "secret") {
-            this.state.secret = o.secret;
-            this.state.id = o.id;
-          } else if (msg === "list-games") {
-            this.state.listOfGames = o.games.games;
-          } else if (msg === "share-state") {
-            this.state.gameState = o.game;
-          } else if (msg === "view") {
-            if (o.view == "view-board") {
-              this.state.mutableViewServer = false;
-              this.state.mutableViewGames = false;
-              this.state.mutableViewGame = true;
-            }
-          } else {
-            alert(json);
-          }
-        } catch (e) {
-          alert(e);
-          alert(event.data);
-        }
-      };
     },
 
     searchAgain() {
