@@ -8,8 +8,7 @@ import (
 )
 
 func handleInMessageListOfGame(server *model.Server, client *ws.Client) {
-	list := server.ListOfGames()
-	reply := model.CreateMessageListOfGames(list)
+	reply := server.CreateListOfGames()
 	b, _ := json.Marshal(&reply)
 	log.Println(">> Sending list of games ")
 	client.Send <- b

@@ -134,6 +134,12 @@ func (s *Server) ListOfGames() *ListOfGames {
 	return &result
 }
 
+func (s *Server) CreateListOfGames() MessageListOfGames {
+	list := s.ListOfGames()
+	return CreateMessageListOfGames(list)
+
+}
+
 //SetNick sets profiles nickname
 func (s *Server) SetNick(client *ws.Client, nick string) {
 
@@ -227,5 +233,19 @@ func (s *Server) Disconnect(client *ws.Client) {
 
 	//Remove from server
 	delete(s.Lobby, client)
+
+}
+
+//NotifyLobby tells players without a game about a new game
+func (s *Server) NotifyLobby() {
+	reply := s.CreateListOfGames()
+	b, _ := json.Marshal(&reply)
+
+	for client := range s.Lobby {
+		found, _ := s.GameByClientPlaying(client)
+		if !found {
+			client.Send <- b
+		}
+	}
 
 }

@@ -76,9 +76,8 @@
 </template>
 
 <script>
-const network = require("./network.js");
+const networkR = require("./network.js");
 const stateR = require("./state.js");
-// const NetworkManager = network.NetworkManager;
 
 export default {
   name: "HelloWorld",
@@ -87,7 +86,7 @@ export default {
   },
   data: function() {
     return {
-      NetworkManager: network.NetworkManager,
+      NetworkManager: networkR.NetworkManager,
       state: new stateR.State()
     };
   },
