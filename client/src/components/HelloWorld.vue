@@ -89,18 +89,6 @@ export default {
     return {
       NetworkManager: network.NetworkManager,
       state: new stateR.State(),
-
-      // mutableViewServer: true,
-      // mutableViewGames: false,
-      // mutableViewGame: false,
-      // nickname: "Swag",
-      // url: "ws://localhost:8000/ws",
-      // conn: {},
-      // secret: "",
-      // gameState: {},
-      // listOfGames: [],
-      // admin: false,
-      // id: {}
     };
   },
   methods: {
@@ -109,14 +97,14 @@ export default {
         alert("You need a nickname");
         return;
       }
-      this.state.conn = new WebSocket(this.state.url);
-      this.NetworkManager.state.conn = this.state.conn;
+      this.NetworkManager.state.conn = new WebSocket(this.state.url);
+      this.NetworkManager.state.conn = this.NetworkManager.state.conn;
 
-      this.state.conn.onopen = () => {
+      this.NetworkManager.state.conn.onopen = () => {
         this.state.mutableViewServer = false;
         this.state.mutableViewGames = true;
         this.state.mutableViewGame = false;
-        this.state.conn.send(
+        this.NetworkManager.state.conn.send(
           JSON.stringify({
             msg: "nick",
             nick: this.state.nickname
@@ -125,10 +113,10 @@ export default {
         this.searchAgain();
       };
 
-      this.state.conn.onclose = () => {
+      this.NetworkManager.state.conn.onclose = () => {
         alert("closed ws");
       };
-      this.state.conn.onmessage = event => {
+      this.NetworkManager.state.conn.onmessage = event => {
         try {
           const json = event.data;
           const o = JSON.parse(json);
