@@ -109,7 +109,13 @@ func (s *Server) JoinGame(gameID string, p *Profile) *Game {
 		Profile: s.Lobby[p.Client],
 	}
 	game := s.Games[gameID]
-	game.JoinGame(player)
+	ok := game.JoinGame(player)
+	if !ok {
+		reply := CreateMessageError("Could not join game", "Server is full")
+		b, _ := json.Marshal(reply)
+		p.Client.Send <- b
+		return game
+	}
 
 	reply := CreateMessageView(ViewBoard)
 	b, _ := json.Marshal(reply)
