@@ -93,7 +93,10 @@ export default {
         alert("You need a nickname");
         return;
       }
-      this.NetworkManager.connect(this.state, B);
+      this.NetworkManager.connect(
+        this.state,
+        B
+      );
     },
 
     searchAgain() {
@@ -103,7 +106,6 @@ export default {
     createGame() {
       this.NetworkManager.createGame();
       this.state.admin = true;
-
     },
 
     joinGame(id) {
@@ -144,6 +146,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+body {
+  background: #000;
+}
 h3 {
   margin: 40px 0 0;
 }
@@ -157,6 +162,11 @@ li {
 }
 a {
   color: #42b983;
+}
+#renderCanvas {
+  width: 100%;
+  height: 100%;
+  touch-action: none;
 }
 </style>
 
