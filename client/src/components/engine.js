@@ -11,7 +11,7 @@ export class B {
     pieceList = []
     canvas = {}
     startingPoint = {}
-    currentMesh = {}
+    currfentMesh = {}
 
 
     static startup() {
