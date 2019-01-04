@@ -12,6 +12,7 @@ Four player chess is a game I played growing up. I would love to relive the fun 
 - Pieces cannot be placed on the last two lines or such that they put the other player in check or mate.
 - A timer can be introduced limiting the time a player has to make a move. If a move is not made within the time limit, then the other player may take a piece off the board from their opponent.
 
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/3P7odVjrMiM/0.jpg)](https://www.youtube.com/watch?v=3P7odVjrMiM)
 
 
 ## Project structure
