@@ -2,25 +2,29 @@
   <div class="hello">
     <div class="container-fluid">
       <div>
-        <div v-if="state.mutableViewServer" class="form-group">
-          <h2>Chess for 4</h2>
-          <img width="200px" alt="Logo" src="../assets/logo.png">
+        <div v-if="state.mutableViewServer" class="row">
+          <div class="col"></div>
+          <div class="col-2">
+            <h2>Chess for 4</h2>
+            <img width="200px" alt="Logo" src="../assets/logo.png">
 
-          <h3>Server</h3>
-          <p>Get started by connecting to a server.</p>
+            <h3>Server</h3>
+            <p>Get started by connecting to a server.</p>
 
-          <input
-            type="text"
-            class="form-control-plaintext"
-            v-model="state.nickname"
-            placeholder="Nickname"
-          >
-          <br>
-          <input type="text" class="form-control-plaintext" v-model="state.url" placeholder>
-          <br>
-          <button class="btn btn-success" v-on:click="connect">Connect</button>
+            <input
+              type="text"
+              class="form-control-plaintext"
+              v-model="state.nickname"
+              placeholder="Nickname"
+            >
+            <br>
+            <input type="text" class="form-control-plaintext" v-model="state.url" placeholder>
+            <br>
+            <button class="btn btn-success" v-on:click="connect">Connect</button>
+          </div>
+          <div class="col"></div>
         </div>
-
+        <!-- /row -->
         <div v-if="state.mutableViewGames">
           <h2>Chess for 4</h2>
           <img alt="Logo" src="../assets/logo.png">
@@ -71,7 +75,7 @@
 
           <div class="boards">
             <div
-              class="board" 
+              class="board"
               style="outline: 5px dotted green; height: 900px; width: 900px; margin: 50px; display:inline-block;"
               v-for="board in getBoards()"
               :key="board['id']"
