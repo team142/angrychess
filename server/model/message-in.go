@@ -18,10 +18,10 @@ type MessageJoinGame struct {
 //MessageMove describes a movement
 type MessageMove struct {
 	PieceID string `json:"pieceId"`
-	FromX   int    `json:"fx"`
-	FromY   int    `json:"fy"`
 	ToX     int    `json:"tx"`
 	ToY     int    `json:"ty"`
+	Board   int    `json:"board"`
+	Cache   bool   `json:"bool"`
 }
 
 //MessagePlace describes placing a piece
