@@ -6,6 +6,7 @@
 
 <style>
   @import './assets/bootstrap.min.css';
+  @import './assets/animate.css';
 </style>
 
 

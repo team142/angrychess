@@ -4,9 +4,9 @@
       <div>
         <div v-if="state.mutableViewServer" class="row">
           <div class="col"></div>
-          <div class="col-2 jumbotron">
+          <div class="col-2 jumbotron animated jello">
             <h2>Battle Royale Chess</h2>
-            <img width="200px" alt="Logo" src="../assets/logo.png">
+            <img class="animated shake" width="200px" alt="Logo" src="../assets/logo.png">
 
             <h3>Connect</h3>
             <br />
@@ -55,7 +55,7 @@
           <div class="col"></div>
           <div class="col-3 jumbotron">
             <h2>Battle Royale Chess</h2>
-            <img alt="Logo" src="../assets/logo.png">
+            <img class="animated bounce" alt="Logo" src="../assets/logo.png">
 
             <h3>Lobby</h3>
             <br />

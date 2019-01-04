@@ -15,7 +15,7 @@ export class B {
 
 
     static startup() {
-        
+
         B.canvas = document.getElementById("renderCanvas");
         B.engine = new BABYLON.Engine(B.canvas, true, { preserveDrawingBuffer: true, stencil: true });
         B.createScene();
@@ -88,18 +88,19 @@ export class B {
 
 
         // Meshes
-        var redSphere = BABYLON.Mesh.CreateBox("red", 20, B.scene);
-        var redMat = new BABYLON.StandardMaterial("redMat", B.scene);
-        redMat.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
-        redMat.specularColor = new BABYLON.Color3(0.4, 0.4, 0.4);
-        redMat.emissiveColor = BABYLON.Color3.Red();
-        redSphere.material = redMat;
-        redSphere.position.x += -100 + (8 * 20) + 110;
-        redSphere.position.z += (8 * 20) + 10 - 100;
-        redSphere.position.y = -9 + 20;
-        redSphere.movable = true;
+        B.redMat = new BABYLON.StandardMaterial("redMat", B.scene);
+        B.redMat.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+        B.redMat.specularColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+        B.redMat.emissiveColor = BABYLON.Color3.Red();
 
-
+        let id = "piece1"
+        if (!B.pieceExists(id)) {
+            B.createPiece(id)
+        }
+        id = "piece2"
+        if (!B.pieceExists(id)) {
+            B.createPiece(id)
+        }
 
 
 
@@ -164,7 +165,9 @@ export class B {
         let newZ = 20 * Math.round(z / 20);
         B.currentMesh.position.z = newZ - 10;
 
-        console.log(B.currentMesh.position);
+        if (B && B.currentMesh) {
+            console.log(B.currentMesh.metadata.id + ": " + B.currentMesh.position);
+        }
 
 
         if (B.startingPoint) {
@@ -192,6 +195,35 @@ export class B {
 
     }
 
+    static pieceExists(id) {
+        if (B.pieces) {
+            return B.pieces[id]
+        }
+        return false
+    }
+
+    static createPiece(id, color, identity) {
+        let newPiece = BABYLON.Mesh.CreateBox(id, 20, B.scene);
+        newPiece.material = B.redMat;
+        newPiece.position.x += -100 + (8 * 20) + 110;
+        newPiece.position.z += (8 * 20) + 10 - 100;
+        newPiece.position.y = -9 + 20;
+        newPiece.movable = true;
+        newPiece.metadata = {}
+        newPiece.metadata.id = id
+        newPiece.metadata.color = color
+        newPiece.metadata.identity = identity
+
+        if (!B.pieces) {
+            B.pieces = {}
+        }
+        B.pieces[id] = newPiece
+        if (!B.pieceList) {
+            B.pieceList = []
+        }
+        B.pieceList.push(newPiece)
+
+    }
 
 
 
