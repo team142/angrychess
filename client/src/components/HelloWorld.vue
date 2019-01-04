@@ -4,21 +4,47 @@
       <div>
         <div v-if="state.mutableViewServer" class="row">
           <div class="col"></div>
-          <div class="col-2">
-            <h2>Chess for 4</h2>
+          <div class="col-2 jumbotron">
+            <h2>Battle Royale Chess</h2>
             <img width="200px" alt="Logo" src="../assets/logo.png">
 
-            <h3>Server</h3>
-            <p>Get started by connecting to a server.</p>
+            <h3>Connect</h3>
+            <br />
+            <br />
 
-            <input
-              type="text"
-              class="form-control-plaintext"
-              v-model="state.nickname"
-              placeholder="Nickname"
-            >
-            <br>
-            <input type="text" class="form-control-plaintext" v-model="state.url" placeholder>
+
+            <div class="form-group">
+              <label for="nickname">Nickname</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nicname"
+                v-model="state.nickname"
+                aria-describedby="nicknameHelp"
+                placeholder="Nickname for the game"
+              >
+              <small
+                id="nicknameHelp"
+                class="form-text text-muted"
+              >Your name will be shown to other players.</small>
+            </div>
+
+            <div class="form-group">
+              <label for="url">URL</label>
+              <input
+                type="text"
+                class="form-control"
+                id="url"
+                v-model="state.url"
+                aria-describedby="urlHelp"
+                placeholder="URL of server"
+              >
+              <small
+                id="urlHelp"
+                class="form-text text-muted"
+              >Game server url.</small>
+            </div>
+
             <br>
             <button class="btn btn-success" v-on:click="connect">Connect</button>
           </div>
@@ -27,15 +53,15 @@
         <!-- /row -->
         <div v-if="state.mutableViewGames" class="row">
           <div class="col"></div>
-          <div class="col-3">
-            <h2>Chess for 4</h2>
+          <div class="col-3 jumbotron">
+            <h2>Battle Royale Chess</h2>
             <img alt="Logo" src="../assets/logo.png">
 
-            <h3>List of games</h3>
-            <p>Pick a game or start your own.</p>
+            <h3>Lobby</h3>
+            <br />
 
-            <button class="btn btn-primary" v-on:click="createGame">New game</button>&nbsp;
-            <button class="btn btn-primary" v-on:click="searchAgain">Refresh</button>
+            <button class="btn btn-success" v-on:click="createGame">New game</button>&nbsp;
+            <button class="btn btn-success" v-on:click="searchAgain">Refresh</button>
 
             <div class="md-layout">
               <div class="md-layout-item"></div>

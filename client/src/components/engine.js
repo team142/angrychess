@@ -142,9 +142,6 @@ export class B {
                 return; ///////////////////////////////////////////////////
             }
             B.currentMesh = pickInfo.pickedMesh;
-            console.log(B.currentMesh.position);
-
-
 
             B.startingPoint = B.getGroundPosition(evt);
 
@@ -166,6 +163,8 @@ export class B {
         let z = B.currentMesh.position.z + 10;
         let newZ = 20 * Math.round(z / 20);
         B.currentMesh.position.z = newZ - 10;
+
+        console.log(B.currentMesh.position);
 
 
         if (B.startingPoint) {
