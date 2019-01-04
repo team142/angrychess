@@ -64,28 +64,7 @@
         </div>
 
         <div v-if="state.mutableViewGame">
-          <h2>{{ state.gameState.title}}</h2>
-          <button
-            class="btn btn-primary"
-            v-on:click="startGame"
-            v-if="state.admin && !state.gameState.started"
-          >Start game</button>
-          <br>
-          <br>
-          <span v-if="!state.gameState.started" class="badge badge-warning">Has not started</span>
-          
-          <span v-if="state.gameState.started && myTurn()" class="badge badge-success">Your turn</span>
-          <span v-if="state.gameState.started && !myTurn()" class="badge badge-warning">Their turn</span>
-
-          <div class="boards">
-            <div
-              class="board"
-              style="outline: 5px dotted green; height: 900px; width: 900px; margin: 50px; display:inline-block;"
-              v-for="board in getBoards()"
-              :key="board['id']"
-            ></div>
-          </div>
-          {{ JSON.stringify(state.gameState)}}
+          <canvas id="renderCanvas"></canvas>
         </div>
       </div>
     </div>
@@ -95,6 +74,7 @@
 <script>
 const networkR = require("./network.js");
 const stateR = require("./state.js");
+const B = require("./engine.js").B;
 
 export default {
   name: "HelloWorld",
@@ -113,7 +93,7 @@ export default {
         alert("You need a nickname");
         return;
       }
-      this.NetworkManager.connect(this.state);
+      this.NetworkManager.connect(this.state, B);
     },
 
     searchAgain() {
@@ -123,6 +103,7 @@ export default {
     createGame() {
       this.NetworkManager.createGame();
       this.state.admin = true;
+
     },
 
     joinGame(id) {

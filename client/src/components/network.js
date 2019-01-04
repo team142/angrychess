@@ -1,3 +1,4 @@
+export let B = {}
 export class NetworkManager {
 
     static state = {
@@ -6,7 +7,8 @@ export class NetworkManager {
 
     }
 
-    static connect(game) {
+    static connect(game, bIn) {
+        B = bIn
         NetworkManager.state.game = game
         NetworkManager.state.conn = new WebSocket(NetworkManager.state.game.url);
 
@@ -40,6 +42,12 @@ export class NetworkManager {
                         NetworkManager.state.game.mutableViewServer = false;
                         NetworkManager.state.game.mutableViewGames = false;
                         NetworkManager.state.game.mutableViewGame = true;
+
+                        setTimeout(function () {
+                            B.startup()
+                        }, 500);
+
+
                     }
                 } else {
                     alert(json);
