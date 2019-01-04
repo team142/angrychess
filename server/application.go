@@ -10,12 +10,13 @@ import (
 
 var addr = flag.String("addr", "127.0.0.1:8000", "http service address")
 var publicAddress = flag.String("public", "local", "Server public domain name")
+var cantStartBeforeFull = flag.String("emptySeat", "true", "Server public domain name")
 
 func main() {
 
 	log.Println("Oh hai 🚀 Lets Go 🎠")
 
-	server := model.CreateServer(*publicAddress, controller.HandleIncoming)
+	server := model.CreateServer(*publicAddress, controller.HandleIncoming, *cantStartBeforeFull == "true")
 
 	//Blocking call
 	ws.StartWSServer(addr, server.HandleMessage)

@@ -33,12 +33,13 @@ type ListOfGames struct {
 
 //Game describes a game on the server
 type Game struct {
-	ID      string          `json:"id"`
-	Started bool            `json:"started"`
-	Title   string          `json:"title"`
-	Owner   *Player         `json:"-"`
-	Players map[int]*Player `json:"players"`
-	Boards  int             `json:"boards"`
+	ID                 string          `json:"id"`
+	Started            bool            `json:"started"`
+	Title              string          `json:"title"`
+	Owner              *Player         `json:"-"`
+	Players            map[int]*Player `json:"players"`
+	Boards             int             `json:"boards"`
+	CanStartBeforeFull bool            `json:"canStartBeforeFull"`
 }
 
 //JoinGame gets a player into a game
@@ -123,6 +124,10 @@ func (game *Game) SetupBoards() {
 
 //IsReadyToStart checks that the game can start
 func (game *Game) IsReadyToStart() (ok bool, message string) {
+	if game.CanStartBeforeFull {
+		ok = true
+		return
+	}
 	ok = game.MaxPlayers() == len(game.Players)
 	if !ok {
 		message = "Not enough players"

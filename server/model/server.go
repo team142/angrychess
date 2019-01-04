@@ -8,13 +8,14 @@ import (
 )
 
 //CreateServer starts a new server
-func CreateServer(address string, handler func(*Server, *ws.Client, []byte)) *Server {
+func CreateServer(address string, handler func(*Server, *ws.Client, []byte), canStartBeforeFull bool) *Server {
 	s := &Server{
-		Address: address,
-		handler: handler,
-		Lobby:   make(map[*ws.Client]*Profile),
-		Games:   make(map[string]*Game),
-		todo:    make(chan *item, 256),
+		Address:            address,
+		handler:            handler,
+		Lobby:              make(map[*ws.Client]*Profile),
+		Games:              make(map[string]*Game),
+		todo:               make(chan *item, 256),
+		canStartBeforeFull: canStartBeforeFull,
 	}
 	s.run()
 	return s
@@ -22,11 +23,12 @@ func CreateServer(address string, handler func(*Server, *ws.Client, []byte)) *Se
 
 //Server holds server state
 type Server struct {
-	Address string
-	Lobby   map[*ws.Client]*Profile
-	Games   map[string]*Game
-	handler func(*Server, *ws.Client, []byte)
-	todo    chan *item
+	Address            string
+	Lobby              map[*ws.Client]*Profile
+	Games              map[string]*Game
+	handler            func(*Server, *ws.Client, []byte)
+	todo               chan *item
+	canStartBeforeFull bool
 }
 
 type item struct {
@@ -92,6 +94,7 @@ func (s *Server) CreateGame(client *ws.Client) *Game {
 	}
 
 	g := CreateGame(player)
+	g.CanStartBeforeFull = s.canStartBeforeFull
 	s.Games[g.ID] = g
 
 	reply := CreateMessageView(ViewBoard)
