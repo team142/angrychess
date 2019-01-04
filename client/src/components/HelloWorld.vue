@@ -25,38 +25,42 @@
           <div class="col"></div>
         </div>
         <!-- /row -->
-        <div v-if="state.mutableViewGames">
-          <h2>Chess for 4</h2>
-          <img alt="Logo" src="../assets/logo.png">
+        <div v-if="state.mutableViewGames" class="row">
+          <div class="col"></div>
+          <div class="col-3">
+            <h2>Chess for 4</h2>
+            <img alt="Logo" src="../assets/logo.png">
 
-          <h3>List of games</h3>
-          <p>Pick a game or start your own.</p>
+            <h3>List of games</h3>
+            <p>Pick a game or start your own.</p>
 
-          <button class="btn btn-primary" v-on:click="createGame">New game</button>&nbsp;
-          <button class="btn btn-primary" v-on:click="searchAgain">Refresh</button>
+            <button class="btn btn-primary" v-on:click="createGame">New game</button>&nbsp;
+            <button class="btn btn-primary" v-on:click="searchAgain">Refresh</button>
 
-          <div class="md-layout">
-            <div class="md-layout-item"></div>
-            <div class="md-layout-item">
-              <br>
-              <table class="table table-hover">
-                <tr>
-                  <th md-numeric>Name</th>
-                  <th>Players</th>
-                  <th>Actions</th>
-                </tr>
+            <div class="md-layout">
+              <div class="md-layout-item"></div>
+              <div class="md-layout-item">
+                <br>
+                <table class="table table-hover">
+                  <tr>
+                    <th md-numeric>Name</th>
+                    <th>Players</th>
+                    <th>Actions</th>
+                  </tr>
 
-                <tr v-for="game in state.listOfGames" :key="game['id']">
-                  <td>{{ game["title"] }}</td>
-                  <td>{{ game["players"] }}</td>
-                  <td>
-                    <button class="btn btn-primary btn-sm" v-on:click="joinGame(game['id'])">Join</button>
-                  </td>
-                </tr>
-              </table>
+                  <tr v-for="game in state.listOfGames" :key="game['id']">
+                    <td>{{ game["title"] }}</td>
+                    <td>{{ game["players"] }}</td>
+                    <td>
+                      <button class="btn btn-primary btn-sm" v-on:click="joinGame(game['id'])">Join</button>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div class="md-layout-item"></div>
             </div>
-            <div class="md-layout-item"></div>
           </div>
+          <div class="col"></div>
         </div>
 
         <div v-if="state.mutableViewGame">
