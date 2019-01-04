@@ -1,5 +1,5 @@
 # Chess For 4 (Chess Doubles)
-<a href="https://goreportcard.com/report/github.com/team142/chessfor4"><img src="https://goreportcard.com/badge/github.com/team142/chessfor4" /></a><img src="docs/trello.png" />
+<a href="https://goreportcard.com/report/github.com/team142/chessfor4"><img src="https://goreportcard.com/badge/github.com/team142/chessfor4" /></a>&nbsp;<img src="docs/trello.png" />
 
 ## Background
 
