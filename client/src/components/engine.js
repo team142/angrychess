@@ -70,11 +70,20 @@ export class B {
                 for (let y = 1; y <= 8; y++) {
                     const tile = BABYLON.Mesh.CreateBox("tile" + board + "." + x + "." + y, 20, B.scene);
                     tile.scaling = new BABYLON.Vector3(1, 0.1, 1);
-                    if ((x + y) % 2) {
-                        tile.material = blackMat;
+                    if (board % 2 == 0) {
+                        if ((x + y) % 2) {
+                            tile.material = whiteMat;
+                        } else {
+                            tile.material = blackMat;
+                        }
                     } else {
-                        tile.material = whiteMat;
+                        if ((x + y) % 2) {
+                            tile.material = blackMat;
+                        } else {
+                            tile.material = whiteMat;
+                        }
                     }
+
 
                     tile.position.x = x * 20 - (board - 1) * 200 + 10;
                     tile.position.z = y * 20 - 90;
@@ -95,11 +104,11 @@ export class B {
 
         let id = "piece1"
         if (!B.pieceExists(id)) {
-            B.createPiece(id)
+            B.createPiece(id, true, 1, 1, 1, 1)
         }
         id = "piece2"
         if (!B.pieceExists(id)) {
-            B.createPiece(id)
+            B.createPiece(id, true, 1, 2, 1, 1)
         }
 
 
@@ -165,16 +174,20 @@ export class B {
         let newZ = 20 * Math.round(z / 20);
         B.currentMesh.position.z = newZ - 10;
 
-        if (B && B.currentMesh) {
-            console.log(B.currentMesh.metadata.id + ": " + B.currentMesh.position);
-        }
 
 
         if (B.startingPoint) {
             B.camera.attachControl(B.canvas, true);
             B.startingPoint = null;
+            if (B && B.currentMesh) {
+                console.log(JSON.stringify(B.getPosition(B.currentMesh)));
+                console.log(B.currentMesh.metadata.id + ": " + B.currentMesh.position);
+            }
             return;
         }
+
+
+
     }
 
     static onPointerMove = (evt) => {
@@ -202,11 +215,11 @@ export class B {
         return false
     }
 
-    static createPiece(id, color, identity) {
+    static createPiece(id, color, identity, board, x, y) {
         let newPiece = BABYLON.Mesh.CreateBox(id, 20, B.scene);
         newPiece.material = B.redMat;
-        newPiece.position.x += -100 + (8 * 20) + 110;
-        newPiece.position.z += (8 * 20) + 10 - 100;
+        newPiece.position.x += 170 - (x - 1) * 20 - 200 * (board - 1);
+        newPiece.position.z += 70 - (y - 1) * 20;
         newPiece.position.y = -9 + 20;
         newPiece.movable = true;
         newPiece.metadata = {}
@@ -223,6 +236,55 @@ export class B {
         }
         B.pieceList.push(newPiece)
 
+    }
+
+    static getPosition(mesh) {
+        let result = {
+            x: 0,
+            y: 0,
+            board: 0,
+            cache: false
+        }
+        if (mesh && mesh.position) {
+
+            if (mesh.position.x <= 170 && mesh.position.x >= 70 && mesh.position.z <= 70 && mesh.position.z >= -70) {
+                result.board = 1
+            } else if (mesh.position.x <= -30 && mesh.position.x >= -170 && mesh.position.z <= 70 && mesh.position.z >= -70) {
+                result.board = 2
+            }
+
+
+
+            if (result.board == 0) {
+                result.cache = true
+            }
+
+            let x = mesh.position.x - 10
+            x = 160 - x
+            result.x = B.relativeTile(x)
+            if (result.board == 2) {
+                result.x -= 10;
+            }
+
+            let z = mesh.position.z - 10 + 100
+            z = 160 - z
+            result.y = B.relativeTile(z)
+
+
+
+        }
+
+
+
+
+        return result
+    }
+
+    static relativeTile(p) {
+        if (p == 0) {
+            return 1;
+        }
+        return Math.round(p / 20) + 1
     }
 
 
