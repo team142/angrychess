@@ -102,14 +102,14 @@ export class B {
         B.redMat.specularColor = new BABYLON.Color3(0.4, 0.4, 0.4);
         B.redMat.emissiveColor = BABYLON.Color3.Red();
 
-        let id = "piece1"
-        if (!B.pieceExists(id)) {
-            B.createPiece(id, true, 1, 1, 1, 1)
-        }
-        id = "piece2"
-        if (!B.pieceExists(id)) {
-            B.createPiece(id, true, 1, 2, 1, 1)
-        }
+        // let id = "piece1"
+        // if (!B.pieceExists(id)) {
+        //     B.createPiece(id, true, 1, 1, 1, 1)
+        // }
+        // id = "piece2"
+        // if (!B.pieceExists(id)) {
+        //     B.createPiece(id, true, 1, 2, 1, 1)
+        // }
 
 
 
@@ -215,26 +215,36 @@ export class B {
         return false
     }
 
-    static createPiece(id, color, identity, board, x, y) {
-        let newPiece = BABYLON.Mesh.CreateBox(id, 20, B.scene);
+    static createPiece(board, piece) {
+        let newPiece = BABYLON.Mesh.CreateBox(piece.id, 20, B.scene);
         newPiece.material = B.redMat;
-        newPiece.position.x += 170 - (x - 1) * 20 - 200 * (board - 1);
-        newPiece.position.z += 70 - (y - 1) * 20;
-        newPiece.position.y = -9 + 20;
         newPiece.movable = true;
         newPiece.metadata = {}
-        newPiece.metadata.id = id
-        newPiece.metadata.color = color
-        newPiece.metadata.identity = identity
+        newPiece.metadata.id = piece.id
+        newPiece.metadata.board = piece.board
+        newPiece.metadata.color = piece.color
+        newPiece.metadata.identity = piece.identity
+
+        // newPiece.position.x += 170 - (piece.x - 1) * 20 - 200 * (board - 1);
+        // newPiece.position.z += 70 - (piece.y - 1) * 20;
+        // newPiece.position.y = -9 + 20;
 
         if (!B.pieces) {
             B.pieces = {}
         }
-        B.pieces[id] = newPiece
+        B.pieces[piece.id] = newPiece
         if (!B.pieceList) {
             B.pieceList = []
         }
         B.pieceList.push(newPiece)
+
+    }
+
+    static updatePiece(board, piece) {
+        let newPiece = B.pieces[piece.id]
+        newPiece.position.x += 170 - (piece.x - 1) * 20 - 200 * (board - 1);
+        newPiece.position.z += 70 - (piece.y - 1) * 20;
+        newPiece.position.y = -9 + 20;
 
     }
 
@@ -297,12 +307,12 @@ export class B {
 
     }
 
-    static createOrUpdatePiece(baord, piece) {
+    static createOrUpdatePiece(board, piece) {
         if (B.pieceExists(piece.id)) {
-            console.log("Update piece")
+            B.updatePiece(board, piece)
         } else {
-            console.log("Create piece")   
-            B.createPiece
+            B.createPiece(board, piece)
+            B.updatePiece(board, piece)
         }
     }
 
