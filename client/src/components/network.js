@@ -36,18 +36,15 @@ export class NetworkManager {
                 } else if (msg === "list-games") {
                     NetworkManager.state.game.listOfGames = o.games.games;
                 } else if (msg === "share-state") {
-                    NetworkManager.state.game.gameState = o.game;
+                    NetworkManager.handleState(o.game)
                 } else if (msg === "view") {
                     if (o.view == "view-board") {
                         NetworkManager.state.game.mutableViewServer = false;
                         NetworkManager.state.game.mutableViewGames = false;
                         NetworkManager.state.game.mutableViewGame = true;
-
                         setTimeout(function () {
                             B.startup()
                         }, 500);
-
-
                     }
                 } else {
                     alert(json);
@@ -100,6 +97,19 @@ export class NetworkManager {
                 msg: "start-game"
             })
         );
+    }
+
+    static handleState(s) {
+        NetworkManager.state.game.gameState = s;
+        const players = NetworkManager.state.game.gameState.boards * 2;
+        for (let p = 1; p < players; p++) {
+            if (NetworkManager.state.game.gameState.players["" + p]) {
+                const player = NetworkManager.state.game.gameState.players["" + p];
+                B.renderPlayer(player)
+            }
+        }
+
+        console.log(NetworkManager.state.game.gameState)
     }
 
 

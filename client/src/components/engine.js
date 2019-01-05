@@ -287,7 +287,24 @@ export class B {
         return Math.round(p / 20) + 1
     }
 
+    static renderPlayer(player) {
+        if (!player.pieces) {
+            return
+        }
+        for (const piece of player.pieces) {
+            B.createOrUpdatePiece(player.board, piece)
+        }
 
+    }
+
+    static createOrUpdatePiece(baord, piece) {
+        if (B.pieceExists(piece.id)) {
+            console.log("Update piece")
+        } else {
+            console.log("Create piece")   
+            B.createPiece
+        }
+    }
 
 
 } 
