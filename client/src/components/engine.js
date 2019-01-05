@@ -54,14 +54,32 @@ export class B {
         groundMaterial.specularColor = BABYLON.Color3.Black();
         B.ground.material = groundMaterial;
 
-        const blackMat = new BABYLON.StandardMaterial("blackMat", B.scene);
-        blackMat.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
-        blackMat.specularColor = new BABYLON.Color3(0.4, 0.4, 0.4);
-        blackMat.emissiveColor = BABYLON.Color3.Black();
-        const whiteMat = new BABYLON.StandardMaterial("whiteMat", B.scene);
-        whiteMat.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
-        whiteMat.specularColor = new BABYLON.Color3(0.4, 0.4, 0.4);
-        whiteMat.emissiveColor = BABYLON.Color3.Gray();
+        B.blueMat = new BABYLON.StandardMaterial("blueMat", B.scene);
+        B.blueMat.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+        B.blueMat.specularColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+        B.blueMat.emissiveColor = BABYLON.Color3.Blue();
+
+        B.redMat = new BABYLON.StandardMaterial("redMat", B.scene);
+        B.redMat.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+        B.redMat.specularColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+        B.redMat.emissiveColor = BABYLON.Color3.Red();
+
+
+
+        B.blackMat = new BABYLON.StandardMaterial("blackMat", B.scene);
+        B.blackMat.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+        B.blackMat.specularColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+        B.blackMat.emissiveColor = BABYLON.Color3.Black();
+
+        B.whiteMat = new BABYLON.StandardMaterial("whiteMat", B.scene);
+        B.whiteMat.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+        B.whiteMat.specularColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+        B.whiteMat.emissiveColor = BABYLON.Color3.White();
+
+        B.grayMat = new BABYLON.StandardMaterial("grayMat", B.scene);
+        B.grayMat.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+        B.grayMat.specularColor = new BABYLON.Color3(0.4, 0.4, 0.4);
+        B.grayMat.emissiveColor = BABYLON.Color3.Gray();
 
         let boards = 2;
 
@@ -72,15 +90,15 @@ export class B {
                     tile.scaling = new BABYLON.Vector3(1, 0.1, 1);
                     if (board % 2 == 0) {
                         if ((x + y) % 2) {
-                            tile.material = whiteMat;
+                            tile.material = B.grayMat;
                         } else {
-                            tile.material = blackMat;
+                            tile.material = B.blackMat;
                         }
                     } else {
                         if ((x + y) % 2) {
-                            tile.material = blackMat;
+                            tile.material = B.blackMat;
                         } else {
-                            tile.material = whiteMat;
+                            tile.material = B.grayMat;
                         }
                     }
 
@@ -93,23 +111,6 @@ export class B {
                 }
             }
         }
-
-
-
-        // Meshes
-        B.redMat = new BABYLON.StandardMaterial("redMat", B.scene);
-        B.redMat.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
-        B.redMat.specularColor = new BABYLON.Color3(0.4, 0.4, 0.4);
-        B.redMat.emissiveColor = BABYLON.Color3.Red();
-
-        // let id = "piece1"
-        // if (!B.pieceExists(id)) {
-        //     B.createPiece(id, true, 1, 1, 1, 1)
-        // }
-        // id = "piece2"
-        // if (!B.pieceExists(id)) {
-        //     B.createPiece(id, true, 1, 2, 1, 1)
-        // }
 
 
 
@@ -216,18 +217,30 @@ export class B {
     }
 
     static createPiece(board, piece) {
-        let newPiece = BABYLON.Mesh.CreateBox(piece.id, 20, B.scene);
-        newPiece.material = B.redMat;
+
+        const cone = BABYLON.MeshBuilder.CreateCylinder("cone", { diameterTop: 0, height: 20, tessellation: 96, diameterBottom: 20 }, B.scene);
+        const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 10 }, B.scene);
+        sphere.position.y = cone.position.y + 10
+        const newPiece = BABYLON.MeshBuilder.CreateBox(piece.id, { width: 20, height: 60, depth: 20 }, B.scene);
+
+
+        newPiece.addChild(sphere)
+        newPiece.addChild(cone)
+        newPiece.visibility = false;
+
+        if (piece.color) {
+            cone.material = B.blueMat;
+            sphere.material = B.blueMat;
+        } else {
+            cone.material = B.redMat;
+            sphere.material = B.redMat;
+        }
+        
+
+
         newPiece.movable = true;
         newPiece.metadata = {}
-        newPiece.metadata.id = piece.id
-        newPiece.metadata.board = piece.board
-        newPiece.metadata.color = piece.color
-        newPiece.metadata.identity = piece.identity
-
-        // newPiece.position.x += 170 - (piece.x - 1) * 20 - 200 * (board - 1);
-        // newPiece.position.z += 70 - (piece.y - 1) * 20;
-        // newPiece.position.y = -9 + 20;
+        newPiece.metadata = piece
 
         if (!B.pieces) {
             B.pieces = {}
@@ -242,11 +255,54 @@ export class B {
 
     static updatePiece(board, piece) {
         let newPiece = B.pieces[piece.id]
-        newPiece.position.x += 170 - (piece.x - 1) * 20 - 200 * (board - 1);
-        newPiece.position.z += 70 - (piece.y - 1) * 20;
-        newPiece.position.y = -9 + 20;
+        newPiece.metadata = piece
+        if (!piece.cache) {
+            newPiece.position.x += 170 - (piece.x - 1) * 20 - 200 * (board - 1);
+            newPiece.position.z += 70 - (piece.y - 1) * 20;
+            newPiece.position.y = -9 + 20;
+
+        } else {
+            B.updateCachedPiece(board, piece)
+        }
 
     }
+
+    static updateCachedPiece(board, piece) {
+        let newPiece = B.pieces[piece.id]
+
+        let n = B.getCachedRelativeNumber(board, piece)
+        let row = Math.floor((n - 1) / 10) + 1
+
+        n = n - ((row - 1) * 10)
+        let x = 190 - (n - 1) * 20;
+        x = x - (board - 1) * 200
+
+        newPiece.position.x = x
+
+        if ((board % 2 == 1 && !piece.color) || (board % 2 == 0 && piece.color)) {
+            newPiece.position.z = -130 + 20 * (row - 1)
+        } else {
+            let z = 90 + 20 * (row - 1);
+            // console.log(n + " of row " + row + " has z: " + z)
+            newPiece.position.z = z;
+        }
+
+        newPiece.position.y = -9 + 20;
+    }
+
+    static getCachedRelativeNumber(board, piece) {
+        let n = 0;
+        for (const pieceB of B.pieceList) {
+            if (pieceB.metadata.cache && pieceB.metadata.color == piece.color && pieceB.metadata.board == piece.board) {
+                n++;
+                if (pieceB.metadata.id == piece.id) {
+                    return n
+                }
+            }
+        }
+        return n
+    }
+
 
     static getPosition(mesh) {
         let result = {

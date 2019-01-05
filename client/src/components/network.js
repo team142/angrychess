@@ -102,9 +102,10 @@ export class NetworkManager {
     static handleState(s) {
         NetworkManager.state.game.gameState = s;
         const players = NetworkManager.state.game.gameState.boards * 2;
-        for (let p = 1; p < players; p++) {
+        for (let p = 1; p <= players; p++) {
             if (NetworkManager.state.game.gameState.players["" + p]) {
                 const player = NetworkManager.state.game.gameState.players["" + p];
+                console.log("Rendering player " + player.profile.nick)
                 B.renderPlayer(player)
             }
         }
