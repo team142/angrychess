@@ -189,6 +189,7 @@ func (game *Game) ChangeSeat(client *ws.Client, seat int) {
 	}
 	delete(game.Players, currentSeat)
 	game.Players[seat] = currentPlayer
+	currentPlayer.SetTeamColorAndBoard(seat, game.Boards)
 	game.ShareState()
 
 }
