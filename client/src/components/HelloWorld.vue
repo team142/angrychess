@@ -90,6 +90,7 @@
         </div>
 
         <div v-if="state.mutableViewGame">
+          <button v-if="state.admin && !state.gameState.started" class="btn btn-success" v-on:click="startGame">Start game</button>&nbsp;
           <canvas id="renderCanvas"></canvas>
         </div>
       </div>
