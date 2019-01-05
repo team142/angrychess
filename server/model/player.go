@@ -24,7 +24,7 @@ func (p *Player) GetPieceByID(id string) (piece *Piece, found bool) {
 }
 
 //SetTeamAndColor derives the color and team
-func (p *Player) SetTeamAndColor(spot int, boards int) {
+func (p *Player) SetTeamColorAndBoard(spot int, boards int) {
 	if spot <= boards {
 		p.Team = 1
 		p.Color = (spot+boards)%2 == 0

@@ -22,7 +22,7 @@ func CreateGame(creator *Player) *Game {
 	}
 	game.Players[1] = creator
 	game.Owner = creator
-	creator.SetTeamAndColor(1, game.Boards)
+	creator.SetTeamColorAndBoard(1, game.Boards)
 	return game
 }
 
@@ -48,7 +48,7 @@ func (game *Game) JoinGame(player *Player) bool {
 	if !found {
 		return false
 	}
-	player.SetTeamAndColor(spot, game.Boards)
+	player.SetTeamColorAndBoard(spot, game.Boards)
 	game.Players[spot] = player
 	return true
 }
