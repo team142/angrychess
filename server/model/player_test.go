@@ -16,13 +16,18 @@ func TestPlayer_SetTeamAndColorNormal(t *testing.T) {
 		t.Errorf("Expected team %v and got %v", expectedTeam, p.Team)
 	}
 
+	expectedBoard := 1
+	if p.Board != expectedBoard {
+		t.Errorf("Expected board %v and got %v", expectedBoard, p.Board)
+	}
+
 }
 
-func TestPlayer_SetTeamAndColorAbsurd(t *testing.T) {
+func TestPlayer_SetTeamAndColorNormal2(t *testing.T) {
 	p := Player{}
-	p.SetTeamAndColor(7, 4)
+	p.SetTeamAndColor(3, 2)
 
-	expectedColor := false
+	expectedColor := true
 	if p.Color != expectedColor {
 		t.Errorf("Expected color %v and got %v", expectedColor, p.Color)
 	}
@@ -30,6 +35,32 @@ func TestPlayer_SetTeamAndColorAbsurd(t *testing.T) {
 	expectedTeam := 2
 	if p.Team != expectedTeam {
 		t.Errorf("Expected team %v and got %v", expectedTeam, p.Team)
+	}
+
+	expectedBoard := 1
+	if p.Board != expectedBoard {
+		t.Errorf("Expected board %v and got %v", expectedBoard, p.Board)
+	}
+
+}
+
+func TestPlayer_SetTeamAndColorAbsurd(t *testing.T) {
+	p := Player{}
+	p.SetTeamAndColor(7, 4)
+
+	expectedColor := true
+	if p.Color != expectedColor {
+		t.Errorf("Expected color %v and got %v", expectedColor, p.Color)
+	}
+
+	expectedTeam := 2
+	if p.Team != expectedTeam {
+		t.Errorf("Expected team %v and got %v", expectedTeam, p.Team)
+	}
+
+	expectedBoard := 3
+	if p.Board != expectedBoard {
+		t.Errorf("Expected board %v and got %v", expectedBoard, p.Board)
 	}
 
 }

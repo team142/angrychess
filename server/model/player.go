@@ -9,6 +9,7 @@ type Player struct {
 	Team    int      `json:"team"`
 	Pieces  []*Piece `json:"pieces"`
 	MyTurn  bool     `json:"myTurn"`
+	Board   int      `json:"board"`
 }
 
 //GetPieceByID for easy access
@@ -24,13 +25,14 @@ func (p *Player) GetPieceByID(id string) (piece *Piece, found bool) {
 
 //SetTeamAndColor derives the color and team
 func (p *Player) SetTeamAndColor(spot int, boards int) {
-	c := spot + boards
-	b := c%2 == 0
-	p.Color = b
 	if spot <= boards {
 		p.Team = 1
+		p.Color = (spot+boards)%2 == 0
+		p.Board = spot
 	} else {
 		p.Team = 2
+		p.Color = (spot+boards)%2 == 1
+		p.Board = spot - boards
 	}
 
 }
