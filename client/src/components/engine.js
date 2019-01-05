@@ -218,24 +218,25 @@ export class B {
 
     static createPiece(board, piece) {
 
-        const cone = BABYLON.MeshBuilder.CreateCylinder("cone", { diameterTop: 0, height: 20, tessellation: 96, diameterBottom: 20 }, B.scene);
-        const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 10 }, B.scene);
+        let newPiece
+        const cone = BABYLON.MeshBuilder.CreateCylinder("cone" + piece.id, { diameterTop: 0, height: 20, tessellation: 96, diameterBottom: 20 }, B.scene);
+        const sphere = BABYLON.MeshBuilder.CreateSphere("sphere" + piece.id, { diameter: 10 }, B.scene);
         sphere.position.y = cone.position.y + 10
-        const newPiece = BABYLON.MeshBuilder.CreateBox(piece.id, { width: 20, height: 60, depth: 20 }, B.scene);
-
-
+        newPiece = BABYLON.MeshBuilder.CreateBox(piece.id, { width: 20, height: 30, depth: 20 }, B.scene);
         newPiece.addChild(sphere)
         newPiece.addChild(cone)
         newPiece.visibility = false;
 
         if (piece.color) {
-            cone.material = B.blueMat;
-            sphere.material = B.blueMat;
+            for (let a of newPiece.getChildMeshes()) {
+                a.material = B.blueMat;
+            }
         } else {
-            cone.material = B.redMat;
-            sphere.material = B.redMat;
+            for (let a of newPiece.getChildMeshes()) {
+                a.material = B.redMat;
+            }
         }
-        
+
 
 
         newPiece.movable = true;
@@ -361,6 +362,17 @@ export class B {
             B.createOrUpdatePiece(player.board, piece)
         }
 
+    }
+
+    static findMeshByIdentity(identity) {
+        if (B.pieceList) {
+            for (let piece of B.pieceList) {
+                if (piece.metadata.identity == identity) {
+                    return piece;
+                }
+            }
+        }
+        return null;
     }
 
     static createOrUpdatePiece(board, piece) {
