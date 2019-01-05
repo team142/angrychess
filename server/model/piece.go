@@ -17,6 +17,7 @@ type Piece struct {
 	Y        int    `json:"y"`
 	Color    bool   `json:"color"`
 	Cache    bool   `json:"cache"`
+	Board    int    `json:"board"`
 }
 
 //Move moves piece

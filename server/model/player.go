@@ -51,8 +51,9 @@ func (p *Player) SetupBoard() {
 			X:        i,
 			Identity: identityPawn,
 			Cache:    false,
+			Board:    p.Board,
 		}
-		if p.Color {
+		if p.Team == 1 {
 			piece.Y = 7
 		} else {
 			piece.Y = 2
@@ -61,7 +62,7 @@ func (p *Player) SetupBoard() {
 	}
 
 	//Two free pawns :D
-	for i := 1; i <= 2; i++ {
+	for i := 1; i <= 30; i++ {
 		piece := &Piece{
 			ID:       uuid.NewV4().String(),
 			Color:    p.Color,
@@ -69,6 +70,7 @@ func (p *Player) SetupBoard() {
 			Y:        0,
 			Identity: identityPawn,
 			Cache:    true,
+			Board:    p.Board,
 		}
 		p.Pieces = append(p.Pieces, piece)
 	}
