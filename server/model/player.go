@@ -50,6 +50,7 @@ func (p *Player) SetupBoard() {
 			Color:    p.Color,
 			X:        i,
 			Identity: identityPawn,
+			Cache:    false,
 		}
 		if p.Color {
 			piece.Y = 7
@@ -67,6 +68,7 @@ func (p *Player) SetupBoard() {
 			X:        0,
 			Y:        0,
 			Identity: identityPawn,
+			Cache:    true,
 		}
 		p.Pieces = append(p.Pieces, piece)
 	}
