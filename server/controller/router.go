@@ -15,7 +15,6 @@ const (
 	inMessageJoinGame    = "join-game"
 	inMessageListOfGames = "list-games"
 	inMessageMove        = "move"
-	inMessagePlace       = "place"
 	inMessageChangeSeat  = "seat"
 	inMessageDC          = "disconnect"
 )
@@ -44,9 +43,6 @@ func HandleIncoming(server *model.Server, client *ws.Client, msg []byte) {
 
 	} else if message.Msg == inMessageMove {
 		handleInMessageMove(server, client, msg)
-
-	} else if message.Msg == inMessagePlace {
-		handleInMessagePlace(server, client, msg)
 
 	} else if message.Msg == inMessageChangeSeat {
 		handleInMessageChangeSeat(server, client, msg)
