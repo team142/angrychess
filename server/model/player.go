@@ -62,7 +62,7 @@ func (p *Player) SetupBoard() {
 	}
 
 	//Two free pawns :D
-	for i := 1; i <= 30; i++ {
+	for i := 1; i <= 2; i++ {
 		piece := &Piece{
 			ID:       uuid.NewV4().String(),
 			Color:    p.Color,
