@@ -228,13 +228,19 @@ export class B {
     static createPiece(piece) {
 
         let newPiece
-        const cone = BABYLON.MeshBuilder.CreateCylinder("cone" + piece.id, { diameterTop: 0, height: 20, tessellation: 96, diameterBottom: 20 }, B.scene);
-        const sphere = BABYLON.MeshBuilder.CreateSphere("sphere" + piece.id, { diameter: 10 }, B.scene);
-        sphere.position.y = cone.position.y + 10
-        newPiece = BABYLON.MeshBuilder.CreateBox(piece.id, { width: 20, height: 30, depth: 20 }, B.scene);
-        newPiece.addChild(sphere)
-        newPiece.addChild(cone)
-        newPiece.visibility = false;
+        if (B.pieceList && (B.pieceExists.length > 0)) {
+            newPiece = B.pieceList[0].clone(piece.id)
+        } else {
+            const cone = BABYLON.MeshBuilder.CreateCylinder("cone" + piece.id, { diameterTop: 0, height: 20, tessellation: 96, diameterBottom: 20 }, B.scene);
+            const sphere = BABYLON.MeshBuilder.CreateSphere("sphere" + piece.id, { diameter: 10 }, B.scene);
+            sphere.position.y = cone.position.y + 10
+            newPiece = BABYLON.MeshBuilder.CreateBox(piece.id, { width: 20, height: 30, depth: 20 }, B.scene);
+            newPiece.addChild(sphere)
+            newPiece.addChild(cone)
+            newPiece.visibility = false;
+        }
+
+
 
         if (piece.color) {
             for (let a of newPiece.getChildMeshes()) {
@@ -278,7 +284,6 @@ export class B {
     }
 
     static updateCachedPiece(piece) {
-        console.log(piece)
         let newPiece = B.pieces[piece.id]
 
         let n = B.getCachedRelativeNumber(piece.board, piece)
