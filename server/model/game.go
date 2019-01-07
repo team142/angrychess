@@ -20,6 +20,7 @@ func CreateGame(creator *Player) *Game {
 		Boards:   maxSupportedBoards,
 		Title:    fmt.Sprintf("%s's game", creator.Profile.Nick),
 		commands: make(chan func(*Game), 256),
+		stop:     make(chan bool),
 	}
 	game.Players[1] = creator
 	game.Owner = creator
@@ -59,6 +60,7 @@ func (game *Game) run() {
 		case <-game.stop:
 			close(game.commands)
 			close(game.stop)
+			log.Println("Stopping game runner")
 			return
 		}
 	}
