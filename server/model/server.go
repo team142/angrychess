@@ -138,7 +138,7 @@ func (s *Server) JoinGame(gameID string, p *Profile) *Game {
 }
 
 //ListOfGames produces a light struct that describes the games hosted
-func (s *Server) ListOfGames() *ListOfGames {
+func (s *Server) CreateListOfGames() *ListOfGames {
 	result := ListOfGames{Games: []map[string]string{}}
 	for _, game := range s.Games {
 		item := make(map[string]string)
@@ -150,8 +150,8 @@ func (s *Server) ListOfGames() *ListOfGames {
 	return &result
 }
 
-func (s *Server) CreateListOfGames() MessageListOfGames {
-	list := s.ListOfGames()
+func (s *Server) CreateMessageListOfGames() MessageListOfGames {
+	list := s.CreateListOfGames()
 	return CreateMessageListOfGames(list)
 
 }
