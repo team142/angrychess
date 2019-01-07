@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import * as GUI from 'babylonjs-gui';
 
 export class B {
     engine = {};
@@ -12,6 +13,7 @@ export class B {
     canvas = {}
     startingPoint = {}
     currfentMesh = {}
+    labels = {}
 
     NetworkManager
 
@@ -39,6 +41,9 @@ export class B {
         B.scene = new BABYLON.Scene(B.engine);
         B.camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 0, new BABYLON.Vector3(0, 0, 0), B.scene);
 
+        B.advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("myUI");
+
+
         B.camera.setPosition(new BABYLON.Vector3(0, 600, 50));
 
         B.camera.lowerBetaLimit = 0.1;
@@ -55,6 +60,7 @@ export class B {
         const groundMaterial = new BABYLON.StandardMaterial("groundMaterial", B.scene);
         groundMaterial.specularColor = BABYLON.Color3.Black();
         B.ground.material = groundMaterial;
+
 
         B.blueMat = new BABYLON.StandardMaterial("blueMat", B.scene);
         B.blueMat.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.4);
@@ -122,6 +128,15 @@ export class B {
         }
 
 
+        B.createLabel(1)
+        B.createLabel(2)
+        B.createLabel(3)
+        B.createLabel(4)
+
+
+
+
+
 
         // Events
         B.canvas = B.engine.getRenderingCanvas();
@@ -138,7 +153,39 @@ export class B {
             B.canvas.removeEventListener("pointermove", B.onPointerMove);
         }
 
+        B.onPointerDown({})
+        B.onPointerUp()
+
     };
+
+    static createLabel(l) {
+        let planeMaterial, plan, planeTexture, textureContext, size, textSize; 
+        plan = BABYLON.MeshBuilder.CreatePlane("plane_1" + l, {width:200, height:30}, B.scene);
+        plan.position = new BABYLON.Vector3(0, 2.75, 0); 
+        plan.position.x = 100;
+        plan.position.z = 165
+        plan.rotate(BABYLON.Axis.X, Math.PI /2)
+        plan.rotate(BABYLON.Axis.Z, Math.PI)
+
+        planeMaterial = new BABYLON.StandardMaterial("plane material", B.scene); 
+        planeTexture = new BABYLON.DynamicTexture("dynamic texture", 128, B.scene, true); 
+        planeTexture.hasAlpha = true; 
+        textureContext = planeTexture.getContext(); 
+        textureContext.font = "30px Calibri"; 
+        size = planeTexture.getSize(); 
+        textureContext.save(); 
+        textureContext.fillStyle = "red"; 
+        textureContext.fillRect(0, 0, size.width, size.height); 
+        textSize = textureContext.measureText("             "); 
+        textureContext.fillStyle = "white"; 
+        textureContext.fillText("             ", (size.width - textSize.width) / 2, (size.height + 20) / 2); 
+        textureContext.restore(); 
+        planeTexture.update(); 
+        planeMaterial.diffuseTexture = planeTexture; 
+        plan.material = planeMaterial; 
+        plan.parent = B.ground;
+        
+    }
 
     static getGroundPosition = () => {
         // Use a predicate to get position on the ground
@@ -151,7 +198,7 @@ export class B {
 
 
     static onPointerDown = (evt) => {
-        if (evt.button !== 0) {
+        if (!evt || evt.button !== 0) {
             return;
         }
 
@@ -174,6 +221,9 @@ export class B {
     }
 
     static onPointerUp = () => {
+        if (!B.currentMesh) {
+            return
+        }
 
         // if (B.currentMesh.position.x)
         let x = B.currentMesh.position.x + 10;
@@ -370,12 +420,19 @@ export class B {
     }
 
     static renderPlayer(player) {
+        B.renderLabel(player)
         if (!player.pieces) {
             return
         }
         for (const piece of player.pieces) {
             B.createOrUpdatePiece(piece)
         }
+
+    }
+
+    static renderLabel(player) {
+        //TODO: get and update
+
 
     }
 

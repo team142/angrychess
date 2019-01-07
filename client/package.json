@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "babylonjs": "^3.3.0",
+    "babylonjs-gui": "^3.3.0",
     "cannon": "^0.6.2",
     "earcut": "^2.1.4",
     "oimo": "^1.0.9",
