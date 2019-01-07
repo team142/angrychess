@@ -84,11 +84,18 @@ export class B {
         B.grayMat.emissiveColor = BABYLON.Color3.Gray();
 
         let boards = 2;
+        let fTile
 
         for (let board = 1; board <= boards; board++) {
             for (let x = 1; x <= 8; x++) {
                 for (let y = 1; y <= 8; y++) {
-                    const tile = BABYLON.Mesh.CreateBox("tile" + board + "." + x + "." + y, 20, B.scene);
+                    let tile
+                    if (fTile) {
+                        tile = fTile.clone("tile" + board + "." + x + "." + y)
+                    } else {
+                        tile = BABYLON.Mesh.CreateBox("tile" + board + "." + x + "." + y, 20, B.scene);
+                        fTile = tile
+                    }
                     tile.scaling = new BABYLON.Vector3(1, 0.1, 1);
                     if (board % 2 == 0) {
                         if ((x + y) % 2) {
