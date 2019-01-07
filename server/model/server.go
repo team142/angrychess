@@ -97,11 +97,10 @@ func (s *Server) CreateGame(client *ws.Client) *Game {
 	game.CanStartBeforeFull = s.canStartBeforeFull
 	s.Games[game.ID] = game
 
-	reply := CreateMessageView(ViewBoard)
-	b, _ := json.Marshal(reply)
-
 	game.DoWork(
 		func(game *Game) {
+			reply := CreateMessageView(ViewBoard)
+			b, _ := json.Marshal(reply)
 			game.Announce(b)
 			game.ShareState()
 		})
