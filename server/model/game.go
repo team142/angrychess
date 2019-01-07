@@ -15,14 +15,16 @@ const (
 //CreateGame starts a game with a player
 func CreateGame(creator *Player) *Game {
 	game := &Game{
-		ID:      uuid.NewV4().String(),
-		Players: make(map[int]*Player),
-		Boards:  maxSupportedBoards,
-		Title:   fmt.Sprintf("%s's game", creator.Profile.Nick),
+		ID:       uuid.NewV4().String(),
+		Players:  make(map[int]*Player),
+		Boards:   maxSupportedBoards,
+		Title:    fmt.Sprintf("%s's game", creator.Profile.Nick),
+		commands: make(chan func(*Game), 256),
 	}
 	game.Players[1] = creator
 	game.Owner = creator
 	creator.SetTeamColorAndBoard(1, game.Boards)
+	go game.run()
 	return game
 }
 
@@ -40,6 +42,30 @@ type Game struct {
 	Players            map[int]*Player `json:"players"`
 	Boards             int             `json:"boards"`
 	CanStartBeforeFull bool            `json:"canStartBeforeFull"`
+	commands           chan func(*Game)
+	stop               chan bool
+}
+
+func (game *Game) DoWork(f func(*Game)) {
+	game.commands <- f
+}
+
+func (game *Game) run() {
+	for {
+		select {
+		case command := <-game.commands:
+			fmt.Println("Running command")
+			command(game)
+		case <-game.stop:
+			close(game.commands)
+			close(game.stop)
+			return
+		}
+	}
+}
+
+func (game *Game) Stop() {
+	game.stop <- true
 }
 
 //JoinGame gets a player into a game

@@ -93,17 +93,21 @@ func (s *Server) CreateGame(client *ws.Client) *Game {
 		Team:    1,
 	}
 
-	g := CreateGame(player)
-	g.CanStartBeforeFull = s.canStartBeforeFull
-	s.Games[g.ID] = g
+	game := CreateGame(player)
+	game.CanStartBeforeFull = s.canStartBeforeFull
+	s.Games[game.ID] = game
 
 	reply := CreateMessageView(ViewBoard)
 	b, _ := json.Marshal(reply)
-	g.Announce(b)
 
-	g.ShareState()
-	log.Println(">> Created game ", g.Title)
-	return g
+	game.DoWork(
+		func(game *Game) {
+			game.Announce(b)
+			game.ShareState()
+		})
+
+	log.Println(">> Created game ", game.Title)
+	return game
 }
 
 //JoinGame for easy access
@@ -122,10 +126,14 @@ func (s *Server) JoinGame(gameID string, p *Profile) *Game {
 
 	reply := CreateMessageView(ViewBoard)
 	b, _ := json.Marshal(reply)
-	game.Announce(b)
+
+	game.DoWork(
+		func(game *Game) {
+			game.Announce(b)
+			game.ShareState()
+		})
 
 	log.Println(">> ", player.Profile.Nick, " joined game ", game.Title)
-	game.ShareState()
 	return game
 
 }
@@ -172,7 +180,11 @@ func (s *Server) StartGame(client *ws.Client) {
 		log.Println(fmt.Sprintf("Error finding game owned by, %v with nick %v", client, s.Lobby[client].Nick))
 		return
 	}
-	game.StartGame()
+
+	game.DoWork(
+		func(game *Game) {
+			game.StartGame()
+		})
 
 }
 
@@ -183,25 +195,22 @@ func (s *Server) Move(message MessageMove, client *ws.Client) {
 		log.Println(fmt.Sprintf("Error finding game"))
 		return
 	}
-	game.Move(client, message)
 
-}
-
-//Place attempts to place a piece
-func (s *Server) Place(message MessagePlace, client *ws.Client) {
-	foundGame, game := s.GameByClientPlaying(client)
-	if !foundGame {
-		log.Println(fmt.Sprintf("Error finding game"))
-		return
-	}
-	game.Place(client, message)
+	game.DoWork(
+		func(game *Game) {
+			game.Move(client, message)
+		})
 
 }
 
 //ChangeSeat changes where a player sits
 func (s *Server) ChangeSeat(client *ws.Client, seat int) {
 	_, game := s.GameByClientPlaying(client)
-	game.ChangeSeat(client, seat)
+
+	game.DoWork(
+		func(game *Game) {
+			game.ChangeSeat(client, seat)
+		})
 }
 
 func (s *Server) createUniqueNick(nickIn string) string {
@@ -234,6 +243,7 @@ func (s *Server) Disconnect(client *ws.Client) {
 		game.RemoveClient(client)
 		if len(game.Players) == 0 {
 			log.Println(">> Game is empty. Removing game")
+			game.Stop()
 			delete(s.Games, game.ID)
 		}
 	} else {
