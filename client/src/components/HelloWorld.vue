@@ -124,6 +124,7 @@ export default {
         this.state,
         B
       );
+      B.NetworkManager = this.NetworkManager
     },
 
     searchAgain() {
