@@ -4,7 +4,7 @@ import "testing"
 
 func TestPlayer_SetTeamAndColorNormal(t *testing.T) {
 	p := Player{}
-	p.SetTeamAndColor(1, 2)
+	p.SetTeamColorAndBoard(1, 2)
 
 	expectedColor := false
 	if p.Color != expectedColor {
@@ -25,7 +25,7 @@ func TestPlayer_SetTeamAndColorNormal(t *testing.T) {
 
 func TestPlayer_SetTeamAndColorNormal2(t *testing.T) {
 	p := Player{}
-	p.SetTeamAndColor(3, 2)
+	p.SetTeamColorAndBoard(3, 2)
 
 	expectedColor := true
 	if p.Color != expectedColor {
@@ -46,7 +46,7 @@ func TestPlayer_SetTeamAndColorNormal2(t *testing.T) {
 
 func TestPlayer_SetTeamAndColorAbsurd(t *testing.T) {
 	p := Player{}
-	p.SetTeamAndColor(7, 4)
+	p.SetTeamColorAndBoard(7, 4)
 
 	expectedColor := true
 	if p.Color != expectedColor {
