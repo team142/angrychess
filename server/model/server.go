@@ -197,7 +197,11 @@ func (s *Server) Move(message MessageMove, client *ws.Client) {
 
 	game.DoWork(
 		func(game *Game) {
-			game.Move(client, message)
+			didMove := game.Move(client, message)
+			if didMove {
+				game.changeMoveFrom(client)
+			}
+
 		})
 
 }

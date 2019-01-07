@@ -132,11 +132,10 @@ func (game *Game) MaxPlayers() int {
 }
 
 //PlayerByClient for easy access
-func (game *Game) PlayerByClient(client *ws.Client) (result *Player, found bool) {
-	for _, p := range game.Players {
+func (game *Game) PlayerByClient(client *ws.Client) (result *Player, seat int, found bool) {
+	for seat, p := range game.Players {
 		if p.Profile.Client == client {
-			result, found = p, true
-			return
+			return p, seat, true
 		}
 	}
 	return
@@ -174,10 +173,15 @@ func (game *Game) IsReadyToStart() (ok bool, message string) {
 }
 
 //Move moves a piece
-func (game *Game) Move(client *ws.Client, message MessageMove) {
+func (game *Game) Move(client *ws.Client, message MessageMove) (didMove bool) {
 	log.Println(">> Moving ")
-	player, _ := game.PlayerByClient(client)
+	player, _, _ := game.PlayerByClient(client)
 	pieceFound, piece, piecePlayer := game.findPiece(message.PieceID)
+
+	if piece.isEqual(message) {
+		log.Println("No move")
+		return
+	}
 
 	defer game.ShareState()
 
@@ -213,6 +217,7 @@ func (game *Game) Move(client *ws.Client, message MessageMove) {
 	//	err = fmt.Errorf("player doesnt not own piece: %s", move.PieceID)
 	//}
 
+	didMove = true
 	piece.Move(message)
 	return
 }
@@ -270,5 +275,18 @@ func (game *Game) RemoveClient(client *ws.Client) {
 
 	}
 	game.ShareState()
+
+}
+
+func (game *Game) changeMoveFrom(client *ws.Client) {
+	var newPlayer *Player
+	player, seat, _ := game.PlayerByClient(client)
+	if seat <= game.Boards {
+		newPlayer = game.Players[seat+2]
+	} else {
+		newPlayer = game.Players[seat-2]
+	}
+	player.MyTurn = false
+	newPlayer.MyTurn = true
 
 }

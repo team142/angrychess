@@ -97,3 +97,19 @@ func (piece *Piece) CanMoveLikeThat(player *Player, move MessageMove) (ok bool) 
 func isLastTwo(player *Player, y int) bool {
 	return (1 == player.Team && 2 >= y) || (y >= 7 && 2 == player.Team)
 }
+
+func (piece *Piece) isEqual(move MessageMove) bool {
+	if piece.Board != move.Board {
+		return false
+	}
+	if piece.Cache != move.Cache {
+		return false
+	}
+	if piece.X != move.ToX {
+		return false
+	}
+	if piece.Y != move.ToY {
+		return false
+	}
+	return true
+}
