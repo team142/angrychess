@@ -64,6 +64,12 @@ func (piece *Piece) CanMoveLikeThat(player *Player, move MessageMove) (ok bool) 
 			return
 		}
 
+		if player.Board != move.Board {
+			log.Println("Can't move onto another board")
+			ok = false
+			return
+		}
+
 	}
 
 	return
