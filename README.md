@@ -26,4 +26,8 @@ Four player chess is a game I played growing up. I would love to relive the fun 
 - Git clone the directory or your own fork of the project.
 - `go run application.go`
 
+### Client
 
+- cd to client directory.
+- `npm i`
+- `npm run serve`
