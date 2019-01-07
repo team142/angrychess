@@ -186,7 +186,7 @@ export class B {
                 console.log(JSON.stringify(B.getPosition(B.currentMesh)));
                 console.log(B.currentMesh.metadata.id + ": " + B.currentMesh.position);
             }
-            B.checkForMove(B.currentMesh.metadata.id, B.currentMesh.position.x, B.currentMesh.position.z)
+            B.checkForMove(B.currentMesh)
             
             return;
         }
@@ -195,22 +195,9 @@ export class B {
 
     }
 
-    static checkForMove(id, rawX, rawZ) {
-        console.log(id + ": " + rawX + ", " + rawZ)
-        let board = 0
-        let cache = false
-
-        if ((rawX <= 170 && rawX >= 30) && ((rawZ <= 70 && rawZ >= -70))) {
-            board = 1
-        } else if ((rawX <= 10 && rawX >= -130) && ((rawZ <= 70 && rawZ >= -70))) {
-                board = 2            
-        } else {
-            cache = true
-        }
-
-        B.NetworkManager.sendMove(id, board, rawX, rawZ, cache)
-
-
+    static checkForMove(mesh) {
+        let p = B.getPosition(mesh)
+        B.NetworkManager.sendMove(mesh.metadata.id, p.board, p.x, p.y, p.cache)
     }
 
     static onPointerMove = (evt) => {
