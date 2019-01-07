@@ -28,7 +28,7 @@ func (piece *Piece) Move(message MessageMove) {
 		piece.X = message.ToX
 		piece.Y = message.ToY
 	}
-	
+
 }
 
 //Place places a piece on a board at a point

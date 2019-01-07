@@ -44,7 +44,7 @@ func (p *Player) SetupBoard() {
 	}
 
 	//Pawns
-	for i := 1; i <= 1; i++ {
+	for i := 1; i <= 8; i++ {
 		piece := &Piece{
 			ID:       uuid.NewV4().String(),
 			Color:    p.Color,
@@ -62,18 +62,18 @@ func (p *Player) SetupBoard() {
 	}
 
 	//Two free pawns :D
-	//for i := 1; i <= 2; i++ {
-	//	piece := &Piece{
-	//		ID:       uuid.NewV4().String(),
-	//		Color:    p.Color,
-	//		X:        0,
-	//		Y:        0,
-	//		Identity: identityPawn,
-	//		Cache:    true,
-	//		Board:    p.Board,
-	//	}
-	//	p.Pieces = append(p.Pieces, piece)
-	//}
+	for i := 1; i <= 2; i++ {
+		piece := &Piece{
+			ID:       uuid.NewV4().String(),
+			Color:    p.Color,
+			X:        0,
+			Y:        0,
+			Identity: identityPawn,
+			Cache:    true,
+			Board:    p.Board,
+		}
+		p.Pieces = append(p.Pieces, piece)
+	}
 
 }
 
