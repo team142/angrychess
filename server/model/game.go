@@ -55,7 +55,6 @@ func (game *Game) run() {
 	for {
 		select {
 		case command := <-game.commands:
-			fmt.Println("Running command")
 			command(game)
 		case <-game.stop:
 			close(game.commands)
