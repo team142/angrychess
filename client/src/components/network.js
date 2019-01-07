@@ -118,12 +118,11 @@ export class NetworkManager {
         for (let p = 1; p <= players; p++) {
             if (NetworkManager.state.game.gameState.players["" + p]) {
                 const player = NetworkManager.state.game.gameState.players["" + p];
-                console.log("Rendering player " + player.profile.nick)
                 B.renderPlayer(player)
             }
         }
 
-        console.log(NetworkManager.state.game.gameState)
+        // console.log(NetworkManager.state.game.gameState)
     }
 
 
