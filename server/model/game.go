@@ -92,6 +92,17 @@ func (game *Game) findSpot() (found bool, spot int) {
 	return false, 0
 }
 
+func (game *Game) findPiece(pieceID string) (found bool, piece *Piece, player *Player) {
+	for _, player := range game.Players {
+		piece, found := player.GetPieceByID(pieceID)
+		if found {
+			return true, piece, player
+		}
+	}
+	found = false
+	return
+}
+
 //StartGame starts the game for all players
 func (game *Game) StartGame() {
 	ok, msg := game.IsReadyToStart()
@@ -166,7 +177,25 @@ func (game *Game) IsReadyToStart() (ok bool, message string) {
 func (game *Game) Move(client *ws.Client, message MessageMove) {
 	log.Println(">> Moving ")
 	player, _ := game.PlayerByClient(client)
-	piece, _ := player.GetPieceByID(message.PieceID)
+	pieceFound, piece, piecePlayer := game.findPiece(message.PieceID)
+
+	defer game.ShareState()
+
+	if player != piecePlayer {
+		log.Println("Player does not own piece, " + message.PieceID)
+		//return
+	}
+
+	if !pieceFound {
+		log.Println("Piece not found, " + message.PieceID)
+		return
+	}
+
+	//Check for bad state
+	if message.Cache == false && message.Board == 0 {
+		log.Println("Piece must be on board or in cache, not neither")
+		return
+	}
 
 	/*
 		TODO: do other checks
@@ -176,7 +205,6 @@ func (game *Game) Move(client *ws.Client, message MessageMove) {
 	//}
 
 	piece.Move(message)
-	game.ShareState()
 	return
 }
 
