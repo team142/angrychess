@@ -159,7 +159,6 @@ export default {
 
     myTurn() {
       const id = this.state.id;
-      // console.log(this.state.gameState.players)
       for (let seat in this.state.gameState.players) {
         if (this.state.gameState.players[seat].profile.id == id) {
           return this.state.gameState.players[seat].myTurn;
