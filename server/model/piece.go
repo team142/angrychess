@@ -44,7 +44,26 @@ func (piece *Piece) CanMoveLikeThat(player *Player, move MessageMove) (ok bool) 
 		movingOne := util.Abs(piece.Y-move.ToY) == 1
 		movingTwo := util.Abs(piece.Y-move.ToY) == 2
 		goingDown := piece.Y > move.ToY
+		placeOntoBoard := piece.Cache && !move.Cache
+		movingBoards := piece.Board != move.Board
 		isOnStartRow := player.Team == 1 && piece.Y == 7 || player.Team == 2 && piece.Y == 2
+
+		if movingBoards {
+			log.Println("Can't move boards")
+			ok = false
+			return
+		}
+
+		if placeOntoBoard {
+			//TODO: other checks
+			if isLastTwo(player, move.ToY) {
+				log.Println("Can't place on last two enemy lines")
+				ok = false
+				return
+			}
+			ok = true
+			return
+		}
 
 		if !movingTwo && !movingOne {
 			log.Println("Must only move 1 or 2 blocks")
@@ -73,4 +92,8 @@ func (piece *Piece) CanMoveLikeThat(player *Player, move MessageMove) (ok bool) 
 	}
 
 	return
+}
+
+func isLastTwo(player *Player, y int) bool {
+	return (1 == player.Team && 2 >= y) || (y >= 7 && 2 == player.Team)
 }
