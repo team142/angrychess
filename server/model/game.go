@@ -183,7 +183,12 @@ func (game *Game) Move(client *ws.Client, message MessageMove) {
 
 	if player != piecePlayer {
 		log.Println("Player does not own piece, " + message.PieceID)
-		//return
+		return
+	}
+
+	if !player.MyTurn {
+		log.Println("Not my turn!, " + message.PieceID)
+		return
 	}
 
 	if !pieceFound {
@@ -197,6 +202,10 @@ func (game *Game) Move(client *ws.Client, message MessageMove) {
 		return
 	}
 
+	if !piece.CanMoveLikeThat(player, message) {
+		return
+	}
+
 	/*
 		TODO: do other checks
 	*/
@@ -205,21 +214,6 @@ func (game *Game) Move(client *ws.Client, message MessageMove) {
 	//}
 
 	piece.Move(message)
-	return
-}
-
-//Place places a piece if possible
-func (game *Game) Place(client *ws.Client, message MessagePlace) {
-	log.Println(">> Placing ")
-
-	/*
-		TODO: do other checks
-	*/
-
-	player, _ := game.PlayerByClient(client)
-	piece, _ := player.GetPieceByID(message.ID)
-	piece.Place(message)
-	game.ShareState()
 	return
 }
 

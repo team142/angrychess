@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/team142/chessfor4/util"
+	"log"
+)
+
 const (
 	identityPawn   = 1
 	identityKnight = 2
@@ -31,9 +36,35 @@ func (piece *Piece) Move(message MessageMove) {
 
 }
 
-//Place places a piece on a board at a point
-func (piece *Piece) Place(message MessagePlace) {
-	piece.X = message.ToY
-	piece.Y = message.ToY
+//CanMoveLikeThat checks that the piece can make those sorts of moves
+func (piece *Piece) CanMoveLikeThat(player *Player, move MessageMove) (ok bool) {
+	ok = true
+	if piece.Identity == identityPawn {
+		shouldGoDown := player.Team == 1
+		movingOne := util.Abs(piece.Y-move.ToY) == 1
+		movingTwo := util.Abs(piece.Y-move.ToY) == 2
+		goingDown := piece.Y > move.ToY
+		isOnStartRow := player.Team == 1 && piece.Y == 7 || player.Team == 2 && piece.Y == 2
 
+		if !movingTwo && !movingOne {
+			log.Println("Must only move 1 or 2 blocks")
+			ok = false
+			return
+		}
+
+		if shouldGoDown != goingDown {
+			log.Println("Expected goingDown ", goingDown, " equal to should go down ", shouldGoDown)
+			ok = false
+			return
+		}
+
+		if !isOnStartRow && movingTwo {
+			log.Println("Can't move two when not on start row")
+			ok = false
+			return
+		}
+
+	}
+
+	return
 }
