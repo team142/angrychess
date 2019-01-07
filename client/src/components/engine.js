@@ -183,11 +183,11 @@ export class B {
             B.camera.attachControl(B.canvas, true);
             B.startingPoint = null;
             if (B && B.currentMesh) {
-                console.log(JSON.stringify(B.getPosition(B.currentMesh)));
-                console.log(B.currentMesh.metadata.id + ": " + B.currentMesh.position);
+                // console.log(JSON.stringify(B.getPosition(B.currentMesh)));
+                // console.log(B.currentMesh.metadata.id + ": " + B.currentMesh.position);
             }
             B.checkForMove(B.currentMesh)
-            
+
             return;
         }
 
@@ -225,7 +225,7 @@ export class B {
         return false
     }
 
-    static createPiece(board, piece) {
+    static createPiece(piece) {
 
         let newPiece
         const cone = BABYLON.MeshBuilder.CreateCylinder("cone" + piece.id, { diameterTop: 0, height: 20, tessellation: 96, diameterBottom: 20 }, B.scene);
@@ -263,37 +263,37 @@ export class B {
 
     }
 
-    static updatePiece(board, piece) {
+    static updatePiece(piece) {
         let newPiece = B.pieces[piece.id]
         newPiece.metadata = piece
         if (!piece.cache) {
-            newPiece.position.x += 170 - (piece.x - 1) * 20 - 200 * (board - 1);
-            newPiece.position.z += 70 - (piece.y - 1) * 20;
+            newPiece.position.x = 170 - (piece.x - 1) * 20 - 200 * (piece.board - 1);
+            newPiece.position.z = 70 - (piece.y - 1) * 20;
             newPiece.position.y = -9 + 20;
 
         } else {
-            B.updateCachedPiece(board, piece)
+            B.updateCachedPiece(piece)
         }
 
     }
 
-    static updateCachedPiece(board, piece) {
+    static updateCachedPiece(piece) {
+        console.log(piece)
         let newPiece = B.pieces[piece.id]
 
-        let n = B.getCachedRelativeNumber(board, piece)
+        let n = B.getCachedRelativeNumber(piece.board, piece)
         let row = Math.floor((n - 1) / 10) + 1
 
         n = n - ((row - 1) * 10)
         let x = 190 - (n - 1) * 20;
-        x = x - (board - 1) * 200
+        x = x - (piece.board - 1) * 200
 
         newPiece.position.x = x
 
-        if ((board % 2 == 1 && !piece.color) || (board % 2 == 0 && piece.color)) {
+        if ((piece.board % 2 == 1 && !piece.color) || (piece.board % 2 == 0 && piece.color)) {
             newPiece.position.z = -130 + 20 * (row - 1)
         } else {
             let z = 90 + 20 * (row - 1);
-            // console.log(n + " of row " + row + " has z: " + z)
             newPiece.position.z = z;
         }
 
@@ -322,37 +322,31 @@ export class B {
             cache: false
         }
         if (mesh && mesh.position) {
-
-            if (mesh.position.x <= 170 && mesh.position.x >= 70 && mesh.position.z <= 70 && mesh.position.z >= -70) {
+            if (mesh.position.x <= 170 && mesh.position.x >= 30 && mesh.position.z <= 70 && mesh.position.z >= -70) {
+                result.cache = false
                 result.board = 1
             } else if (mesh.position.x <= -30 && mesh.position.x >= -170 && mesh.position.z <= 70 && mesh.position.z >= -70) {
+                result.cache = false
                 result.board = 2
-            }
-
-
-
-            if (result.board == 0) {
+            } else {
                 result.cache = true
-            }
+                if (mesh.position.x >= 10) {
+                    result.board = 1
+                } else {
+                    result.board = 2
+                }
 
+            }
             let x = mesh.position.x - 10
             x = 160 - x
             result.x = B.relativeTile(x)
             if (result.board == 2) {
                 result.x -= 10;
             }
-
             let z = mesh.position.z - 10 + 100
             z = 160 - z
             result.y = B.relativeTile(z)
-
-
-
         }
-
-
-
-
         return result
     }
 
@@ -368,7 +362,7 @@ export class B {
             return
         }
         for (const piece of player.pieces) {
-            B.createOrUpdatePiece(player.board, piece)
+            B.createOrUpdatePiece(piece)
         }
 
     }
@@ -384,12 +378,12 @@ export class B {
         return null;
     }
 
-    static createOrUpdatePiece(board, piece) {
+    static createOrUpdatePiece(piece) {
         if (B.pieceExists(piece.id)) {
-            B.updatePiece(board, piece)
+            B.updatePiece(piece)
         } else {
-            B.createPiece(board, piece)
-            B.updatePiece(board, piece)
+            B.createPiece(piece)
+            B.updatePiece(piece)
         }
     }
 
