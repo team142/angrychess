@@ -22,8 +22,14 @@ type Piece struct {
 
 //Move moves piece
 func (piece *Piece) Move(message MessageMove) {
-	piece.X = message.ToX
-	piece.Y = message.ToY
+	if message.Cache {
+		piece.Cache = true
+	} else {
+		piece.X = message.ToX
+		piece.Y = message.ToY
+		piece.Cache = false
+	}
+	piece.Board = message.Board
 
 }
 
