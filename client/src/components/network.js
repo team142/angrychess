@@ -99,6 +99,19 @@ export class NetworkManager {
         );
     }
 
+    static sendMove(id, board, x, y, cache) {
+        NetworkManager.state.conn.send(
+            JSON.stringify({
+                msg: "move",
+                pieceId: id,
+                tx: x,
+                ty: y,
+                board: board,
+                cache: cache,
+            })
+        );
+    }
+
     static handleState(s) {
         NetworkManager.state.game.gameState = s;
         const players = NetworkManager.state.game.gameState.boards * 2;
