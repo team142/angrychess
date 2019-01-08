@@ -39,7 +39,7 @@ type Game struct {
 	ID                 string          `json:"id"`
 	Started            bool            `json:"started"`
 	Title              string          `json:"title"`
-	Owner              *Player         `json:"-"`
+	Owner              *Player         `json:"owner"`
 	Players            map[int]*Player `json:"players"`
 	Boards             int             `json:"boards"`
 	CanStartBeforeFull bool            `json:"canStartBeforeFull"`
@@ -250,9 +250,9 @@ func (game *Game) ChangeSeat(client *ws.Client, seat int) {
 
 func (game *Game) RemoveClient(client *ws.Client) {
 	pid := 0
-	for a, player := range game.Players {
+	for seat, player := range game.Players {
 		if player.Profile.Client == client {
-			pid = a
+			pid = seat
 			break
 		}
 	}
@@ -271,6 +271,9 @@ func (game *Game) RemoveClient(client *ws.Client) {
 			log.Println(">> New owner is ", game.Players[a].Profile.Nick)
 			game.Owner = game.Players[a]
 			break
+		}
+		if game.Owner == nil && len(game.Players) > 0 {
+			log.Println("Error: did not assign new owner.")
 		}
 
 	}
