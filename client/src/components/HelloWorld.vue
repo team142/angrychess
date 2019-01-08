@@ -90,7 +90,8 @@
         </div>
 
         <div v-if="state.mutableViewGame">
-          <button v-if="state.admin && !state.gameState.started" class="btn btn-success" v-on:click="startGame">Start game</button>&nbsp;
+          <button v-if="amIAdmin() && !state.gameState.started" class="btn btn-success" v-on:click="startGame">Start game</button>&nbsp;
+          <span v-for="p in getPlayersArr()" :key="p" class="badge badge-pill badge-primary" style="margin-right: 10px">{{p}}</span>
           <canvas style="outline: none;" id="renderCanvas"></canvas>
         </div>
       </div>
@@ -120,11 +121,8 @@ export default {
         alert("You need a nickname");
         return;
       }
-      this.NetworkManager.connect(
-        this.state,
-        B
-      );
-      B.NetworkManager = this.NetworkManager
+      this.NetworkManager.connect(this.state, B);
+      B.NetworkManager = this.NetworkManager;
     },
 
     searchAgain() {
@@ -133,16 +131,29 @@ export default {
 
     createGame() {
       this.NetworkManager.createGame();
-      this.state.admin = true;
     },
 
     joinGame(id) {
       this.NetworkManager.joinGame(id);
-      this.state.admin = false;
     },
 
     startGame() {
       this.NetworkManager.startGame();
+    },
+
+    getPlayersArr() {
+      let arr = [];
+      for (let seat in this.state.gameState.players) {
+        arr.push(this.state.gameState.players[seat].profile.nick);
+      }
+      return arr;
+    },
+
+    amIAdmin() {
+      if (this.state && this.state.gameState && this.state.gameState.owner) {
+        return this.state.gameState.owner.profile.id === this.state.id;
+      }
+      return false
     },
 
     getBoards() {

@@ -7,7 +7,6 @@ export class State {
     secret = "";
     gameState = {};
     listOfGames = [];
-    admin = false;
     id = {};
 
 }
