@@ -159,32 +159,32 @@ export class B {
     };
 
     static createLabel(l) {
-        let planeMaterial, plan, planeTexture, textureContext, size, textSize; 
-        plan = BABYLON.MeshBuilder.CreatePlane("plane_1" + l, {width:200, height:30}, B.scene);
-        plan.position = new BABYLON.Vector3(0, 2.75, 0); 
+        let planeMaterial, plan, planeTexture, textureContext, size, textSize;
+        plan = BABYLON.MeshBuilder.CreatePlane("plane_1" + l, { width: 200, height: 30 }, B.scene);
+        plan.position = new BABYLON.Vector3(0, 2.75, 0);
         plan.position.x = 100;
         plan.position.z = 165
-        plan.rotate(BABYLON.Axis.X, Math.PI /2)
+        plan.rotate(BABYLON.Axis.X, Math.PI / 2)
         plan.rotate(BABYLON.Axis.Z, Math.PI)
 
-        planeMaterial = new BABYLON.StandardMaterial("plane material", B.scene); 
-        planeTexture = new BABYLON.DynamicTexture("dynamic texture", 128, B.scene, true); 
-        planeTexture.hasAlpha = true; 
-        textureContext = planeTexture.getContext(); 
-        textureContext.font = "30px Calibri"; 
-        size = planeTexture.getSize(); 
-        textureContext.save(); 
-        textureContext.fillStyle = "red"; 
-        textureContext.fillRect(0, 0, size.width, size.height); 
-        textSize = textureContext.measureText("             "); 
-        textureContext.fillStyle = "white"; 
-        textureContext.fillText("             ", (size.width - textSize.width) / 2, (size.height + 20) / 2); 
-        textureContext.restore(); 
-        planeTexture.update(); 
-        planeMaterial.diffuseTexture = planeTexture; 
-        plan.material = planeMaterial; 
+        planeMaterial = new BABYLON.StandardMaterial("plane material", B.scene);
+        planeTexture = new BABYLON.DynamicTexture("dynamic texture", 128, B.scene, true);
+        planeTexture.hasAlpha = true;
+        textureContext = planeTexture.getContext();
+        textureContext.font = "30px Calibri";
+        size = planeTexture.getSize();
+        textureContext.save();
+        textureContext.fillStyle = "red";
+        textureContext.fillRect(0, 0, size.width, size.height);
+        textSize = textureContext.measureText("             ");
+        textureContext.fillStyle = "white";
+        textureContext.fillText("             ", (size.width - textSize.width) / 2, (size.height + 20) / 2);
+        textureContext.restore();
+        planeTexture.update();
+        planeMaterial.diffuseTexture = planeTexture;
+        plan.material = planeMaterial;
         plan.parent = B.ground;
-        
+
     }
 
     static getGroundPosition = () => {
@@ -282,6 +282,45 @@ export class B {
         return false
     }
 
+    static createRook(piece) {
+        // Add and manipulate meshes in the scene
+        const cone = BABYLON.MeshBuilder.CreateCylinder("cone", { diameterTop: 10, height: 20, tessellation: 96, diameterBottom: 20 }, scene);
+        const tower = BABYLON.MeshBuilder.CreateCylinder("coneTower", { diameterTop: 20, height: 5, tessellation: 96, diameterBottom: 20 }, scene);
+        tower.position.y += 10
+        const boxT1 = BABYLON.MeshBuilder.CreateBox("boxT1", { width: 5, height: 5, depth: 5 }, scene);
+        boxT1.position.y += 15
+        boxT1.position.x += 7
+        const boxT2 = BABYLON.MeshBuilder.CreateBox("boxT2", { width: 5, height: 5, depth: 5 }, scene);
+        boxT2.position.y += 15
+        boxT2.position.x -= 7
+        const boxT3 = BABYLON.MeshBuilder.CreateBox("boxT3", { width: 5, height: 5, depth: 5 }, scene);
+        boxT3.position.y += 15
+        boxT3.position.z -= 7
+        const boxT4 = BABYLON.MeshBuilder.CreateBox("boxT4", { width: 5, height: 5, depth: 5 }, scene);
+        boxT4.position.y += 15
+        boxT4.position.z += 7
+        const box = BABYLON.MeshBuilder.CreateBox(piece.id, { width: 20, height: 35, depth: 20 }, scene);
+        box.addChild(cone)
+        box.addChild(tower)
+        box.addChild(boxT1)
+        box.addChild(boxT2)
+        box.addChild(boxT3)
+        box.addChild(boxT4)
+        box.visibility = false;
+        return box
+    }
+
+    static createPawn(piece) {
+        const cone = BABYLON.MeshBuilder.CreateCylinder("cone" + piece.id, { diameterTop: 0, height: 20, tessellation: 96, diameterBottom: 20 }, B.scene);
+        const sphere = BABYLON.MeshBuilder.CreateSphere("sphere" + piece.id, { diameter: 10 }, B.scene);
+        sphere.position.y = cone.position.y + 10
+        let newPiece = BABYLON.MeshBuilder.CreateBox(piece.id, { width: 20, height: 30, depth: 20 }, B.scene);
+        newPiece.addChild(sphere)
+        newPiece.addChild(cone)
+        newPiece.visibility = false;
+        return newPiece
+    }
+
     static createPiece(piece) {
 
         let oldPiece = B.findMeshByIdentity(piece.metadata.identity)
@@ -289,13 +328,11 @@ export class B {
         if (oldPiece) {
             newPiece = oldPiece.clone(piece.id)
         } else {
-            const cone = BABYLON.MeshBuilder.CreateCylinder("cone" + piece.id, { diameterTop: 0, height: 20, tessellation: 96, diameterBottom: 20 }, B.scene);
-            const sphere = BABYLON.MeshBuilder.CreateSphere("sphere" + piece.id, { diameter: 10 }, B.scene);
-            sphere.position.y = cone.position.y + 10
-            newPiece = BABYLON.MeshBuilder.CreateBox(piece.id, { width: 20, height: 30, depth: 20 }, B.scene);
-            newPiece.addChild(sphere)
-            newPiece.addChild(cone)
-            newPiece.visibility = false;
+            if (piece.identity === 1) {
+                newPiece = B.createPawn(piece)
+            } else if (piece.identity === 4) {
+                newPiece = B.createRook(piece)
+            }
         }
 
 
