@@ -284,9 +284,10 @@ export class B {
 
     static createPiece(piece) {
 
+        let oldPiece = B.findMeshByIdentity(piece.metadata.identity)
         let newPiece
-        if (B.pieceList && (B.pieceExists.length > 0)) {
-            newPiece = B.pieceList[0].clone(piece.id)
+        if (oldPiece) {
+            newPiece = oldPiece.clone(piece.id)
         } else {
             const cone = BABYLON.MeshBuilder.CreateCylinder("cone" + piece.id, { diameterTop: 0, height: 20, tessellation: 96, diameterBottom: 20 }, B.scene);
             const sphere = BABYLON.MeshBuilder.CreateSphere("sphere" + piece.id, { diameter: 10 }, B.scene);
