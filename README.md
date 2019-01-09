@@ -1,5 +1,5 @@
 # Chess For 4 (Chess Doubles)
-<a href="https://goreportcard.com/report/github.com/team142/chessfor4"><img src="https://goreportcard.com/badge/github.com/team142/chessfor4" /></a>&nbsp;<img src="docs/trello.png" />
+<a href="https://goreportcard.com/report/github.com/team142/chessfor4"><img src="https://goreportcard.com/badge/github.com/team142/chessfor4" /></a>&nbsp;<a href="https://trello.com/b/czSy3gLz/battle-royale-chess"><img src="docs/trello.png" /></a>
 
 ## Background
 
@@ -27,4 +27,8 @@ Four player chess is a game I played growing up. I would love to relive the fun 
 - Git clone the directory or your own fork of the project.
 - `go run application.go`
 
+### Client
 
+- cd to client directory.
+- `npm i`
+- `npm run serve`

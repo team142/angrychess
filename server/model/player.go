@@ -9,6 +9,7 @@ type Player struct {
 	Team    int      `json:"team"`
 	Pieces  []*Piece `json:"pieces"`
 	MyTurn  bool     `json:"myTurn"`
+	Board   int      `json:"board"`
 }
 
 //GetPieceByID for easy access
@@ -23,14 +24,15 @@ func (p *Player) GetPieceByID(id string) (piece *Piece, found bool) {
 }
 
 //SetTeamAndColor derives the color and team
-func (p *Player) SetTeamAndColor(spot int, boards int) {
-	c := spot + boards
-	b := c%2 == 0
-	p.Color = b
+func (p *Player) SetTeamColorAndBoard(spot int, boards int) {
 	if spot <= boards {
 		p.Team = 1
+		p.Color = (spot+boards)%2 == 0
+		p.Board = spot
 	} else {
 		p.Team = 2
+		p.Color = (spot+boards)%2 == 1
+		p.Board = spot - boards
 	}
 
 }
@@ -48,8 +50,10 @@ func (p *Player) SetupBoard() {
 			Color:    p.Color,
 			X:        i,
 			Identity: identityPawn,
+			Cache:    false,
+			Board:    p.Board,
 		}
-		if p.Color {
+		if p.Team == 1 {
 			piece.Y = 7
 		} else {
 			piece.Y = 2
@@ -58,16 +62,35 @@ func (p *Player) SetupBoard() {
 	}
 
 	//Two free pawns :D
-	for i := 1; i <= 2; i++ {
+	for i := 1; i <= 8; i++ {
 		piece := &Piece{
 			ID:       uuid.NewV4().String(),
 			Color:    p.Color,
 			X:        0,
 			Y:        0,
 			Identity: identityPawn,
+			Cache:    true,
+			Board:    p.Board,
 		}
 		p.Pieces = append(p.Pieces, piece)
 	}
+
+	//Two rooks
+	rookLeft := createRook(uuid.NewV4().String(), p.Board, p.Color)
+	rookRight := createRook(uuid.NewV4().String(), p.Board, p.Color)
+	if p.Team == 1 {
+		rookLeft.Y = 8
+		rookRight.Y = 8
+	} else {
+		rookLeft.Y = 1
+		rookRight.Y = 1
+	}
+
+	rookLeft.X = 1
+	rookRight.X = 8
+
+	p.Pieces = append(p.Pieces, rookLeft)
+	p.Pieces = append(p.Pieces, rookRight)
 
 }
 

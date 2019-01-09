@@ -4,7 +4,7 @@
       <div>
         <div v-if="state.mutableViewServer" class="row">
           <div class="col"></div>
-          <div class="col-2 jumbotron animated jello">
+          <div class="col-4 jumbotron animated jello">
             <h2>Battle Royale Chess</h2>
             <img class="animated shake" width="200px" alt="Logo" src="../assets/logo.png">
 
@@ -53,7 +53,7 @@
         <!-- /row -->
         <div v-if="state.mutableViewGames" class="row">
           <div class="col"></div>
-          <div class="col-3 jumbotron">
+          <div class="col-4 jumbotron">
             <h2>Battle Royale Chess</h2>
             <img class="animated bounce" alt="Logo" src="../assets/logo.png">
 
@@ -90,7 +90,10 @@
         </div>
 
         <div v-if="state.mutableViewGame">
-          <canvas id="renderCanvas"></canvas>
+          <button v-if="amIAdmin() && !state.gameState.started" class="btn btn-success" v-on:click="startGame">Start game</button>&nbsp;
+          <span v-for="i in getPlayersArr()" :key="1 + i.id" class="badge badge-pill badge-success" style="margin-right: 10px" v-if="i.myTurn">{{i.nick}}</span>
+          <span v-for="i in getPlayersArr()" :key="2 + i.id" class="badge badge-pill badge-warning" style="margin-right: 10px" v-if="!i.myTurn">{{i.nick}}</span>
+          <canvas style="outline: none;" id="renderCanvas"></canvas>
         </div>
       </div>
     </div>
@@ -119,10 +122,8 @@ export default {
         alert("You need a nickname");
         return;
       }
-      this.NetworkManager.connect(
-        this.state,
-        B
-      );
+      this.NetworkManager.connect(this.state, B);
+      B.NetworkManager = this.NetworkManager;
     },
 
     searchAgain() {
@@ -131,16 +132,34 @@ export default {
 
     createGame() {
       this.NetworkManager.createGame();
-      this.state.admin = true;
     },
 
     joinGame(id) {
       this.NetworkManager.joinGame(id);
-      this.state.admin = false;
     },
 
     startGame() {
       this.NetworkManager.startGame();
+    },
+
+    getPlayersArr() {
+      let arr = [];
+      for (let seat in this.state.gameState.players) {
+        let item = {
+          id:  this.state.gameState.players[seat].profile.id,
+          nick: this.state.gameState.players[seat].profile.nick,
+          myTurn: this.state.gameState.players[seat].myTurn
+        }
+        arr.push(item);
+      }
+      return arr;
+    },
+
+    amIAdmin() {
+      if (this.state && this.state.gameState && this.state.gameState.owner) {
+        return this.state.gameState.owner.profile.id === this.state.id;
+      }
+      return false
     },
 
     getBoards() {
@@ -157,7 +176,6 @@ export default {
 
     myTurn() {
       const id = this.state.id;
-      // console.log(this.state.gameState.players)
       for (let seat in this.state.gameState.players) {
         if (this.state.gameState.players[seat].profile.id == id) {
           return this.state.gameState.players[seat].myTurn;

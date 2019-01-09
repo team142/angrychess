@@ -21,7 +21,7 @@ type MessageMove struct {
 	ToX     int    `json:"tx"`
 	ToY     int    `json:"ty"`
 	Board   int    `json:"board"`
-	Cache   bool   `json:"bool"`
+	Cache   bool   `json:"cache"`
 }
 
 //MessagePlace describes placing a piece

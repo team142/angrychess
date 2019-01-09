@@ -1,0 +1,10 @@
+FROM arm32v7/golang:1.11.4
+
+WORKDIR /src
+COPY server .
+WORKDIR /src/server
+
+RUN go mod download
+RUN go build application.go
+
+CMD ["application"]
