@@ -91,7 +91,8 @@
 
         <div v-if="state.mutableViewGame">
           <button v-if="amIAdmin() && !state.gameState.started" class="btn btn-success" v-on:click="startGame">Start game</button>&nbsp;
-          <span v-for="p in getPlayersArr()" :key="p" class="badge badge-pill badge-primary" style="margin-right: 10px">{{p}}</span>
+          <span v-for="i in getPlayersArr()" :key="1 + i.id" class="badge badge-pill badge-success" style="margin-right: 10px" v-if="i.myTurn">{{i.nick}}</span>
+          <span v-for="i in getPlayersArr()" :key="2 + i.id" class="badge badge-pill badge-warning" style="margin-right: 10px" v-if="!i.myTurn">{{i.nick}}</span>
           <canvas style="outline: none;" id="renderCanvas"></canvas>
         </div>
       </div>
@@ -144,7 +145,12 @@ export default {
     getPlayersArr() {
       let arr = [];
       for (let seat in this.state.gameState.players) {
-        arr.push(this.state.gameState.players[seat].profile.nick);
+        let item = {
+          id:  this.state.gameState.players[seat].profile.id,
+          nick: this.state.gameState.players[seat].profile.nick,
+          myTurn: this.state.gameState.players[seat].myTurn
+        }
+        arr.push(item);
       }
       return arr;
     },
