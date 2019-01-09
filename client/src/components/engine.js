@@ -284,22 +284,22 @@ export class B {
 
     static createRook(piece) {
         // Add and manipulate meshes in the scene
-        const cone = BABYLON.MeshBuilder.CreateCylinder("cone", { diameterTop: 10, height: 20, tessellation: 96, diameterBottom: 20 }, scene);
-        const tower = BABYLON.MeshBuilder.CreateCylinder("coneTower", { diameterTop: 20, height: 5, tessellation: 96, diameterBottom: 20 }, scene);
+        const cone = BABYLON.MeshBuilder.CreateCylinder("cone", { diameterTop: 10, height: 20, tessellation: 96, diameterBottom: 20 }, B.scene);
+        const tower = BABYLON.MeshBuilder.CreateCylinder("coneTower", { diameterTop: 20, height: 5, tessellation: 96, diameterBottom: 20 }, B.scene);
         tower.position.y += 10
-        const boxT1 = BABYLON.MeshBuilder.CreateBox("boxT1", { width: 5, height: 5, depth: 5 }, scene);
+        const boxT1 = BABYLON.MeshBuilder.CreateBox("boxT1", { width: 5, height: 5, depth: 5 }, B.scene);
         boxT1.position.y += 15
         boxT1.position.x += 7
-        const boxT2 = BABYLON.MeshBuilder.CreateBox("boxT2", { width: 5, height: 5, depth: 5 }, scene);
+        const boxT2 = BABYLON.MeshBuilder.CreateBox("boxT2", { width: 5, height: 5, depth: 5 }, B.scene);
         boxT2.position.y += 15
         boxT2.position.x -= 7
-        const boxT3 = BABYLON.MeshBuilder.CreateBox("boxT3", { width: 5, height: 5, depth: 5 }, scene);
+        const boxT3 = BABYLON.MeshBuilder.CreateBox("boxT3", { width: 5, height: 5, depth: 5 }, B.scene);
         boxT3.position.y += 15
         boxT3.position.z -= 7
-        const boxT4 = BABYLON.MeshBuilder.CreateBox("boxT4", { width: 5, height: 5, depth: 5 }, scene);
+        const boxT4 = BABYLON.MeshBuilder.CreateBox("boxT4", { width: 5, height: 5, depth: 5 }, B.scene);
         boxT4.position.y += 15
         boxT4.position.z += 7
-        const box = BABYLON.MeshBuilder.CreateBox(piece.id, { width: 20, height: 35, depth: 20 }, scene);
+        const box = BABYLON.MeshBuilder.CreateBox(piece.id, { width: 20, height: 35, depth: 20 }, B.scene);
         box.addChild(cone)
         box.addChild(tower)
         box.addChild(boxT1)
@@ -323,7 +323,7 @@ export class B {
 
     static createPiece(piece) {
 
-        let oldPiece = B.findMeshByIdentity(piece.metadata.identity)
+        let oldPiece = B.findMeshByIdentity(piece.identity)
         let newPiece
         if (oldPiece) {
             newPiece = oldPiece.clone(piece.id)
@@ -477,7 +477,7 @@ export class B {
     static findMeshByIdentity(identity) {
         if (B.pieceList) {
             for (let piece of B.pieceList) {
-                if (piece.metadata.identity == identity) {
+                if (piece.metadata && piece.metadata.identity == identity) {
                     return piece;
                 }
             }
