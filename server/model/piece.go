@@ -113,3 +113,12 @@ func (piece *Piece) isEqual(move MessageMove) bool {
 	}
 	return true
 }
+
+func createRook(id string, board int, color bool) *Piece {
+	return &Piece{
+		ID:       id,
+		Board:    board,
+		Color:    color,
+		Identity: identityRook,
+	}
+}

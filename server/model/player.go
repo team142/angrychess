@@ -75,6 +75,23 @@ func (p *Player) SetupBoard() {
 		p.Pieces = append(p.Pieces, piece)
 	}
 
+	//Two rooks
+	rookLeft := createRook(uuid.NewV4().String(), p.Board, p.Color)
+	rookRight := createRook(uuid.NewV4().String(), p.Board, p.Color)
+	if p.Team == 1 {
+		rookLeft.Y = 8
+		rookRight.Y = 8
+	} else {
+		rookLeft.Y = 1
+		rookRight.Y = 1
+	}
+
+	rookLeft.X = 1
+	rookRight.X = 8
+
+	p.Pieces = append(p.Pieces, rookLeft)
+	p.Pieces = append(p.Pieces, rookRight)
+
 }
 
 //OwnsPiece determines if the piece is owned by a player
