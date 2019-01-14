@@ -47,6 +47,7 @@ type Game struct {
 	stop               chan bool
 }
 
+//DoWork Adds a function of work that must run in the game's go-routine.
 func (game *Game) DoWork(f func(*Game)) {
 	game.commands <- f
 }
@@ -175,28 +176,36 @@ func (game *Game) IsReadyToStart() (ok bool, message string) {
 //Move moves a piece
 func (game *Game) Move(client *ws.Client, message MessageMove) (didMove bool) {
 	log.Println(">> Moving ")
-	player, _, _ := game.PlayerByClient(client)
+	//Always send state
+	defer game.ShareState()
+
 	pieceFound, piece, piecePlayer := game.findPiece(message.PieceID)
+
+	//Can't move a piece that does not exists
+	if !pieceFound {
+		log.Println("Piece not found, " + message.PieceID)
+		return
+	}
+
+	//Get the message sending player
+	player, _, _ := game.PlayerByClient(client)
+
+	//Can this player move?
+	if !player.MyTurn {
+		log.Println("Not my turn!, " + message.PieceID)
+		return
+	}
+
+	//TODO: handle taking pieces off board here
 
 	if piece.isEqual(message) {
 		log.Println("No move")
 		return
 	}
 
-	defer game.ShareState()
-
+	//Does this player own this piece?
 	if player != piecePlayer {
 		log.Println("Player does not own piece, " + message.PieceID)
-		return
-	}
-
-	if !player.MyTurn {
-		log.Println("Not my turn!, " + message.PieceID)
-		return
-	}
-
-	if !pieceFound {
-		log.Println("Piece not found, " + message.PieceID)
 		return
 	}
 

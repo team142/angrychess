@@ -197,6 +197,7 @@ func (s *Server) Move(message MessageMove, client *ws.Client) {
 
 	game.DoWork(
 		func(game *Game) {
+			//TODO: figure out where this logic should sit
 			didMove := game.Move(client, message)
 			if didMove {
 				game.changeMoveFrom(client)
