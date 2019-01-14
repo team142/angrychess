@@ -29,6 +29,8 @@ func CalcMoveDescription(game *Game, player *Player, piece *Piece, move *Message
 	result.LastTwoRows = (1 == player.Team && 2 >= piece.Y) || (piece.Y >= 7 && 2 == player.Team)
 	result.OtherBoard = player.Board != move.Board
 
+	CalcPiecesBetween(game, player, piece, move, result)
+
 Outer:
 	for _, pl := range game.Players {
 		for _, pi := range pl.Pieces {
