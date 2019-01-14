@@ -5,7 +5,7 @@ import "testing"
 func TestFindSpotEmptyGame(t *testing.T) {
 	game := Game{Boards: 2}
 	expectedFound := true
-	found, spot := game.findSpot()
+	found, spot := game.FindSpot()
 	if !found {
 		t.Errorf("Expected empty game to have found spot %v, got %v", expectedFound, found)
 	}
@@ -20,7 +20,7 @@ func TestFindSpotGameWithPlayers(t *testing.T) {
 	game := Game{Boards: 2, Players: make(map[int]*Player)}
 	expectedFound := true
 	for i := 1; i <= 4; i++ {
-		found, spot := game.findSpot()
+		found, spot := game.FindSpot()
 		if found != expectedFound {
 			t.Errorf("Expected game to have found spot %v, got %v", expectedFound, found)
 		}

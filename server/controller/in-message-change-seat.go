@@ -14,6 +14,6 @@ func handleInMessageChangeSeat(server *model.Server, client *ws.Client, msg []by
 		log.Println(fmt.Sprintf("Error unmarshaling, %s", err))
 		return
 	}
-	changeSeat(server, client, message.Seat)
+	changeSeatByClient(server, client, message.Seat)
 
 }

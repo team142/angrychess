@@ -13,7 +13,7 @@ func handleInMessageJoinGame(server *model.Server, client *ws.Client, msg []byte
 	if err := json.Unmarshal(msg, &message); err != nil {
 		log.Println(fmt.Sprintf("Error unmarshaling, %s", err))
 	}
-	joinGame(server, message.ID, server.Lobby[client])
+	joinGameByClient(server, message.ID, server.Lobby[client])
 	notifyLobby(server)
 
 }

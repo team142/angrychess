@@ -32,7 +32,7 @@ func CalcMoveDescription(game *Game, player *Player, piece *Piece, move *Message
 Outer:
 	for _, pl := range game.Players {
 		for _, pi := range pl.Pieces {
-			if pi.isEqual(move) {
+			if pi.IsEqual(move) {
 				result.LandingOnPiece = pi
 				break Outer
 			}

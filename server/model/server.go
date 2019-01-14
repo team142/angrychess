@@ -13,7 +13,7 @@ const (
 func CreateServer(address string, handler func(*Server, *ws.Client, []byte), canStartBeforeFull bool) *Server {
 	s := &Server{
 		Address:            address,
-		Handler:            handler,
+		handler:            handler,
 		Lobby:              make(map[*ws.Client]*Profile),
 		Games:              make(map[string]*Game),
 		Todo:               make(chan *item, 256),
@@ -28,7 +28,7 @@ type Server struct {
 	Address            string
 	Lobby              map[*ws.Client]*Profile
 	Games              map[string]*Game
-	Handler            func(*Server, *ws.Client, []byte)
+	handler            func(*Server, *ws.Client, []byte)
 	Todo               chan *item
 	CanStartBeforeFull bool
 }
@@ -41,7 +41,7 @@ type item struct {
 func (s *Server) run() {
 	go func() {
 		for i := range s.Todo {
-			s.Handler(s, i.client, i.msg)
+			s.handler(s, i.client, i.msg)
 		}
 	}()
 }

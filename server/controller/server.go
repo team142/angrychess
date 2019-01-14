@@ -8,7 +8,7 @@ import (
 	"log"
 )
 
-func createNewGame(s *model.Server, client *ws.Client) *model.Game {
+func createGameByClient(s *model.Server, client *ws.Client) *model.Game {
 	player := &model.Player{
 		Profile: s.Lobby[client],
 		Team:    1,
@@ -22,8 +22,8 @@ func createNewGame(s *model.Server, client *ws.Client) *model.Game {
 		func(game *model.Game) {
 			reply := model.CreateMessageView(model.ViewBoard)
 			b, _ := json.Marshal(reply)
-			game.Announce(b)
-			game.ShareState()
+			announce(game, b)
+			shareState(game)
 		})
 
 	log.Println(">> Created game ", game.Title)
@@ -31,12 +31,12 @@ func createNewGame(s *model.Server, client *ws.Client) *model.Game {
 }
 
 //joinGame for easy access
-func joinGame(s *model.Server, gameID string, p *model.Profile) *model.Game {
+func joinGameByClient(s *model.Server, gameID string, p *model.Profile) *model.Game {
 	player := &model.Player{
 		Profile: s.Lobby[p.Client],
 	}
 	game := s.Games[gameID]
-	ok := game.JoinGame(player)
+	ok := joinGame(game, player)
 	if !ok {
 		reply := model.CreateMessageError("Could not join game", "Server is full")
 		b, _ := json.Marshal(reply)
@@ -49,8 +49,8 @@ func joinGame(s *model.Server, gameID string, p *model.Profile) *model.Game {
 
 	game.DoWork(
 		func(game *model.Game) {
-			game.Announce(b)
-			game.ShareState()
+			announce(game, b)
+			shareState(game)
 		})
 
 	log.Println(">> ", player.Profile.Nick, " joined game ", game.Title)
@@ -75,7 +75,7 @@ func setNick(s *model.Server, client *ws.Client, nick string) {
 }
 
 //StartGame starts a game if possible
-func startGame(s *model.Server, client *ws.Client) {
+func startGameByClient(s *model.Server, client *ws.Client) {
 	found, game := s.GameByClientOwner(client)
 	if !found {
 		log.Println(fmt.Sprintf("Error finding game owned by, %v with nick %v", client, s.Lobby[client].Nick))
@@ -84,7 +84,7 @@ func startGame(s *model.Server, client *ws.Client) {
 
 	game.DoWork(
 		func(game *model.Game) {
-			game.StartGame()
+			startGame(game)
 		})
 
 }
@@ -100,22 +100,25 @@ func move(s *model.Server, message *model.MessageMove, client *ws.Client) {
 	game.DoWork(
 		func(game *model.Game) {
 			//TODO: figure out where this logic should sit
-			didMove := game.Move(client, message)
+			didMove := Move(game, client, message)
 			if didMove {
 				game.ChangeMoveFrom(client)
 			}
+			shareState(game)
 
 		})
 
 }
 
 //changeSeat changes where a player sits
-func changeSeat(s *model.Server, client *ws.Client, seat int) {
+func changeSeatByClient(s *model.Server, client *ws.Client, seat int) {
 	_, game := s.GameByClientPlaying(client)
 
 	game.DoWork(
 		func(game *model.Game) {
 			game.ChangeSeat(client, seat)
+			shareState(game)
+
 		})
 }
 
@@ -152,6 +155,7 @@ func disconnect(s *model.Server, client *ws.Client) {
 			game.Stop()
 			delete(s.Games, game.ID)
 		}
+		shareState(game)
 	} else {
 		log.Println(">> Player disconnecting was not in game")
 	}

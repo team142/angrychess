@@ -56,7 +56,7 @@ func (piece *Piece) CanMoveLikeThat(player *Player, move *MessageMove) (ok bool)
 
 		if placeOntoBoard {
 			//TODO: other checks
-			if isLastTwo(player, move.ToY) {
+			if IsLastTwo(player, move.ToY) {
 				log.Println("Can't place on last two enemy lines")
 				ok = false
 				return
@@ -94,11 +94,11 @@ func (piece *Piece) CanMoveLikeThat(player *Player, move *MessageMove) (ok bool)
 	return
 }
 
-func isLastTwo(player *Player, y int) bool {
+func IsLastTwo(player *Player, y int) bool {
 	return (1 == player.Team && 2 >= y) || (y >= 7 && 2 == player.Team)
 }
 
-func (piece *Piece) isEqual(move *MessageMove) bool {
+func (piece *Piece) IsEqual(move *MessageMove) bool {
 	if piece.Board != move.Board {
 		return false
 	}
@@ -114,7 +114,7 @@ func (piece *Piece) isEqual(move *MessageMove) bool {
 	return true
 }
 
-func createRook(id string, board int, color bool) *Piece {
+func CreateRook(id string, board int, color bool) *Piece {
 	return &Piece{
 		ID:       id,
 		Board:    board,
