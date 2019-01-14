@@ -215,7 +215,7 @@ func (game *Game) Move(client *ws.Client, message *MessageMove) (didMove bool) {
 		return
 	}
 
-	desription := CalcMoveDescription(game, player, piece, message)
+	CalcMoveDescription(game, player, piece, message)
 
 	if !piece.CanMoveLikeThat(player, message) {
 		return
