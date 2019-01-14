@@ -1,4 +1,4 @@
-# Chess For 4 (Chess Doubles)
+# Angry Chess (Chess for Four)
 <a href="https://goreportcard.com/report/github.com/team142/chessfor4"><img src="https://goreportcard.com/badge/github.com/team142/chessfor4" /></a>&nbsp;<a href="https://trello.com/b/czSy3gLz/battle-royale-chess"><img src="docs/trello.png" /></a>
 
 ## Background
@@ -11,13 +11,14 @@ Four player chess is a game I played growing up. I would love to relive the fun 
 - When a player takes an enemy piece they give it to their teammate who can then place it on the board as a move.
 - Pieces cannot be placed on the last two lines or such that they put the other player in check or mate.
 - A timer can be introduced limiting the time a player has to make a move. If a move is not made within the time limit, then the other player may take a piece off the board from their opponent.
+- I hope to add battle royale elements and abilities / points to increase the possibility space (and fun).
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/3P7odVjrMiM/0.jpg)](https://www.youtube.com/watch?v=3P7odVjrMiM)
 
 
 ## Project structure
 
-- Client is being written in Vue JS
+- Client is being written in JS
 - Server has being written in Golang
 
 ## Running the project

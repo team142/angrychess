@@ -6,6 +6,6 @@ import (
 )
 
 func handleInMessageDC(server *model.Server, client *ws.Client) {
-	server.Disconnect(client)
+	disconnect(server, client)
 
 }

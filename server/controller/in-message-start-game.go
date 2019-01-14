@@ -6,6 +6,6 @@ import (
 )
 
 func handleInMessageStartGame(server *model.Server, client *ws.Client) {
-	server.StartGame(client)
+	startGameByClient(server, client)
 
 }

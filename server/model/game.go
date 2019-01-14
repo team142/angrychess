@@ -8,18 +8,18 @@ import (
 	"log"
 )
 
-const (
-	maxSupportedBoards = 2
-)
+//ListOfGames describes a list of games on the server
+type ListOfGames struct {
+	Games []map[string]string `json:"games"`
+}
 
-//CreateGame starts a game with a player
 func CreateGame(creator *Player) *Game {
 	game := &Game{
 		ID:       uuid.NewV4().String(),
 		Players:  make(map[int]*Player),
 		Boards:   maxSupportedBoards,
 		Title:    fmt.Sprintf("%s's game", creator.Profile.Nick),
-		commands: make(chan func(*Game), 256),
+		Commands: make(chan func(*Game), 256),
 		stop:     make(chan bool),
 	}
 	game.Players[1] = creator
@@ -27,11 +27,6 @@ func CreateGame(creator *Player) *Game {
 	creator.SetTeamColorAndBoard(1, game.Boards)
 	go game.run()
 	return game
-}
-
-//ListOfGames describes a list of games on the server
-type ListOfGames struct {
-	Games []map[string]string `json:"games"`
 }
 
 //Game describes a game on the server
@@ -43,21 +38,22 @@ type Game struct {
 	Players            map[int]*Player `json:"players"`
 	Boards             int             `json:"boards"`
 	CanStartBeforeFull bool            `json:"canStartBeforeFull"`
-	commands           chan func(*Game)
+	Commands           chan func(*Game)
 	stop               chan bool
 }
 
+//DoWork Adds a function of work that must run in the game's go-routine.
 func (game *Game) DoWork(f func(*Game)) {
-	game.commands <- f
+	game.Commands <- f
 }
 
 func (game *Game) run() {
 	for {
 		select {
-		case command := <-game.commands:
+		case command := <-game.Commands:
 			command(game)
 		case <-game.stop:
-			close(game.commands)
+			close(game.Commands)
 			close(game.stop)
 			log.Println("Stopping game runner")
 			return
@@ -69,18 +65,7 @@ func (game *Game) Stop() {
 	game.stop <- true
 }
 
-//JoinGame gets a player into a game
-func (game *Game) JoinGame(player *Player) bool {
-	found, spot := game.findSpot()
-	if !found {
-		return false
-	}
-	player.SetTeamColorAndBoard(spot, game.Boards)
-	game.Players[spot] = player
-	return true
-}
-
-func (game *Game) findSpot() (found bool, spot int) {
+func (game *Game) FindSpot() (found bool, spot int) {
 	if len(game.Players) >= game.MaxPlayers() {
 		return false, 0
 	}
@@ -92,7 +77,7 @@ func (game *Game) findSpot() (found bool, spot int) {
 	return false, 0
 }
 
-func (game *Game) findPiece(pieceID string) (found bool, piece *Piece, player *Player) {
+func (game *Game) FindPiece(pieceID string) (found bool, piece *Piece, player *Player) {
 	for _, player := range game.Players {
 		piece, found := player.GetPieceByID(pieceID)
 		if found {
@@ -101,29 +86,6 @@ func (game *Game) findPiece(pieceID string) (found bool, piece *Piece, player *P
 	}
 	found = false
 	return
-}
-
-//StartGame starts the game for all players
-func (game *Game) StartGame() {
-	ok, msg := game.IsReadyToStart()
-	if !ok {
-		reply := CreateMessageError("Failed to start game", msg)
-		b, _ := json.Marshal(reply)
-		game.Owner.Profile.Client.Send <- b
-		return
-	}
-
-	game.SetupBoards()
-	game.Started = true
-	game.ShareState()
-
-}
-
-//Announce announces something to all players
-func (game *Game) Announce(b []byte) {
-	for _, player := range game.Players {
-		player.Profile.Client.Send <- b
-	}
 }
 
 //MaxPlayers determines the max number of players
@@ -139,16 +101,6 @@ func (game *Game) PlayerByClient(client *ws.Client) (result *Player, seat int, f
 		}
 	}
 	return
-}
-
-//ShareState tells all players what is going on
-func (game *Game) ShareState() {
-	reply := CreateMessageShareState(game)
-	b, _ := json.Marshal(reply)
-	for _, player := range game.Players {
-		player.Profile.Client.Send <- b
-	}
-
 }
 
 //SetupBoards initializes all boards in the game
@@ -169,56 +121,6 @@ func (game *Game) IsReadyToStart() (ok bool, message string) {
 	if !ok {
 		message = "Not enough players"
 	}
-	return
-}
-
-//Move moves a piece
-func (game *Game) Move(client *ws.Client, message MessageMove) (didMove bool) {
-	log.Println(">> Moving ")
-	player, _, _ := game.PlayerByClient(client)
-	pieceFound, piece, piecePlayer := game.findPiece(message.PieceID)
-
-	if piece.isEqual(message) {
-		log.Println("No move")
-		return
-	}
-
-	defer game.ShareState()
-
-	if player != piecePlayer {
-		log.Println("Player does not own piece, " + message.PieceID)
-		return
-	}
-
-	if !player.MyTurn {
-		log.Println("Not my turn!, " + message.PieceID)
-		return
-	}
-
-	if !pieceFound {
-		log.Println("Piece not found, " + message.PieceID)
-		return
-	}
-
-	//Check for bad state
-	if message.Cache == false && message.Board == 0 {
-		log.Println("Piece must be on board or in cache, not neither")
-		return
-	}
-
-	if !piece.CanMoveLikeThat(player, message) {
-		return
-	}
-
-	/*
-		TODO: do other checks
-	*/
-	//if !player.OwnsPiece(move.PieceID) {
-	//	err = fmt.Errorf("player doesnt not own piece: %s", move.PieceID)
-	//}
-
-	didMove = true
-	piece.Move(message)
 	return
 }
 
@@ -244,7 +146,6 @@ func (game *Game) ChangeSeat(client *ws.Client, seat int) {
 	delete(game.Players, currentSeat)
 	game.Players[seat] = currentPlayer
 	currentPlayer.SetTeamColorAndBoard(seat, game.Boards)
-	game.ShareState()
 
 }
 
@@ -277,11 +178,10 @@ func (game *Game) RemoveClient(client *ws.Client) {
 		}
 
 	}
-	game.ShareState()
 
 }
 
-func (game *Game) changeMoveFrom(client *ws.Client) {
+func (game *Game) ChangeMoveFrom(client *ws.Client) {
 	var newPlayer *Player
 	player, seat, _ := game.PlayerByClient(client)
 	if seat <= game.Boards {

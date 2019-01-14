@@ -23,6 +23,10 @@ func (p *Player) GetPieceByID(id string) (piece *Piece, found bool) {
 	return
 }
 
+func (p *Player) shouldGoDown() bool {
+	return p.Team == 1
+}
+
 //SetTeamAndColor derives the color and team
 func (p *Player) SetTeamColorAndBoard(spot int, boards int) {
 	if spot <= boards {
@@ -76,8 +80,8 @@ func (p *Player) SetupBoard() {
 	}
 
 	//Two rooks
-	rookLeft := createRook(uuid.NewV4().String(), p.Board, p.Color)
-	rookRight := createRook(uuid.NewV4().String(), p.Board, p.Color)
+	rookLeft := CreateRook(uuid.NewV4().String(), p.Board, p.Color)
+	rookRight := CreateRook(uuid.NewV4().String(), p.Board, p.Color)
 	if p.Team == 1 {
 		rookLeft.Y = 8
 		rookRight.Y = 8

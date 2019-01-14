@@ -6,6 +6,6 @@ import (
 )
 
 func handleInMessageCreateGame(server *model.Server, client *ws.Client) {
-	server.CreateGame(client)
-	server.NotifyLobby()
+	createGameByClient(server, client)
+	notifyLobby(server)
 }
