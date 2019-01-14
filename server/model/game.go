@@ -174,7 +174,7 @@ func (game *Game) IsReadyToStart() (ok bool, message string) {
 }
 
 //Move moves a piece
-func (game *Game) Move(client *ws.Client, message MessageMove) (didMove bool) {
+func (game *Game) Move(client *ws.Client, message *MessageMove) (didMove bool) {
 	log.Println(">> Moving ")
 	//Always send state
 	defer game.ShareState()
@@ -211,9 +211,11 @@ func (game *Game) Move(client *ws.Client, message MessageMove) (didMove bool) {
 
 	//Check for bad state
 	if message.Cache == false && message.Board == 0 {
-		log.Println("Piece must be on board or in cache, not neither")
+		log.Println("Bad request.  Piece must be on board or in cache, not neither")
 		return
 	}
+
+	desription := CalcMoveDescription(game, player, piece, message)
 
 	if !piece.CanMoveLikeThat(player, message) {
 		return

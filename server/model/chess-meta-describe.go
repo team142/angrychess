@@ -11,11 +11,12 @@ type MoveDescription struct {
 	BeingRemoved bool
 	MovingBoards bool
 	PawnOnSpawn  bool
+	LastTwoRows  bool
+	OtherBoard   bool
 }
 
 func CalcMoveDescription(game *Game, player *Player, piece *Piece, move *MessageMove) *MoveDescription {
 	result := &MoveDescription{}
-
 	result.YDiff = util.Abs(piece.Y - move.ToY)
 	result.XDiff = util.Abs(piece.X - move.ToX)
 	result.Down = piece.Y > move.ToY
@@ -23,6 +24,8 @@ func CalcMoveDescription(game *Game, player *Player, piece *Piece, move *Message
 	result.BeingRemoved = !piece.Cache && move.Cache
 	result.MovingBoards = piece.Board != move.Board
 	result.PawnOnSpawn = player.Team == 1 && piece.Y == 7 || player.Team == 2 && piece.Y == 2
-
+	result.LastTwoRows = (1 == player.Team && 2 >= piece.Y) || (piece.Y >= 7 && 2 == player.Team)
+	result.OtherBoard = player.Board != move.Board
 	return result
+
 }

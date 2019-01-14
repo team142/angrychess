@@ -188,7 +188,7 @@ func (s *Server) StartGame(client *ws.Client) {
 }
 
 //Move attempts to move a piece
-func (s *Server) Move(message MessageMove, client *ws.Client) {
+func (s *Server) Move(message *MessageMove, client *ws.Client) {
 	foundGame, game := s.GameByClientPlaying(client)
 	if !foundGame {
 		log.Println(fmt.Sprintf("Error finding game"))

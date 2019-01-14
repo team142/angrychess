@@ -23,6 +23,10 @@ func (p *Player) GetPieceByID(id string) (piece *Piece, found bool) {
 	return
 }
 
+func (p *Player) shouldGoDown() bool {
+	return p.Team == 1
+}
+
 //SetTeamAndColor derives the color and team
 func (p *Player) SetTeamColorAndBoard(spot int, boards int) {
 	if spot <= boards {

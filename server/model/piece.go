@@ -26,7 +26,7 @@ type Piece struct {
 }
 
 //Move moves piece
-func (piece *Piece) Move(message MessageMove) {
+func (piece *Piece) Move(message *MessageMove) {
 	piece.Cache = message.Cache
 	piece.Board = message.Board
 	if !piece.Cache {
@@ -37,7 +37,7 @@ func (piece *Piece) Move(message MessageMove) {
 }
 
 //CanMoveLikeThat checks that the piece can make those sorts of moves
-func (piece *Piece) CanMoveLikeThat(player *Player, move MessageMove) (ok bool) {
+func (piece *Piece) CanMoveLikeThat(player *Player, move *MessageMove) (ok bool) {
 	ok = true
 	if piece.Identity == identityPawn {
 		shouldGoDown := player.Team == 1
@@ -98,7 +98,7 @@ func isLastTwo(player *Player, y int) bool {
 	return (1 == player.Team && 2 >= y) || (y >= 7 && 2 == player.Team)
 }
 
-func (piece *Piece) isEqual(move MessageMove) bool {
+func (piece *Piece) isEqual(move *MessageMove) bool {
 	if piece.Board != move.Board {
 		return false
 	}

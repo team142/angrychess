@@ -9,8 +9,8 @@ import (
 )
 
 func handleInMessageMove(server *model.Server, client *ws.Client, msg []byte) {
-	var message model.MessageMove
-	if err := json.Unmarshal(msg, &message); err != nil {
+	message := &model.MessageMove{}
+	if err := json.Unmarshal(msg, message); err != nil {
 		log.Println(fmt.Sprintf("Error unmarshaling, %s", err))
 		return
 	}
