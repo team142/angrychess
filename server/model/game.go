@@ -8,18 +8,18 @@ import (
 	"log"
 )
 
-const (
-	maxSupportedBoards = 2
-)
+//ListOfGames describes a list of games on the server
+type ListOfGames struct {
+	Games []map[string]string `json:"games"`
+}
 
-//CreateGame starts a game with a player
 func CreateGame(creator *Player) *Game {
 	game := &Game{
 		ID:       uuid.NewV4().String(),
 		Players:  make(map[int]*Player),
 		Boards:   maxSupportedBoards,
 		Title:    fmt.Sprintf("%s's game", creator.Profile.Nick),
-		commands: make(chan func(*Game), 256),
+		Commands: make(chan func(*Game), 256),
 		stop:     make(chan bool),
 	}
 	game.Players[1] = creator
@@ -27,11 +27,6 @@ func CreateGame(creator *Player) *Game {
 	creator.SetTeamColorAndBoard(1, game.Boards)
 	go game.run()
 	return game
-}
-
-//ListOfGames describes a list of games on the server
-type ListOfGames struct {
-	Games []map[string]string `json:"games"`
 }
 
 //Game describes a game on the server
@@ -43,22 +38,22 @@ type Game struct {
 	Players            map[int]*Player `json:"players"`
 	Boards             int             `json:"boards"`
 	CanStartBeforeFull bool            `json:"canStartBeforeFull"`
-	commands           chan func(*Game)
+	Commands           chan func(*Game)
 	stop               chan bool
 }
 
 //DoWork Adds a function of work that must run in the game's go-routine.
 func (game *Game) DoWork(f func(*Game)) {
-	game.commands <- f
+	game.Commands <- f
 }
 
 func (game *Game) run() {
 	for {
 		select {
-		case command := <-game.commands:
+		case command := <-game.Commands:
 			command(game)
 		case <-game.stop:
-			close(game.commands)
+			close(game.Commands)
 			close(game.stop)
 			log.Println("Stopping game runner")
 			return
@@ -292,7 +287,7 @@ func (game *Game) RemoveClient(client *ws.Client) {
 
 }
 
-func (game *Game) changeMoveFrom(client *ws.Client) {
+func (game *Game) ChangeMoveFrom(client *ws.Client) {
 	var newPlayer *Player
 	player, seat, _ := game.PlayerByClient(client)
 	if seat <= game.Boards {

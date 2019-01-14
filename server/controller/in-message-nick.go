@@ -13,6 +13,6 @@ func handleInMessageNick(server *model.Server, client *ws.Client, msg []byte) {
 	if err := json.Unmarshal(msg, &message); err != nil {
 		log.Println(fmt.Sprintf("Error unmarshaling, %s", err))
 	}
-	server.SetNick(client, message.Nick)
+	setNick(server, client, message.Nick)
 
 }
