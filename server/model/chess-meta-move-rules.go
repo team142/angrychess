@@ -89,6 +89,10 @@ func isMovePossiblePawn(game *Game, player *Player, piece *Piece, description *M
 		return
 	}
 
+	//TODO: landing on another piece?
+
+	//TODO: Piece between?
+
 	ok = true
 	wouldTake = description.LandingOnPiece
 
