@@ -20,9 +20,9 @@ const (
 )
 
 //HandleIncoming handles messages arriving to the websocket server
-func HandleIncoming(server *model.Server, client *ws.Client, msg []byte) {
+func HandleIncoming(server *model.Server, client *ws.Client, msg *[]byte) {
 	var message model.BaseMessage
-	if err := json.Unmarshal(msg, &message); err != nil {
+	if err := json.Unmarshal(*msg, &message); err != nil {
 		log.Println(fmt.Sprintf("Error unmarshaling, %s", err))
 	}
 
@@ -52,7 +52,7 @@ func HandleIncoming(server *model.Server, client *ws.Client, msg []byte) {
 
 	} else {
 		log.Println("Unknown route: ", message.Msg)
-		log.Println(string(msg))
+		log.Println(string(*msg))
 	}
 
 }

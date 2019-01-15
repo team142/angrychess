@@ -10,7 +10,7 @@ const (
 )
 
 //CreateServer starts a new server
-func CreateServer(address string, handler func(*Server, *ws.Client, []byte), canStartBeforeFull bool) *Server {
+func CreateServer(address string, handler func(*Server, *ws.Client, *[]byte), canStartBeforeFull bool) *Server {
 	s := &Server{
 		Address:            address,
 		handler:            handler,
@@ -28,14 +28,14 @@ type Server struct {
 	Address            string
 	Lobby              map[*ws.Client]*Profile
 	Games              map[string]*Game
-	handler            func(*Server, *ws.Client, []byte)
+	handler            func(*Server, *ws.Client, *[]byte)
 	Todo               chan *item
 	CanStartBeforeFull bool
 }
 
 type item struct {
 	client *ws.Client
-	msg    []byte
+	msg    *[]byte
 }
 
 func (s *Server) run() {
@@ -69,7 +69,7 @@ func (s *Server) GameByClientPlaying(client *ws.Client) (found bool, game *Game)
 }
 
 //HandleMessage This message is called by other parts of the system - the interface to the server
-func (s *Server) HandleMessage(client *ws.Client, msg []byte) {
+func (s *Server) HandleMessage(client *ws.Client, msg *[]byte) {
 	i := &item{
 		client: client,
 		msg:    msg,

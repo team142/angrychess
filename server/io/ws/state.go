@@ -48,10 +48,10 @@ type Client struct {
 	Hub     *Hub
 	conn    *websocket.Conn
 	Send    chan []byte
-	handler func(*Client, []byte)
+	handler func(*Client, *[]byte)
 }
 
-func (c *Client) handleMessage(msg []byte) {
+func (c *Client) handleMessage(msg *[]byte) {
 	go c.handler(c, msg) //TODO: is this right?
 }
 
@@ -72,7 +72,7 @@ func (h *Hub) run() {
 					"disconnect",
 				}
 				b, _ := json.Marshal(data)
-				client.handler(client, b)
+				client.handler(client, &b)
 				log.Println("Client unregistered")
 			}
 		}

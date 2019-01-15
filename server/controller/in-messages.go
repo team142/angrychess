@@ -12,17 +12,17 @@ func handleInMessageStartGame(server *model.Server, client *ws.Client) {
 	startGameByClient(server, client)
 }
 
-func handleInMessageNick(server *model.Server, client *ws.Client, msg []byte) {
+func handleInMessageNick(server *model.Server, client *ws.Client, msg *[]byte) {
 	var message model.MessageNick
-	if err := json.Unmarshal(msg, &message); err != nil {
+	if err := json.Unmarshal(*msg, &message); err != nil {
 		log.Println(fmt.Sprintf("Error unmarshaling, %s", err))
 	}
 	setNick(server, client, message.Nick)
 }
 
-func handleInMessageMove(server *model.Server, client *ws.Client, msg []byte) {
+func handleInMessageMove(server *model.Server, client *ws.Client, msg *[]byte) {
 	message := &model.MessageMove{}
-	if err := json.Unmarshal(msg, message); err != nil {
+	if err := json.Unmarshal(*msg, message); err != nil {
 		log.Println(fmt.Sprintf("Error unmarshaling, %s", err))
 		return
 	}
@@ -38,9 +38,9 @@ func handleInMessageListOfGame(server *model.Server, client *ws.Client) {
 	}()
 }
 
-func handleInMessageJoinGame(server *model.Server, client *ws.Client, msg []byte) {
+func handleInMessageJoinGame(server *model.Server, client *ws.Client, msg *[]byte) {
 	var message model.MessageJoinGame
-	if err := json.Unmarshal(msg, &message); err != nil {
+	if err := json.Unmarshal(*msg, &message); err != nil {
 		log.Println(fmt.Sprintf("Error unmarshaling, %s", err))
 	}
 	joinGameByClient(server, message.ID, server.Lobby[client])
@@ -56,9 +56,9 @@ func handleInMessageCreateGame(server *model.Server, client *ws.Client) {
 	notifyLobby(server)
 }
 
-func handleInMessageChangeSeat(server *model.Server, client *ws.Client, msg []byte) {
+func handleInMessageChangeSeat(server *model.Server, client *ws.Client, msg *[]byte) {
 	var message model.MessageChangeSeat
-	if err := json.Unmarshal(msg, &message); err != nil {
+	if err := json.Unmarshal(*msg, &message); err != nil {
 		log.Println(fmt.Sprintf("Error unmarshaling, %s", err))
 		return
 	}

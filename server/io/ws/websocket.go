@@ -10,7 +10,7 @@ import (
 )
 
 //StartWSServer starts a  websocket server
-func StartWSServer(addr *string, handler func(*Client, []byte)) {
+func StartWSServer(addr *string, handler func(*Client, *[]byte)) {
 
 	flag.Parse()
 	hub := newHub()
@@ -24,7 +24,7 @@ func StartWSServer(addr *string, handler func(*Client, []byte)) {
 	}
 }
 
-func serveWs(hub *Hub, handler func(*Client, []byte), w http.ResponseWriter, r *http.Request) {
+func serveWs(hub *Hub, handler func(*Client, *[]byte), w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
@@ -54,7 +54,7 @@ func (c *Client) readPump() {
 			break
 		}
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-		c.handleMessage(message)
+		c.handleMessage(&message)
 	}
 }
 
