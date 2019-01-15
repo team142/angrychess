@@ -2,7 +2,7 @@ package ws
 
 import (
 	"encoding/json"
-	"github.com/gorilla/websocket"
+	"github.com/fasthttp/websocket"
 	"log"
 	"net/http"
 	"time"

@@ -2,7 +2,7 @@ package model
 
 import (
 	"github.com/satori/go.uuid"
-	"github.com/team142/chessfor4/io/ws"
+	"github.com/team142/angrychess/io/ws"
 )
 
 //CreateProfile for easy access

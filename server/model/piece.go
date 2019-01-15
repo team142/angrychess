@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/team142/chessfor4/util"
+	"github.com/team142/angrychess/util"
 	"log"
 )
 

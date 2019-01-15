@@ -3,8 +3,8 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/team142/chessfor4/io/ws"
-	"github.com/team142/chessfor4/model"
+	"github.com/team142/angrychess/io/ws"
+	"github.com/team142/angrychess/model"
 	"log"
 )
 

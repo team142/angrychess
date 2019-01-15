@@ -2,9 +2,9 @@ package main
 
 import (
 	"flag"
-	"github.com/team142/chessfor4/controller"
-	"github.com/team142/chessfor4/io/ws"
-	"github.com/team142/chessfor4/model"
+	"github.com/team142/angrychess/controller"
+	"github.com/team142/angrychess/io/ws"
+	"github.com/team142/angrychess/model"
 	"log"
 )
 

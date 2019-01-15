@@ -1,6 +1,6 @@
 package model
 
-import "github.com/team142/chessfor4/util"
+import "github.com/team142/angrychess/util"
 
 type MoveDescription struct {
 	XDiff          int

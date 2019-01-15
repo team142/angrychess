@@ -3,7 +3,7 @@ package ws
 import (
 	"bytes"
 	"flag"
-	"github.com/gorilla/websocket"
+	"github.com/fasthttp/websocket"
 	"log"
 	"net/http"
 	"time"

@@ -2,7 +2,7 @@ package model
 
 import (
 	"fmt"
-	"github.com/team142/chessfor4/io/ws"
+	"github.com/team142/angrychess/io/ws"
 )
 
 const (
