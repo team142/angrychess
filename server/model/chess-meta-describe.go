@@ -54,9 +54,13 @@ func CalcPiecesBetween(game *Game, player *Player, piece *Piece, move *MessageMo
 		return
 	}
 
-	//Horizontal moves
+	//Horizontal moves and is also greater than 1 diff
 	if result.XDiff > 1 && result.YDiff == 0 {
-
+		rx1, _, rx2, _ := util.OrderPoints(move.ToX, move.ToY, piece.X, piece.Y)
+		for x := rx1 + 1; x < rx2; x++ {
+			//TODO
+			//Find piece add to result
+		}
 	}
 
 }
