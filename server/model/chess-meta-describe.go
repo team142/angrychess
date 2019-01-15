@@ -58,9 +58,23 @@ func CalcPiecesBetween(game *Game, player *Player, piece *Piece, move *MessageMo
 	if result.XDiff > 1 && result.YDiff == 0 {
 		rx1, _, rx2, _ := util.OrderPoints(move.ToX, move.ToY, piece.X, piece.Y)
 		for x := rx1 + 1; x < rx2; x++ {
-			//TODO
-			//Find piece add to result
+			found, p := game.GetPieceAtPoint(piece.Board, piece.X, piece.Y)
+			if found {
+				result.PiecesBetween = append(result.PiecesBetween, p)
+			}
+		}
+	} else if result.XDiff == 0 && result.YDiff > 1 {
+		//Vertical moves
+		_, ry1, _, ry2 := util.OrderPoints(move.ToX, move.ToY, piece.X, piece.Y)
+		for y := ry1 + 1; y < ry2; y++ {
+			found, p := game.GetPieceAtPoint(piece.Board, piece.X, piece.Y)
+			if found {
+				result.PiecesBetween = append(result.PiecesBetween, p)
+			}
 		}
 	}
+
+	//TODO: do diagonal moves
+	//
 
 }

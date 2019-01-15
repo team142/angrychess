@@ -88,6 +88,19 @@ func (game *Game) FindPiece(pieceID string) (found bool, piece *Piece, player *P
 	return
 }
 
+func (game *Game) GetPieceAtPoint(board, x, y int) (found bool, piece *Piece) {
+	for _, player := range game.Players {
+		for _, piece = range player.Pieces {
+			if piece.Board == board && piece.X == x && piece.X == y {
+				found = true
+				return
+			}
+		}
+	}
+	found = false
+	return
+}
+
 //MaxPlayers determines the max number of players
 func (game *Game) MaxPlayers() int {
 	return game.Boards * 2
