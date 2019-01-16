@@ -82,7 +82,7 @@ func (s *Server) HandleMessage(client *ws.Client, msg *[]byte) {
 func (s *Server) GetOrCreateProfile(client *ws.Client) *Profile {
 	p := s.Lobby[client]
 	if p == nil {
-		p = CreateProfile(client)
+		p = createProfile(client)
 		s.Lobby[client] = p
 	}
 	return p
@@ -92,15 +92,16 @@ func (s *Server) GetOrCreateProfile(client *ws.Client) *Profile {
 func (s *Server) CreateListOfGames() *ListOfGames {
 	result := ListOfGames{Games: []map[string]string{}}
 	for _, game := range s.Games {
-		item := make(map[string]string)
-		item["id"] = game.ID
-		item["title"] = game.Title
-		item["players"] = fmt.Sprint(len(game.Players), "/", game.MaxPlayers())
-		result.Games = append(result.Games, item)
+		row := make(map[string]string)
+		row["id"] = game.ID
+		row["title"] = game.Title
+		row["players"] = fmt.Sprint(len(game.Players), "/", game.MaxPlayers())
+		result.Games = append(result.Games, row)
 	}
 	return &result
 }
 
+//CreateMessageListOfGames creates a list of games
 func (s *Server) CreateMessageListOfGames() MessageListOfGames {
 	list := s.CreateListOfGames()
 	return CreateMessageListOfGames(list)

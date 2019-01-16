@@ -14,7 +14,7 @@ func createGameByClient(s *model.Server, client *ws.Client) *model.Game {
 		Team:    1,
 	}
 
-	game := model.CreateGame(player)
+	game := model.CreateGameAndRun(player)
 	game.CanStartBeforeFull = s.CanStartBeforeFull
 	s.Games[game.ID] = game
 

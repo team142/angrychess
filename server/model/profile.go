@@ -6,7 +6,7 @@ import (
 )
 
 //CreateProfile for easy access
-func CreateProfile(client *ws.Client) *Profile {
+func createProfile(client *ws.Client) *Profile {
 	return &Profile{Client: client, Secret: uuid.NewV4().String(), ID: uuid.NewV4().String()}
 }
 
