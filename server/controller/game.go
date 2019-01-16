@@ -86,7 +86,7 @@ func Move(game *model.Game, client *ws.Client, message *model.MessageMove) (didM
 
 	description := model.CalcMoveDescription(game, player, piece, message)
 
-	ok, taken, msg := model.IsMovePossible(game, player, piece, description)
+	ok, taken, msg := model.IsMovePossible(player, piece, description)
 	if !ok {
 		log.Println(msg)
 		return
