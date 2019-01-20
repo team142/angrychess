@@ -92,14 +92,9 @@ func Move(game *model.Game, client *ws.Client, message *model.MessageMove) (didM
 		return
 	}
 
-	//TODO: handle taken piece
 	if taken != nil {
 		//TODO take piece
 		//TakePiece(game, player, taken)
-	}
-
-	if !piece.CanMoveLikeThat(player, message) {
-		return
 	}
 
 	/*
