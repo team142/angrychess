@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/team142/chessfor4/model"
+	"github.com/team142/angrychess/model"
 	"testing"
 )
 

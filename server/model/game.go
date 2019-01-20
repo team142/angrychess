@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/satori/go.uuid"
-	"github.com/team142/chessfor4/io/ws"
+	"github.com/team142/angrychess/io/ws"
 	"log"
 )
 
@@ -13,7 +13,8 @@ type ListOfGames struct {
 	Games []map[string]string `json:"games"`
 }
 
-func CreateGame(creator *Player) *Game {
+//CreateGameAndRun creates a game and starts it
+func CreateGameAndRun(creator *Player) *Game {
 	game := &Game{
 		ID:       uuid.NewV4().String(),
 		Players:  make(map[int]*Player),
@@ -61,6 +62,7 @@ func (game *Game) run() {
 	}
 }
 
+//Stop stops the game from running
 func (game *Game) Stop() {
 	game.stop <- true
 }
@@ -77,11 +79,26 @@ func (game *Game) FindSpot() (found bool, spot int) {
 	return false, 0
 }
 
+//FindPiece fiends a piece and it's context
 func (game *Game) FindPiece(pieceID string) (found bool, piece *Piece, player *Player) {
 	for _, player := range game.Players {
 		piece, found := player.GetPieceByID(pieceID)
 		if found {
 			return true, piece, player
+		}
+	}
+	found = false
+	return
+}
+
+//GetPieceAtPoint finds a piece by board, x and y
+func (game *Game) GetPieceAtPoint(board, x, y int) (found bool, piece *Piece) {
+	for _, player := range game.Players {
+		for _, piece = range player.Pieces {
+			if piece.Board == board && piece.X == x && piece.X == y {
+				found = true
+				return
+			}
 		}
 	}
 	found = false

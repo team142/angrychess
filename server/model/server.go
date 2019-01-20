@@ -2,7 +2,7 @@ package model
 
 import (
 	"fmt"
-	"github.com/team142/chessfor4/io/ws"
+	"github.com/team142/angrychess/io/ws"
 )
 
 const (
@@ -10,7 +10,7 @@ const (
 )
 
 //CreateServer starts a new server
-func CreateServer(address string, handler func(*Server, *ws.Client, []byte), canStartBeforeFull bool) *Server {
+func CreateServer(address string, handler func(*Server, *ws.Client, *[]byte), canStartBeforeFull bool) *Server {
 	s := &Server{
 		Address:            address,
 		handler:            handler,
@@ -28,14 +28,14 @@ type Server struct {
 	Address            string
 	Lobby              map[*ws.Client]*Profile
 	Games              map[string]*Game
-	handler            func(*Server, *ws.Client, []byte)
+	handler            func(*Server, *ws.Client, *[]byte)
 	Todo               chan *item
 	CanStartBeforeFull bool
 }
 
 type item struct {
 	client *ws.Client
-	msg    []byte
+	msg    *[]byte
 }
 
 func (s *Server) run() {
@@ -69,7 +69,7 @@ func (s *Server) GameByClientPlaying(client *ws.Client) (found bool, game *Game)
 }
 
 //HandleMessage This message is called by other parts of the system - the interface to the server
-func (s *Server) HandleMessage(client *ws.Client, msg []byte) {
+func (s *Server) HandleMessage(client *ws.Client, msg *[]byte) {
 	i := &item{
 		client: client,
 		msg:    msg,
@@ -82,7 +82,7 @@ func (s *Server) HandleMessage(client *ws.Client, msg []byte) {
 func (s *Server) GetOrCreateProfile(client *ws.Client) *Profile {
 	p := s.Lobby[client]
 	if p == nil {
-		p = CreateProfile(client)
+		p = createProfile(client)
 		s.Lobby[client] = p
 	}
 	return p
@@ -92,15 +92,16 @@ func (s *Server) GetOrCreateProfile(client *ws.Client) *Profile {
 func (s *Server) CreateListOfGames() *ListOfGames {
 	result := ListOfGames{Games: []map[string]string{}}
 	for _, game := range s.Games {
-		item := make(map[string]string)
-		item["id"] = game.ID
-		item["title"] = game.Title
-		item["players"] = fmt.Sprint(len(game.Players), "/", game.MaxPlayers())
-		result.Games = append(result.Games, item)
+		row := make(map[string]string)
+		row["id"] = game.ID
+		row["title"] = game.Title
+		row["players"] = fmt.Sprint(len(game.Players), "/", game.MaxPlayers())
+		result.Games = append(result.Games, row)
 	}
 	return &result
 }
 
+//CreateMessageListOfGames creates a list of games
 func (s *Server) CreateMessageListOfGames() MessageListOfGames {
 	list := s.CreateListOfGames()
 	return CreateMessageListOfGames(list)

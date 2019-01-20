@@ -4,9 +4,9 @@ import (
 	"log"
 )
 
-func IsMovePossible(game *Game, player *Player, piece *Piece, description *MoveDescription) (ok bool, taken *Piece, msg string) {
+func IsMovePossible(player *Player, piece *Piece, description *MoveDescription) (ok bool, taken *Piece, msg string) {
 	if piece.Identity == identityPawn {
-		return isMovePossiblePawn(game, player, piece, description)
+		return isMovePossiblePawn(player, description)
 	}
 	ok = false
 	msg = "Unknown identity. Cannot check isMovePossible"
@@ -14,7 +14,7 @@ func IsMovePossible(game *Game, player *Player, piece *Piece, description *MoveD
 	return
 }
 
-func isMovePossiblePawn(game *Game, player *Player, piece *Piece, description *MoveDescription) (ok bool, wouldTake *Piece, msg string) {
+func isMovePossiblePawn(player *Player, description *MoveDescription) (ok bool, wouldTake *Piece, msg string) {
 
 	//For now moving boards is not possible
 	if description.MovingBoards {

@@ -1,10 +1,5 @@
 package model
 
-import (
-	"github.com/team142/chessfor4/util"
-	"log"
-)
-
 const (
 	identityPawn   = 1
 	identityKnight = 2
@@ -34,64 +29,6 @@ func (piece *Piece) Move(message *MessageMove) {
 		piece.Y = message.ToY
 	}
 
-}
-
-//CanMoveLikeThat checks that the piece can make those sorts of moves
-func (piece *Piece) CanMoveLikeThat(player *Player, move *MessageMove) (ok bool) {
-	ok = true
-	if piece.Identity == identityPawn {
-		shouldGoDown := player.Team == 1
-		movingOne := util.Abs(piece.Y-move.ToY) == 1
-		movingTwo := util.Abs(piece.Y-move.ToY) == 2
-		goingDown := piece.Y > move.ToY
-		placeOntoBoard := piece.Cache && !move.Cache
-		movingBoards := piece.Board != move.Board
-		isOnStartRow := player.Team == 1 && piece.Y == 7 || player.Team == 2 && piece.Y == 2
-
-		if movingBoards {
-			log.Println("Can't move boards")
-			ok = false
-			return
-		}
-
-		if placeOntoBoard {
-			//TODO: other checks
-			if IsLastTwo(player, move.ToY) {
-				log.Println("Can't place on last two enemy lines")
-				ok = false
-				return
-			}
-			ok = true
-			return
-		}
-
-		if !movingTwo && !movingOne {
-			log.Println("Must only move 1 or 2 blocks")
-			ok = false
-			return
-		}
-
-		if shouldGoDown != goingDown {
-			log.Println("Expected goingDown ", goingDown, " equal to should go down ", shouldGoDown)
-			ok = false
-			return
-		}
-
-		if !isOnStartRow && movingTwo {
-			log.Println("Can't move two when not on start row")
-			ok = false
-			return
-		}
-
-		if player.Board != move.Board {
-			log.Println("Can't move onto another board")
-			ok = false
-			return
-		}
-
-	}
-
-	return
 }
 
 func IsLastTwo(player *Player, y int) bool {

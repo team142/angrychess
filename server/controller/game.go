@@ -2,8 +2,8 @@ package controller
 
 import (
 	"encoding/json"
-	"github.com/team142/chessfor4/io/ws"
-	"github.com/team142/chessfor4/model"
+	"github.com/team142/angrychess/io/ws"
+	"github.com/team142/angrychess/model"
 	"log"
 )
 
@@ -84,10 +84,17 @@ func Move(game *model.Game, client *ws.Client, message *model.MessageMove) (didM
 		return
 	}
 
-	model.CalcMoveDescription(game, player, piece, message)
+	description := model.CalcMoveDescription(game, player, piece, message)
 
-	if !piece.CanMoveLikeThat(player, message) {
+	ok, taken, msg := model.IsMovePossible(player, piece, description)
+	if !ok {
+		log.Println(msg)
 		return
+	}
+
+	if taken != nil {
+		//TODO take piece
+		//TakePiece(game, player, taken)
 	}
 
 	/*
