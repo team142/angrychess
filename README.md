@@ -1,6 +1,6 @@
 # Angry Chess (Chess for Four)
 <img src="https://europe-west1-captains-badges.cloudfunctions.net/function-clone-badge-pc?project=team142/angrychess" />&nbsp;
-<a href="https://goreportcard.com/report/github.com/team142/chessfor4"><img src="https://goreportcard.com/badge/github.com/team142/chessfor4" /></a>&nbsp;<a href="https://trello.com/b/czSy3gLz/battle-royale-chess"><img src="https://img.shields.io/badge/Project-Trello-brightgreen.svg" /></a>
+<a href="https://goreportcard.com/report/github.com/team142/chessfor4"><img src="https://goreportcard.com/badge/github.com/team142/chessfor4" /></a>&nbsp;<a href="https://trello.com/b/czSy3gLz/angry-chess"><img src="https://img.shields.io/badge/Project-Trello-brightgreen.svg" /></a>
 
 ## Background
 
