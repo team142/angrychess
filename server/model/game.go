@@ -32,15 +32,15 @@ func CreateGameAndRun(creator *Player) *Game {
 
 //Game describes a game on the server
 type Game struct {
-	ID                 string          `json:"id"`
-	Started            bool            `json:"started"`
-	Title              string          `json:"title"`
-	Owner              *Player         `json:"owner"`
-	Players            map[int]*Player `json:"players"`
-	Boards             int             `json:"boards"`
-	CanStartBeforeFull bool            `json:"canStartBeforeFull"`
-	Commands           chan func(*Game)
-	stop               chan bool
+	ID                 string           `json:"id"`
+	Started            bool             `json:"started"`
+	Title              string           `json:"title"`
+	Owner              *Player          `json:"owner"`
+	Players            map[int]*Player  `json:"players"`
+	Boards             int              `json:"boards"`
+	CanStartBeforeFull bool             `json:"canStartBeforeFull"`
+	Commands           chan func(*Game) `json:"-"`
+	stop               chan bool        `json:"-"`
 }
 
 //DoWork Adds a function of work that must run in the game's go-routine.
