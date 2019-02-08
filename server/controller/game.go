@@ -37,7 +37,7 @@ func startGame(game *model.Game) {
 //ShareState tells all players what is going on
 func shareState(game *model.Game) {
 	reply := model.CreateMessageShareState(game)
-	b, err := json.Marshal(&reply)
+	b, err := json.Marshal(reply)
 	if err != nil {
 		log.Println(err)
 		return
