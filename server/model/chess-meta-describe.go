@@ -19,16 +19,35 @@ type MoveDescription struct {
 
 func CalcMoveDescription(game *Game, player *Player, piece *Piece, move *MessageMove) *MoveDescription {
 	result := &MoveDescription{}
+
+	//Change in vertical tiles
 	result.YDiff = util.Abs(piece.Y - move.ToY)
+
+	//Change in horizontal tiles
 	result.XDiff = util.Abs(piece.X - move.ToX)
+
+	//Is the piece moving down the board
 	result.Down = piece.Y > move.ToY
+
+	//Is it going from off the board to on the board
 	result.BeingPlaced = piece.Cache && !move.Cache
+
+	//Is it going from the board to the cache
 	result.BeingRemoved = !piece.Cache && move.Cache
+
+	//Is it moving to another board
 	result.MovingBoards = piece.Board != move.Board
+
+	//Is the pawn on it's starting row
 	result.PawnOnSpawn = player.Team == 1 && piece.Y == 7 || player.Team == 2 && piece.Y == 2
+
+	//Is the placement on the last two of rows for that players direction
 	result.LastTwoRows = (1 == player.Team && 2 >= piece.Y) || (piece.Y >= 7 && 2 == player.Team)
+
+	//Is it not the player's board
 	result.OtherBoard = player.Board != move.Board
 
+	//Pieces between the from tile and to tile
 	CalcPiecesBetween(game, player, piece, move, result)
 
 Outer:
