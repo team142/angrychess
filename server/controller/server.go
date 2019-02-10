@@ -148,12 +148,14 @@ func createUniqueNick(s *model.Server, nickIn string) string {
 func disconnect(s *model.Server, client *ws.Client) {
 	log.Println(">> Going to handle disconnect")
 	found, game := s.GameByClientPlaying(client)
+	notify := false
 	if found {
 		game.RemoveClient(client)
 		if len(game.Players) == 0 {
 			log.Println(">> Game is empty. Removing game")
 			game.Stop()
 			delete(s.Games, game.ID)
+			notify = true
 		}
 		shareState(game)
 	} else {
@@ -162,6 +164,9 @@ func disconnect(s *model.Server, client *ws.Client) {
 
 	//Remove from server
 	delete(s.Lobby, client)
+	if notify {
+		notifyLobby(s)
+	}
 
 }
 
