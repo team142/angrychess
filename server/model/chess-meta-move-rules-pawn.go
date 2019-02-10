@@ -90,8 +90,8 @@ func isMovePossiblePawn(player *Player, description *MoveDescription) (ok bool, 
 		return
 	}
 
-	if description.LandingOnPiece != nil && description.YDiff != 1 {
-		log.Println("Pawns can only land on a piece by taking it: ")
+	if description.LandingOnPiece != nil && description.XDiff != 1 {
+		log.Println("Pawns can only land on a piece by taking it")
 		ok = false
 		return
 	}
