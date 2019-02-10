@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"encoding/json"
 	"github.com/team142/angrychess/io/ws"
 	"github.com/team142/angrychess/model"
 	"log"
@@ -23,8 +22,7 @@ func startGame(game *model.Game) {
 	ok, msg := game.IsReadyToStart()
 	if !ok {
 		reply := model.CreateMessageError("Failed to start game", msg)
-		b, _ := json.Marshal(reply)
-		game.Owner.Profile.Client.Send(b)
+		game.Owner.Profile.Client.SendObject(reply)
 		return
 	}
 
@@ -37,13 +35,8 @@ func startGame(game *model.Game) {
 //ShareState tells all players what is going on
 func shareState(game *model.Game) {
 	reply := model.CreateMessageShareState(game)
-	b, err := json.Marshal(reply)
-	if err != nil {
-		log.Println(err)
-		return
-	}
 	for _, player := range game.Players {
-		player.Profile.Client.Send(b)
+		player.Profile.Client.SendObject(reply)
 	}
 
 }
@@ -116,8 +109,8 @@ func Move(game *model.Game, client *ws.Client, message *model.MessageMove) (didM
 }
 
 //announce announces something to all players
-func announce(game *model.Game, b []byte) {
+func announce(game *model.Game, i interface{}) {
 	for _, player := range game.Players {
-		player.Profile.Client.Send(b)
+		player.Profile.Client.SendObject(i)
 	}
 }

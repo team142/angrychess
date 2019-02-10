@@ -2,6 +2,7 @@ package ws
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/fasthttp/websocket"
 	"log"
 	"net/http"
@@ -56,10 +57,19 @@ func (c *Client) handleMessage(msg *[]byte) {
 	go c.handler(c, msg) //TODO: is this right?
 }
 
-func (c *Client) Send(msg []byte) {
+func (c *Client) sendBytes(msg []byte) {
 	if c.CanSend {
 		c.send <- msg
 	}
+}
+
+func (c *Client) SendObject(o interface{}) {
+	b, err := json.Marshal(o)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	c.sendBytes(b)
 }
 
 func (h *Hub) run() {

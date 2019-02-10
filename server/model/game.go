@@ -1,7 +1,6 @@
 package model
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/satori/go.uuid"
 	"github.com/team142/angrychess/io/ws"
@@ -143,9 +142,8 @@ func (game *Game) IsReadyToStart() (ok bool, message string) {
 
 func (game *Game) ChangeSeat(client *ws.Client, seat int) {
 	if game.Players[seat] != nil {
-		msg := CreateMessageError("Failed to move seats", "Seat taken")
-		b, _ := json.Marshal(msg)
-		client.Send(b)
+		reply := CreateMessageError("Failed to move seats", "Seat taken")
+		client.SendObject(reply)
 		return
 	}
 	currentSeat := 0
