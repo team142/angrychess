@@ -8,8 +8,8 @@ const (
 )
 
 //CreateMessageSecret for easy access
-func CreateMessageSecret(secret, id string) MessageSecret {
-	return MessageSecret{Msg: "secret", Secret: secret, ID: id}
+func CreateMessageSecret(secret, id string) *MessageSecret {
+	return &MessageSecret{Msg: "secret", Secret: secret, ID: id}
 }
 
 //MessageSecret for easy access
@@ -20,8 +20,8 @@ type MessageSecret struct {
 }
 
 //CreateMessageView for easy access
-func CreateMessageView(view string) MessageView {
-	return MessageView{Msg: "view", View: view}
+func CreateMessageView(view string) *MessageView {
+	return &MessageView{Msg: "view", View: view}
 }
 
 //MessageView for easy access
@@ -31,8 +31,8 @@ type MessageView struct {
 }
 
 //CreateMessageError is a general error message constructor
-func CreateMessageError(t, m string) MessageError {
-	return MessageError{Msg: "error", Title: t, Body: m}
+func CreateMessageError(t, m string) *MessageError {
+	return &MessageError{Msg: "error", Title: t, Body: m}
 }
 
 //MessageError is a general error message
@@ -42,8 +42,8 @@ type MessageError struct {
 	Body  string `json:"body"`
 }
 
-func CreateMessageListOfGames(games *ListOfGames) MessageListOfGames {
-	return MessageListOfGames{Msg: "list-games", Games: games}
+func CreateMessageListOfGames(games *ListOfGames) *MessageListOfGames {
+	return &MessageListOfGames{Msg: "list-games", Games: games}
 }
 
 type MessageListOfGames struct {
@@ -51,8 +51,8 @@ type MessageListOfGames struct {
 	Games *ListOfGames `json:"games"`
 }
 
-func CreateMessageShareState(game *Game) MessageShareState {
-	return MessageShareState{Msg: "share-state", Game: game}
+func CreateMessageShareState(game *Game) *MessageShareState {
+	return &MessageShareState{Msg: "share-state", Game: game}
 }
 
 type MessageShareState struct {

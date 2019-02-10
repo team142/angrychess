@@ -1,7 +1,6 @@
 package model
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/satori/go.uuid"
 	"github.com/team142/angrychess/io/ws"
@@ -32,15 +31,15 @@ func CreateGameAndRun(creator *Player) *Game {
 
 //Game describes a game on the server
 type Game struct {
-	ID                 string          `json:"id"`
-	Started            bool            `json:"started"`
-	Title              string          `json:"title"`
-	Owner              *Player         `json:"owner"`
-	Players            map[int]*Player `json:"players"`
-	Boards             int             `json:"boards"`
-	CanStartBeforeFull bool            `json:"canStartBeforeFull"`
-	Commands           chan func(*Game)
-	stop               chan bool
+	ID                 string           `json:"id"`
+	Started            bool             `json:"started"`
+	Title              string           `json:"title"`
+	Owner              *Player          `json:"owner"`
+	Players            map[int]*Player  `json:"players"`
+	Boards             int              `json:"boards"`
+	CanStartBeforeFull bool             `json:"canStartBeforeFull"`
+	Commands           chan func(*Game) `json:"-"`
+	stop               chan bool        `json:"-"`
 }
 
 //DoWork Adds a function of work that must run in the game's go-routine.
@@ -95,7 +94,7 @@ func (game *Game) FindPiece(pieceID string) (found bool, piece *Piece, player *P
 func (game *Game) GetPieceAtPoint(board, x, y int) (found bool, piece *Piece) {
 	for _, player := range game.Players {
 		for _, piece = range player.Pieces {
-			if piece.Board == board && piece.X == x && piece.X == y {
+			if piece.Board == board && piece.X == x && piece.Y == y {
 				found = true
 				return
 			}
@@ -143,9 +142,8 @@ func (game *Game) IsReadyToStart() (ok bool, message string) {
 
 func (game *Game) ChangeSeat(client *ws.Client, seat int) {
 	if game.Players[seat] != nil {
-		msg := CreateMessageError("Failed to move seats", "Seat taken")
-		b, _ := json.Marshal(msg)
-		client.Send <- b
+		reply := CreateMessageError("Failed to move seats", "Seat taken")
+		client.SendObject(reply)
 		return
 	}
 	currentSeat := 0

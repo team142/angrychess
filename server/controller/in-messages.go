@@ -32,9 +32,8 @@ func handleInMessageMove(server *model.Server, client *ws.Client, msg *[]byte) {
 func handleInMessageListOfGame(server *model.Server, client *ws.Client) {
 	go func() {
 		reply := server.CreateMessageListOfGames()
-		b, _ := json.Marshal(&reply)
 		log.Println(">> Sending list of games ")
-		client.Send <- b
+		client.SendObject(reply)
 	}()
 }
 

@@ -30,7 +30,7 @@ func serveWs(hub *Hub, handler func(*Client, *[]byte), w http.ResponseWriter, r 
 		log.Println(err)
 		return
 	}
-	client := &Client{Hub: hub, conn: conn, Send: make(chan []byte, 256), handler: handler}
+	client := &Client{Hub: hub, conn: conn, CanSend: true, send: make(chan []byte, 256), handler: handler}
 	client.Hub.register <- client
 
 	go client.writePump()
@@ -66,7 +66,7 @@ func (c *Client) writePump() {
 	}()
 	for {
 		select {
-		case message, ok := <-c.Send:
+		case message, ok := <-c.send:
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
 				// The Hub closed the channel.

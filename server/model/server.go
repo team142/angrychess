@@ -102,7 +102,7 @@ func (s *Server) CreateListOfGames() *ListOfGames {
 }
 
 //CreateMessageListOfGames creates a list of games
-func (s *Server) CreateMessageListOfGames() MessageListOfGames {
+func (s *Server) CreateMessageListOfGames() *MessageListOfGames {
 	list := s.CreateListOfGames()
 	return CreateMessageListOfGames(list)
 
