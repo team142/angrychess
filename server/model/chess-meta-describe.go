@@ -1,20 +1,24 @@
 package model
 
-import "github.com/team142/angrychess/util"
+import (
+	"fmt"
+	"github.com/team142/angrychess/util"
+)
 
 type MoveDescription struct {
-	XDiff          int
-	YDiff          int
-	Down           bool //Y is decreasing
-	Diagonal       bool
-	BeingPlaced    bool
-	BeingRemoved   bool
-	MovingBoards   bool
-	PawnOnSpawn    bool
-	LastTwoRows    bool
-	OtherBoard     bool
-	LandingOnPiece *Piece
-	PiecesBetween  []*Piece
+	XDiff             int
+	YDiff             int
+	Down              bool //Y is decreasing
+	Diagonal          bool
+	BeingPlaced       bool
+	BeingRemoved      bool
+	MovingBoards      bool
+	PawnOnSpawn       bool
+	LastTwoRows       bool
+	OtherBoard        bool
+	LandingOnPiece    *Piece
+	LandingOnPieceOwn bool
+	PiecesBetween     []*Piece
 }
 
 func CalcMoveDescription(game *Game, player *Player, piece *Piece, move *MessageMove) *MoveDescription {
@@ -55,6 +59,7 @@ Outer:
 		for _, pi := range pl.Pieces {
 			if pi.IsEqual(move) {
 				result.LandingOnPiece = pi
+				result.LandingOnPieceOwn = pl.Profile.ID == player.Profile.ID
 				break Outer
 			}
 		}
@@ -75,18 +80,20 @@ func CalcPiecesBetween(game *Game, player *Player, piece *Piece, move *MessageMo
 
 	//Horizontal moves and is also greater than 1 diff
 	if result.XDiff > 1 && result.YDiff == 0 {
-		rx1, _, rx2, _ := util.OrderPoints(move.ToX, move.ToY, piece.X, piece.Y)
+		rx1, _, rx2, _ := util.OrderPointsX(move.ToX, move.ToY, piece.X, piece.Y)
+		fmt.Println(fmt.Sprintf("Checking from %v to %v", rx1, rx2))
 		for x := rx1 + 1; x < rx2; x++ {
-			found, p := game.GetPieceAtPoint(piece.Board, piece.X, piece.Y)
+			found, p := game.GetPieceAtPoint(piece.Board, x, piece.Y)
 			if found {
 				result.PiecesBetween = append(result.PiecesBetween, p)
 			}
 		}
 	} else if result.XDiff == 0 && result.YDiff > 1 {
 		//Vertical moves
-		_, ry1, _, ry2 := util.OrderPoints(move.ToX, move.ToY, piece.X, piece.Y)
+		_, ry1, _, ry2 := util.OrderPointsY(move.ToX, move.ToY, piece.X, piece.Y)
+		fmt.Println(fmt.Sprintf("Checking from %v to %v", ry1, ry2))
 		for y := ry1 + 1; y < ry2; y++ {
-			found, p := game.GetPieceAtPoint(piece.Board, piece.X, piece.Y)
+			found, p := game.GetPieceAtPoint(piece.Board, piece.X, y)
 			if found {
 				result.PiecesBetween = append(result.PiecesBetween, p)
 			}
