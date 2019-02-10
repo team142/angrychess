@@ -11,6 +11,13 @@ func isMovePossibleRook(player *Player, description *MoveDescription) (ok bool, 
 		return
 	}
 
+	//Can't land on your own piece
+	if description.LandingOnPieceOwn {
+		log.Println("Can't move onto own piece")
+		ok = false
+		return
+	}
+
 	//There is a whole set of rules for placing pieces
 	if description.BeingPlaced {
 		//TODO: other checks
