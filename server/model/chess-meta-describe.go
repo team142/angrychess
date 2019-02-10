@@ -97,6 +97,18 @@ func CalcPiecesBetween(game *Game, player *Player, piece *Piece, move *MessageMo
 		}
 	}
 
+	if result.XDiff == result.YDiff {
+		start := &Tile{X: piece.X, Y: piece.Y}
+		end := &Tile{X: move.ToX, Y: move.ToY}
+		c := start.GetTilesUntil(end)
+		for tile := range c {
+			found, p := game.GetPieceAtPoint(piece.Board, tile.X, tile.Y)
+			if found {
+				result.PiecesBetween = append(result.PiecesBetween, p)
+			}
+		}
+	}
+
 	//TODO: do diagonal moves
 	//
 
