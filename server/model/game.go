@@ -95,7 +95,7 @@ func (game *Game) FindPiece(pieceID string) (found bool, piece *Piece, player *P
 func (game *Game) GetPieceAtPoint(board, x, y int) (found bool, piece *Piece) {
 	for _, player := range game.Players {
 		for _, piece = range player.Pieces {
-			if piece.Board == board && piece.X == x && piece.X == y {
+			if piece.Board == board && piece.X == x && piece.Y == y {
 				found = true
 				return
 			}
