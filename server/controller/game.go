@@ -97,7 +97,9 @@ func Move(game *model.Game, client *ws.Client, message *model.MessageMove) (didM
 	}
 
 	if taken != nil {
+		taken.Cache = true
 		//TODO take piece
+		//Switch players
 		//TakePiece(game, player, taken)
 	}
 
