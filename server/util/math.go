@@ -7,17 +7,18 @@ func Abs(i int) int {
 	return i
 }
 
-func OrderPoints(px1, py1, px2, py2 int) (rx1, ry1, rx2, ry2 int) {
-	if px1 <= px2 {
-		rx1 = px1
-		ry1 = py1
-		rx2 = px2
-		ry2 = py2
-	} else {
-		rx1 = px1
-		ry1 = py1
-		rx2 = px2
-		ry2 = py2
+func OrderPoints(p1, p2 int) (int, int) {
+	if p1 <= p2 {
+		return p1, p2
 	}
-	return
+	return p2, p1
+}
+
+func GetDirection(p1, p2 int) int {
+	if p1 == p2 {
+		return 0
+	} else if p1 <= p2 {
+		return 1
+	}
+	return -1
 }

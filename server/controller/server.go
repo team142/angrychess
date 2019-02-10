@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/team142/angrychess/io/ws"
 	"github.com/team142/angrychess/model"
@@ -21,8 +20,7 @@ func createGameByClient(s *model.Server, client *ws.Client) *model.Game {
 	game.DoWork(
 		func(game *model.Game) {
 			reply := model.CreateMessageView(model.ViewBoard)
-			b, _ := json.Marshal(reply)
-			announce(game, b)
+			announce(game, reply)
 			shareState(game)
 		})
 
@@ -39,17 +37,15 @@ func joinGameByClient(s *model.Server, gameID string, p *model.Profile) *model.G
 	ok := joinGame(game, player)
 	if !ok {
 		reply := model.CreateMessageError("Could not join game", "Server is full")
-		b, _ := json.Marshal(reply)
-		p.Client.Send <- b
+		p.Client.SendObject(reply)
 		return game
 	}
 
 	reply := model.CreateMessageView(model.ViewBoard)
-	b, _ := json.Marshal(reply)
 
 	game.DoWork(
 		func(game *model.Game) {
-			announce(game, b)
+			announce(game, reply)
 			shareState(game)
 		})
 
@@ -69,8 +65,7 @@ func setNick(s *model.Server, client *ws.Client, nick string) {
 	log.Println(">> Set profile nick: ", profile.Nick)
 
 	reply := model.CreateMessageSecret(profile.Secret, profile.ID)
-	b, _ := json.Marshal(reply)
-	client.Send <- b
+	client.SendObject(reply)
 
 }
 
@@ -148,12 +143,14 @@ func createUniqueNick(s *model.Server, nickIn string) string {
 func disconnect(s *model.Server, client *ws.Client) {
 	log.Println(">> Going to handle disconnect")
 	found, game := s.GameByClientPlaying(client)
+	notify := false
 	if found {
 		game.RemoveClient(client)
 		if len(game.Players) == 0 {
 			log.Println(">> Game is empty. Removing game")
 			game.Stop()
 			delete(s.Games, game.ID)
+			notify = true
 		}
 		shareState(game)
 	} else {
@@ -162,18 +159,19 @@ func disconnect(s *model.Server, client *ws.Client) {
 
 	//Remove from server
 	delete(s.Lobby, client)
+	if notify {
+		notifyLobby(s)
+	}
 
 }
 
 //notifyLobby tells players without a game about a new game
 func notifyLobby(s *model.Server) {
-	reply := s.CreateListOfGames()
-	b, _ := json.Marshal(&reply)
-
+	reply := model.CreateMessageListOfGames(s.CreateListOfGames())
 	for client := range s.Lobby {
 		found, _ := s.GameByClientPlaying(client)
 		if !found {
-			client.Send <- b
+			client.SendObject(reply)
 		}
 	}
 
