@@ -1,7 +1,6 @@
 package model
 
 import (
-	"fmt"
 	"github.com/team142/angrychess/util"
 )
 
@@ -80,9 +79,8 @@ func CalcPiecesBetween(game *Game, player *Player, piece *Piece, move *MessageMo
 
 	//Horizontal moves and is also greater than 1 diff
 	if result.XDiff > 1 && result.YDiff == 0 {
-		rx1, _, rx2, _ := util.OrderPointsX(move.ToX, move.ToY, piece.X, piece.Y)
-		fmt.Println(fmt.Sprintf("Checking from %v to %v", rx1, rx2))
-		for x := rx1 + 1; x < rx2; x++ {
+		lower, higher := util.OrderPoints(move.ToX, piece.X)
+		for x := lower + 1; x < higher; x++ {
 			found, p := game.GetPieceAtPoint(piece.Board, x, piece.Y)
 			if found {
 				result.PiecesBetween = append(result.PiecesBetween, p)
@@ -90,9 +88,8 @@ func CalcPiecesBetween(game *Game, player *Player, piece *Piece, move *MessageMo
 		}
 	} else if result.XDiff == 0 && result.YDiff > 1 {
 		//Vertical moves
-		_, ry1, _, ry2 := util.OrderPointsY(move.ToX, move.ToY, piece.X, piece.Y)
-		fmt.Println(fmt.Sprintf("Checking from %v to %v", ry1, ry2))
-		for y := ry1 + 1; y < ry2; y++ {
+		lower, higher := util.OrderPoints(move.ToY, piece.Y)
+		for y := lower + 1; y < higher; y++ {
 			found, p := game.GetPieceAtPoint(piece.Board, piece.X, y)
 			if found {
 				result.PiecesBetween = append(result.PiecesBetween, p)
