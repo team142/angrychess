@@ -77,6 +77,11 @@ func CalcPiecesBetween(game *Game, player *Player, piece *Piece, move *MessageMo
 		return
 	}
 
+	if result.XDiff <= 1 && result.YDiff <= 1 {
+		//Ignore one tile moves
+		return
+	}
+
 	//Horizontal moves and is also greater than 1 diff
 	if result.XDiff > 1 && result.YDiff == 0 {
 		lower, higher := util.OrderPoints(move.ToX, piece.X)
