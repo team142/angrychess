@@ -167,8 +167,8 @@ func disconnect(s *model.Server, client *ws.Client) {
 
 //notifyLobby tells players without a game about a new game
 func notifyLobby(s *model.Server) {
-	reply := s.CreateListOfGames()
-	b, _ := json.Marshal(&reply)
+	reply := model.CreateMessageListOfGames(s.CreateListOfGames())
+	b, _ := json.Marshal(reply)
 
 	for client := range s.Lobby {
 		found, _ := s.GameByClientPlaying(client)
