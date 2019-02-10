@@ -52,7 +52,6 @@ func isMovePossibleRook(player *Player, description *MoveDescription) (ok bool, 
 		log.Println("Rooks can't move over pieces: ", len(description.PiecesBetween))
 		ok = false
 		return
-
 	}
 
 	if description.OtherBoard {

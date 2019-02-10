@@ -84,6 +84,12 @@ func isMovePossiblePawn(player *Player, description *MoveDescription) (ok bool, 
 		return
 	}
 
+	if len(description.PiecesBetween) > 0 {
+		log.Println("Pawns can't move over pieces: ", len(description.PiecesBetween))
+		ok = false
+		return
+	}
+
 	ok = true
 	wouldTake = description.LandingOnPiece
 
