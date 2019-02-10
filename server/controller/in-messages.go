@@ -34,7 +34,7 @@ func handleInMessageListOfGame(server *model.Server, client *ws.Client) {
 		reply := server.CreateMessageListOfGames()
 		b, _ := json.Marshal(&reply)
 		log.Println(">> Sending list of games ")
-		client.Send <- b
+		client.Send(b)
 	}()
 }
 

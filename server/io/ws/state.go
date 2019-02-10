@@ -47,7 +47,8 @@ func newHub() *Hub {
 type Client struct {
 	Hub     *Hub
 	conn    *websocket.Conn
-	Send    chan []byte
+	send    chan []byte
+	CanSend bool
 	handler func(*Client, *[]byte)
 }
 
@@ -55,16 +56,20 @@ func (c *Client) handleMessage(msg *[]byte) {
 	go c.handler(c, msg) //TODO: is this right?
 }
 
+func (c *Client) Send(msg []byte) {
+	if c.CanSend {
+		c.send <- msg
+	}
+}
+
 func (h *Hub) run() {
 	for {
 		select {
-		case client := <-h.register:
-			h.clients[client] = true
-			log.Println("New client registered")
 		case client := <-h.unregister:
 			if _, ok := h.clients[client]; ok {
+				client.CanSend = false
 				delete(h.clients, client)
-				close(client.Send)
+				close(client.send)
 
 				data := struct {
 					Msg string `json:"msg"`
@@ -72,9 +77,16 @@ func (h *Hub) run() {
 					"disconnect",
 				}
 				b, _ := json.Marshal(data)
-				client.handler(client, &b)
+				go func() {
+					//TODO: Might be the problem
+					time.Sleep(1 * time.Second)
+					client.handler(client, &b)
+				}()
 				log.Println("Client unregistered")
 			}
+		case client := <-h.register:
+			h.clients[client] = true
+			log.Println("New client registered")
 		}
 	}
 }

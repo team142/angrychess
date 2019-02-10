@@ -24,7 +24,7 @@ func startGame(game *model.Game) {
 	if !ok {
 		reply := model.CreateMessageError("Failed to start game", msg)
 		b, _ := json.Marshal(reply)
-		game.Owner.Profile.Client.Send <- b
+		game.Owner.Profile.Client.Send(b)
 		return
 	}
 
@@ -43,7 +43,7 @@ func shareState(game *model.Game) {
 		return
 	}
 	for _, player := range game.Players {
-		player.Profile.Client.Send <- b
+		player.Profile.Client.Send(b)
 	}
 
 }
@@ -118,6 +118,6 @@ func Move(game *model.Game, client *ws.Client, message *model.MessageMove) (didM
 //announce announces something to all players
 func announce(game *model.Game, b []byte) {
 	for _, player := range game.Players {
-		player.Profile.Client.Send <- b
+		player.Profile.Client.Send(b)
 	}
 }

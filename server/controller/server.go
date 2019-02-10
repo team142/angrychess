@@ -40,7 +40,7 @@ func joinGameByClient(s *model.Server, gameID string, p *model.Profile) *model.G
 	if !ok {
 		reply := model.CreateMessageError("Could not join game", "Server is full")
 		b, _ := json.Marshal(reply)
-		p.Client.Send <- b
+		p.Client.Send(b)
 		return game
 	}
 
@@ -70,7 +70,7 @@ func setNick(s *model.Server, client *ws.Client, nick string) {
 
 	reply := model.CreateMessageSecret(profile.Secret, profile.ID)
 	b, _ := json.Marshal(reply)
-	client.Send <- b
+	client.Send(b)
 
 }
 
@@ -178,7 +178,7 @@ func notifyLobby(s *model.Server) {
 	for client := range s.Lobby {
 		found, _ := s.GameByClientPlaying(client)
 		if !found {
-			client.Send <- b
+			client.Send(b)
 		}
 	}
 

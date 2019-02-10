@@ -145,7 +145,7 @@ func (game *Game) ChangeSeat(client *ws.Client, seat int) {
 	if game.Players[seat] != nil {
 		msg := CreateMessageError("Failed to move seats", "Seat taken")
 		b, _ := json.Marshal(msg)
-		client.Send <- b
+		client.Send(b)
 		return
 	}
 	currentSeat := 0
